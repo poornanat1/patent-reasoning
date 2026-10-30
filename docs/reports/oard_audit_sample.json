@@ -1,0 +1,524 @@
+{
+  "schema": [
+    {
+      "table": "office_actions",
+      "rows": 30693,
+      "documented_rows": null,
+      "missing_columns": [],
+      "extra_columns": []
+    },
+    {
+      "table": "rejections",
+      "rows": 69823,
+      "documented_rows": null,
+      "missing_columns": [],
+      "extra_columns": []
+    },
+    {
+      "table": "citations",
+      "rows": 381364,
+      "documented_rows": null,
+      "missing_columns": [],
+      "extra_columns": []
+    }
+  ],
+  "blanks": [
+    {
+      "table": "office_actions",
+      "column": "app_id",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "ifw_number",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "document_cd",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "mail_dt",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "art_unit",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "uspc_class",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "uspc_subclass",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "header_missing",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "fp_missing",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "rejection_fp_mismatch",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "closing_missing",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "rejection_101",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "rejection_102",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "rejection_103",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "rejection_112",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "rejection_dp",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "objection",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "allowed_claims",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "cite102_gt1",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "cite103_gt3",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "cite103_eq1",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "cite103_max",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "office_actions",
+      "column": "signature_type",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "rejections",
+      "column": "app_id",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "rejections",
+      "column": "ifw_number",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "rejections",
+      "column": "action_type",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "rejections",
+      "column": "action_subtype",
+      "blank_rate": 0.259226902310127
+    },
+    {
+      "table": "rejections",
+      "column": "claim_numbers",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "rejections",
+      "column": "alice_in",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "rejections",
+      "column": "bilski_in",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "rejections",
+      "column": "mayo_in",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "rejections",
+      "column": "myriad_in",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "citations",
+      "column": "app_id",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "citations",
+      "column": "citation_pat_pgpub_id",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "citations",
+      "column": "parsed",
+      "blank_rate": 0.00737353289770403
+    },
+    {
+      "table": "citations",
+      "column": "form892",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "citations",
+      "column": "form1449",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "citations",
+      "column": "citation_in_oa",
+      "blank_rate": 0.0
+    },
+    {
+      "table": "citations",
+      "column": "ifw_number",
+      "blank_rate": 0.7709380014893907
+    },
+    {
+      "table": "citations",
+      "column": "action_type",
+      "blank_rate": 0.7709380014893907
+    },
+    {
+      "table": "citations",
+      "column": "action_subtype",
+      "blank_rate": 0.7743835285973506
+    }
+  ],
+  "identifiers": {
+    "oa_app_id_not_8_digits": 0,
+    "oa_duplicate_ifw_numbers": 0,
+    "oa_distinct_apps": 14247,
+    "rej_orphan_ifw": 0,
+    "rej_app_id_mismatch": 0,
+    "cit_orphan_apps": 0,
+    "cit_linked_rows": 87356,
+    "cit_linked_orphan_actions": 0
+  },
+  "dates": {
+    "unparsed_rate": 0.0,
+    "min_date": "2008-04-02",
+    "max_date": "2017-07-11",
+    "examples": [
+      "2009-02-10",
+      "2009-02-11",
+      "2009-02-12"
+    ],
+    "by_year": [
+      {
+        "year": "2008",
+        "office_actions": 67,
+        "apps": 65
+      },
+      {
+        "year": "2009",
+        "office_actions": 658,
+        "apps": 563
+      },
+      {
+        "year": "2010",
+        "office_actions": 2033,
+        "apps": 1687
+      },
+      {
+        "year": "2011",
+        "office_actions": 4283,
+        "apps": 3340
+      },
+      {
+        "year": "2012",
+        "office_actions": 5678,
+        "apps": 4380
+      },
+      {
+        "year": "2013",
+        "office_actions": 6709,
+        "apps": 5026
+      },
+      {
+        "year": "2014",
+        "office_actions": 6972,
+        "apps": 5249
+      },
+      {
+        "year": "2015",
+        "office_actions": 3082,
+        "apps": 1996
+      },
+      {
+        "year": "2016",
+        "office_actions": 1056,
+        "apps": 731
+      },
+      {
+        "year": "2017",
+        "office_actions": 155,
+        "apps": 143
+      }
+    ]
+  },
+  "labels": {
+    "oa_flag_rates": {
+      "rejection_101": 0.10015312937803408,
+      "rejection_102": 0.4152412602222005,
+      "rejection_103": 0.7943179226533738,
+      "rejection_112": 0.33659140520639885,
+      "rejection_dp": 0.0970905418173525,
+      "objection": 0.26009187762682046,
+      "allowed_claims": 0.07291564851920633,
+      "header_missing": 0.0711237089890203,
+      "fp_missing": 0.10969927996611606,
+      "rejection_fp_mismatch": 0.04398397028638452,
+      "closing_missing": 0.0020200045613006225
+    },
+    "document_cd": [
+      {
+        "document_cd": "CTNF",
+        "n": 20273
+      },
+      {
+        "document_cd": "CTFR",
+        "n": 10420
+      }
+    ],
+    "action_types": [
+      {
+        "action_type": "103",
+        "action_subtype": "a",
+        "n": 23984
+      },
+      {
+        "action_type": "102",
+        "action_subtype": "b",
+        "n": 9844
+      },
+      {
+        "action_type": "112",
+        "action_subtype": "b",
+        "n": 8300
+      },
+      {
+        "action_type": "objected",
+        "action_subtype": null,
+        "n": 7979
+      },
+      {
+        "action_type": "cancelled",
+        "action_subtype": null,
+        "n": 4523
+      },
+      {
+        "action_type": "112",
+        "action_subtype": "a",
+        "n": 3005
+      },
+      {
+        "action_type": "nonstatutory double patenting",
+        "action_subtype": null,
+        "n": 2890
+      },
+      {
+        "action_type": "102",
+        "action_subtype": "e",
+        "n": 2545
+      },
+      {
+        "action_type": "allowed",
+        "action_subtype": null,
+        "n": 1976
+      },
+      {
+        "action_type": "101",
+        "action_subtype": "Non-Statutory-data",
+        "n": 935
+      },
+      {
+        "action_type": "102",
+        "action_subtype": "a",
+        "n": 722
+      },
+      {
+        "action_type": "101",
+        "action_subtype": "Non-Statutory-other",
+        "n": 537
+      },
+      {
+        "action_type": "103",
+        "action_subtype": null,
+        "n": 448
+      },
+      {
+        "action_type": "112",
+        "action_subtype": "d",
+        "n": 369
+      },
+      {
+        "action_type": "101",
+        "action_subtype": "Non-Statutory-bilski",
+        "n": 290
+      },
+      {
+        "action_type": "101",
+        "action_subtype": "Non-Statutory-nature",
+        "n": 274
+      },
+      {
+        "action_type": "101",
+        "action_subtype": "Non-Statutory-alice",
+        "n": 274
+      },
+      {
+        "action_type": "112",
+        "action_subtype": null,
+        "n": 220
+      },
+      {
+        "action_type": "101",
+        "action_subtype": "Statutory-double-patenting",
+        "n": 215
+      },
+      {
+        "action_type": "101",
+        "action_subtype": "Non-Statutory-mentally",
+        "n": 147
+      },
+      {
+        "action_type": "101",
+        "action_subtype": "Non-Statutory-software",
+        "n": 140
+      },
+      {
+        "action_type": "102",
+        "action_subtype": null,
+        "n": 64
+      },
+      {
+        "action_type": "101",
+        "action_subtype": "Useful",
+        "n": 62
+      },
+      {
+        "action_type": "101",
+        "action_subtype": "Non-Statutory-mayo",
+        "n": 48
+      },
+      {
+        "action_type": "101",
+        "action_subtype": "Non-Statutory-myriad",
+        "n": 18
+      }
+    ],
+    "flag_vs_rejection_rows": [
+      {
+        "flag": "rejection_101",
+        "both": 2939,
+        "flag_only": 135,
+        "rows_only": 0
+      },
+      {
+        "flag": "rejection_102",
+        "both": 12630,
+        "flag_only": 115,
+        "rows_only": 0
+      },
+      {
+        "flag": "rejection_103",
+        "both": 24363,
+        "flag_only": 17,
+        "rows_only": 0
+      },
+      {
+        "flag": "rejection_112",
+        "both": 10017,
+        "flag_only": 314,
+        "rows_only": 0
+      }
+    ],
+    "claim_numbers_parse_rate": 1.0,
+    "claim_numbers_unparsed_examples": []
+  },
+  "citations": {
+    "rates": {
+      "form892": 0.37428021522744676,
+      "form1449": 0.6379495704890865,
+      "citation_in_oa": 0.2290619985106093,
+      "parsed_blank": 0.00737353289770403
+    },
+    "by_action_type": [
+      {
+        "action_type": "103",
+        "n": 72588
+      },
+      {
+        "action_type": "102",
+        "n": 14768
+      }
+    ],
+    "examples": [
+      {
+        "citation_pat_pgpub_id": "20080250914",
+        "parsed": "20080250914"
+      },
+      {
+        "citation_pat_pgpub_id": "20070095297",
+        "parsed": "20070095297"
+      },
+      {
+        "citation_pat_pgpub_id": "20090212123",
+        "parsed": "20090212123"
+      },
+      {
+        "citation_pat_pgpub_id": "4863737",
+        "parsed": "4863737"
+      },
+      {
+        "citation_pat_pgpub_id": "6267296",
+        "parsed": "6267296"
+      }
+    ]
+  }
+}
