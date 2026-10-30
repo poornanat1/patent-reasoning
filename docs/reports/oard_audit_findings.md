@@ -48,7 +48,7 @@ The sample keeps every office action for a sampled application, so it includes 4
 
 ## Decisions for next steps
 
-- Take labels from `rejections` rows (statutory types 101/102/103/112 and double patenting), and keep objected/cancelled/allowed as claim status.
+- Take labels from `rejections` rows (statutory types 101/102/103/112 and double patenting), and keep objected/cancelled/allowed as claim status. *Update after the feasibility join:* `claim_numbers` is incomplete in about 18% of 102/103 rejections when compared with the office action text. See [feasibility.md](feasibility.md).
 - Apply evidence-grounded targets to 102/103 only, and treat 101/112 as classification plus examiner-reasoning tasks.
 - Pull office action text for sampled 102/103 actions first (Day 4), since paragraph-level evidence depends on it.
 - Revisit the cohort filter once claims are joined: filter by publication year instead of mail year.
