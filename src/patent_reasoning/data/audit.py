@@ -92,8 +92,11 @@ def audit_identifiers(con) -> dict[str, Any]:
         ),
         "cit_linked_orphan_actions": _scalar(
             con,
+            # Blank subtypes are NULL on both sides, so match them with IS NOT DISTINCT FROM.
             f"SELECT count(*) FROM (SELECT * FROM citations WHERE NOT {_blank('ifw_number')}) c "
-            "ANTI JOIN rejections r USING (ifw_number, action_type, action_subtype)",
+            "ANTI JOIN rejections r ON c.ifw_number = r.ifw_number "
+            "AND c.action_type = r.action_type "
+            "AND c.action_subtype IS NOT DISTINCT FROM r.action_subtype",
         ),
     }
 
@@ -109,7 +112,7 @@ def audit_dates(con) -> dict[str, Any]:
     ]
     stats["by_year"] = _rows(
         con,
-        f"SELECT year({MAIL_DT_SQL}) AS year, count(*) AS office_actions, "
+        f"SELECT year({MAIL_DT_SQL})::VARCHAR AS year, count(*) AS office_actions, "
         "count(DISTINCT app_id) AS apps FROM office_actions GROUP BY 1 ORDER BY 1",
     )
     return stats
@@ -202,7 +205,7 @@ def run_audit(con: duckdb.DuckDBPyConnection, full: bool) -> dict[str, Any]:
 
 def _fmt(v: Any) -> str:
     if isinstance(v, float):
-        return f"{v:.4f}"
+        return f"{v:.2e}" if 0 < abs(v) < 1e-4 else f"{v:.4f}"
     if isinstance(v, int):
         return f"{v:,}"
     return "" if v is None else str(v)

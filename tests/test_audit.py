@@ -10,6 +10,8 @@ def test_audit_catches_known_issues(csvs, tmp_path):
     ids = result["identifiers"]
     assert ids["rej_orphan_ifw"] == 1
     assert ids["oa_duplicate_ifw_numbers"] == 0
+    # Linked citations with a blank action_subtype must still match their rejection row.
+    assert ids["cit_linked_orphan_actions"] == 0
     assert result["dates"]["unparsed_rate"] == 0
     assert result["labels"]["claim_numbers_parse_rate"] == pytest.approx(4 / 5)
     agree = {r["flag"]: r for r in result["labels"]["flag_vs_rejection_rows"]}
