@@ -1,0 +1,8 @@
+# Environment smoke test: verifies MLflow tracking and seeding work end to end.
+name: smoke
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  stage: day1-setup
