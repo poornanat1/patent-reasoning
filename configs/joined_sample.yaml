@@ -1,0 +1,15 @@
+# Feasibility set: non-final office actions with 102/103 rejections from the OARD sample,
+# joined with office action text, published claims and prior-art full text.
+name: joined-sample
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  sample_dir: data/interim/oard_sample
+  cache_dir: data/raw/odp
+  out_dir: data/interim/joined_sample
+  n_office_actions: 200
+  year_min: 2008
+  year_max: 2014
+  salt: joined-v1
