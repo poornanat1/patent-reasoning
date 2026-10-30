@@ -1,0 +1,17 @@
+# Application-level sample of the Office Action Research Dataset.
+# 2008-2014 is where office actions overlap the Patent Claims Research Dataset (applications
+# published through 2014). The filter uses office-action mail year until claims are joined;
+# switch it to publication year at that point.
+name: oard-sample
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  zip_dir: data/raw/oard
+  csv_dir: data/raw/oard/csv
+  out_dir: data/interim/oard_sample
+  sample_rate: 0.01
+  year_min: 2008
+  year_max: 2014
+  salt: oard
