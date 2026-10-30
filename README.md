@@ -26,6 +26,22 @@ uv run python scripts/smoke_test.py
 uv run pytest
 ```
 
+## Data
+
+The pipeline starts from the [USPTO Office Action Research Dataset](https://www.uspto.gov/ip-policy/economic-research/research-datasets/office-action-research-dataset-patents) (2017 release): about 4.4M office actions from 2008 to mid-2017, with rejection and citation tables. The USPTO Open Data Portal serves the files. Downloading them needs a free API key from [data.uspto.gov](https://data.uspto.gov).
+
+```bash
+export USPTO_API_KEY=...
+uv run python scripts/download_oard.py      # ~800 MB of zips into data/raw/oard
+uv run python scripts/sample_oard.py        # extract + 1% application sample -> data/interim
+uv run python scripts/audit_oard.py         # schema/quality report -> docs/reports
+uv run python scripts/audit_oard.py --sample
+```
+
+Without a key, download `office_actions.csv.zip`, `rejections.csv.zip` and `citations.csv.zip` from the [PTOFFACT dataset page](https://data.uspto.gov/bulkdata/datasets/ptoffact) in a browser, put them in `data/raw/oard/`, and start from the sample step.
+
+The sample takes whole applications, chosen by a salted SHA-256 of `app_id`. Rerunning it gives the same sample regardless of row order, and every office action, rejection and citation for a chosen application stays together. That keeps later family-level splits clean. Sample settings live in [configs/oard_sample.yaml](configs/oard_sample.yaml).
+
 ## Experiment tracking
 
 Runs are logged to MLflow, stored in a local SQLite database (`mlflow.db`). To browse them:
