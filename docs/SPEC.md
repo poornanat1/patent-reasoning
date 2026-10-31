@@ -6,58 +6,75 @@ For legal reasoning over USPTO patent examination records, how does parameter-ef
 
 ## Task
 
-Given a patent claim, the office-action context and the cited prior-art passages, the model must:
+The model plays the examiner. It sees one claim and the prior art the examiner had in front of them, and it decides what happens to that claim.
 
-1. **Classify the rejection basis**, e.g. 35 U.S.C. 101, 102, 103 or 112.
-2. **Map claim limitations to evidence**, citing specific prior-art paragraphs.
-3. **Explain the reasoning** in terms of that evidence.
-4. **Report evidence status** (`supported`, `partially_supported`, `unsupported`). The model should abstain rather than assert a conclusion the evidence doesn't support.
+**Input**
+
+- The claim text, plus the text of any claims it depends on
+- The cited prior-art documents, as retrieved passages under a fixed context budget that is the same for every experiment
+
+The examiner's office action is **never** part of the input. It states the outcome ("Claims 1-5 are rejected under 35 U.S.C. 103"), so including it would leak the label.
+
+**Output**
+
+1. **Decision.** The grounds on which the claim is rejected, or none:
+   - `102` (anticipated by a single reference)
+   - `103` (obvious over one or more references)
+   - `112` (indefinite or unsupported)
+   - `101` (ineligible subject matter)
+
+   A claim can have several grounds. An empty list means *no rejection*: the claim is allowable over the cited art.
+2. **Claim mapping** (for 102/103). Each claim limitation, the reference and passages that disclose it, or a statement that no cited passage does.
+3. **Explanation** of the decision in terms of that mapping.
+4. **Evidence status.** One of:
+   - `supported`: every limitation is mapped to cited text
+   - `partially_supported`
+   - `unsupported`
+   - `not_applicable` (101/112 and no-rejection decisions)
+
+   The model should abstain rather than assert a rejection the evidence doesn't support.
+
+## Labels and negatives
+
+Each example is one claim in one non-final office action.
+
+- **Rejection grounds:** taken from the examiner's rejection statements in the office action text, cross-checked against the Office Action Research Dataset (OARD). The OARD claim lists miss claims in about 18% of rejections ([feasibility.md](reports/feasibility.md)).
+- **No-rejection examples:** claims in the same office action that the examiner *allowed* or *objected to as allowable but dependent on a rejected claim*. The examiner judged these against the same cited art and found it didn't disclose or suggest the added limitations. They share the input distribution of the positives, so the decision can't be read off the context.
+- **Reference targets:** the examiner's reasoning for that claim, with pin cites resolved to the cited passages. For 102/103 these are mapping and explanation targets. For 101/112, only the explanation.
+
+Examiner statements are what the examiner asserted, not independently verified conclusions, and records keep that distinction. Generated text is never treated as ground truth.
 
 ## Data sources
 
 | Source | Use |
 | --- | --- |
-| USPTO Office Action Research Dataset | Rejection labels, application IDs, prior-art citations |
-| Office Action Text Retrieval API | Examiner office-action text |
-| Patent Claims Research Dataset | Claim text and dependencies |
-| Patent Examination Research Dataset (PatEx) | Application histories and metadata |
-| USPTO Open Data Portal | Full text of cited prior-art publications |
+| USPTO Office Action Research Dataset (2017) | Rejection and allowance labels, cited documents |
+| Open Data Portal file wrapper | Office action text (XML), claims as filed, amendment history |
+| Open Data Portal full text (`APPXML-SPLT`, `PTGRXML-SPLT`) | Claims and cited prior-art text |
 
-The initial cohort is applications from 2008–2014, where the office-action and claims datasets overlap. Later filings are an optional temporal out-of-distribution (OOD) test.
+The cohort is non-final actions mailed 2008–2014. Paragraph-level evidence is available for US publications from 2005 onward. Older or granted patents, which are cited by column and line, and foreign references are evidence at the document level only. Details: [feasibility.md](reports/feasibility.md).
 
-## Record schema
+## Data contracts
 
-```json
-{
-  "application_id": "...",
-  "claim_number": 1,
-  "claim_text": "...",
-  "office_action_id": "...",
-  "rejection_type": "103",
-  "examiner_reasoning": "...",
-  "prior_art": [{ "document_id": "...", "paragraph_id": "...", "text": "..." }],
-  "target": {
-    "legal_basis": "103",
-    "claim_mapping": [],
-    "explanation": "...",
-    "evidence_status": "supported"
-  }
-}
-```
+The schemas live in `src/patent_reasoning/schema.py`, with JSON Schema exports in [docs/schemas/](schemas/). Each `Example` has three parts:
 
-Examiner-stated facts are kept separate from independently verified conclusions. Generated text is never treated as ground truth.
+- `input`: what the model sees
+- `target`: the reference output, with the same shape as the model's output
+- `provenance`: source IDs, label sources and quality flags. Never shown to the model.
 
 ## Splits
 
 | Partition | Target size |
 | --- | --- |
-| SFT train | ~20,000 |
+| SFT train | ~20,000 claims |
 | DPO preference pairs | ~3,000 |
 | Validation | 1,000 |
 | In-distribution test | 1,000 |
 | OOD test (technology class / period) | 500–1,000 |
 
-The splits are disjoint by application family. The final test sets are never shown to any optimizer.
+- Splits are disjoint by application family.
+- Validation and test sets contain only fully grounded examples: claims as filed, and paragraph evidence for 102/103.
+- The final test sets are never shown to any optimizer.
 
 ## Experimental matrix
 
@@ -74,11 +91,11 @@ All variants use the same evidence retrieval and context budget, so differences 
 
 ## Metrics
 
-- Rejection macro-F1, precision and recall, in-distribution and OOD
-- Citation precision: whether cited paragraphs exist and support the claim
-- Unsupported-assertion rate
-- Inference latency and total experiment cost (GPU hours, optimizer calls, tokens)
-- Bootstrap 95% confidence intervals and paired error comparisons
+- **Decision:** macro-F1 over {no rejection, 102, 103, 112, 101}, in-distribution and OOD. Also reported per class, including false-rejection and false-allowance rates.
+- **Citations:** precision (cited passages exist and support the limitation) and unsupported-assertion rate.
+- **Mapping:** limitation-level agreement with the examiner's pin cites, where available.
+- **Cost:** inference latency and total experiment cost (GPU hours, optimizer calls, tokens).
+- **Statistics:** bootstrap 95% confidence intervals and paired error comparisons.
 
 ## Model and training defaults
 
@@ -100,4 +117,4 @@ All variants use the same evidence retrieval and context budget, so differences 
 
 ## Fallback scope
 
-If claim-to-evidence alignment turns out to be unreliable, the project narrows to rejection classification plus evidence verification. In that case it prioritizes a smaller, trustworthy benchmark over a large, weakly labeled one.
+If grounded examples are too scarce, the project narrows to the decision task plus evidence verification. It prioritizes a smaller, trustworthy benchmark over a large, weakly labeled one.
