@@ -1,0 +1,434 @@
+{
+  "$defs": {
+    "ClaimText": {
+      "additionalProperties": false,
+      "properties": {
+        "number": {
+          "minimum": 1,
+          "title": "Number",
+          "type": "integer"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "number",
+        "text"
+      ],
+      "title": "ClaimText",
+      "type": "object"
+    },
+    "ExampleInput": {
+      "additionalProperties": false,
+      "properties": {
+        "claim": {
+          "$ref": "#/$defs/ClaimText"
+        },
+        "parent_claims": {
+          "description": "Claims this claim depends on, nearest first, so the full scope is visible.",
+          "items": {
+            "$ref": "#/$defs/ClaimText"
+          },
+          "title": "Parent Claims",
+          "type": "array"
+        },
+        "prior_art": {
+          "description": "The art cited in the office action.",
+          "items": {
+            "$ref": "#/$defs/PriorArtDocument"
+          },
+          "title": "Prior Art",
+          "type": "array"
+        }
+      },
+      "required": [
+        "claim"
+      ],
+      "title": "ExampleInput",
+      "type": "object"
+    },
+    "Ground": {
+      "additionalProperties": false,
+      "properties": {
+        "statute": {
+          "enum": [
+            "101",
+            "102",
+            "103",
+            "112"
+          ],
+          "title": "Statute",
+          "type": "string"
+        },
+        "references": {
+          "description": "Document IDs the ground relies on. 102 needs exactly one, 103 at least one, and 101/112 none.",
+          "items": {
+            "type": "string"
+          },
+          "title": "References",
+          "type": "array"
+        }
+      },
+      "required": [
+        "statute"
+      ],
+      "title": "Ground",
+      "type": "object"
+    },
+    "LimitationMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "limitation": {
+          "description": "A limitation of this claim, verbatim.",
+          "minLength": 1,
+          "title": "Limitation",
+          "type": "string"
+        },
+        "disclosed": {
+          "description": "Whether the cited art discloses or suggests it.",
+          "title": "Disclosed",
+          "type": "boolean"
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Id"
+        },
+        "passage_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Passage Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "limitation",
+        "disclosed"
+      ],
+      "title": "LimitationMapping",
+      "type": "object"
+    },
+    "ModelOutput": {
+      "additionalProperties": false,
+      "description": "What the model produces for one claim, and the shape of every reference target.",
+      "properties": {
+        "grounds": {
+          "description": "Rejection grounds. Empty means no rejection.",
+          "items": {
+            "$ref": "#/$defs/Ground"
+          },
+          "title": "Grounds",
+          "type": "array"
+        },
+        "claim_mapping": {
+          "description": "This claim's own limitations (parent limitations belong to the parent claim's example).",
+          "items": {
+            "$ref": "#/$defs/LimitationMapping"
+          },
+          "title": "Claim Mapping",
+          "type": "array"
+        },
+        "explanation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Reasoning for the decision. Null in a target when the examiner gave none.",
+          "title": "Explanation"
+        },
+        "evidence_status": {
+          "enum": [
+            "supported",
+            "partially_supported",
+            "unsupported",
+            "not_applicable"
+          ],
+          "title": "Evidence Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_status"
+      ],
+      "title": "ModelOutput",
+      "type": "object"
+    },
+    "Passage": {
+      "additionalProperties": false,
+      "properties": {
+        "passage_id": {
+          "description": "Unique within the example, conventionally '<document_id>:<locator key>', e.g. '20130173955:0092'.",
+          "title": "Passage Id",
+          "type": "string"
+        },
+        "locator": {
+          "description": "How the document cites it, e.g. '[0092]'.",
+          "title": "Locator",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "passage_id",
+        "locator",
+        "text"
+      ],
+      "title": "Passage",
+      "type": "object"
+    },
+    "PinCite": {
+      "additionalProperties": false,
+      "properties": {
+        "raw": {
+          "description": "As written by the examiner, e.g. 'paragraph [0092]'.",
+          "title": "Raw",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "paragraph",
+            "column_line"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Document Id"
+        },
+        "resolved_passage_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Resolved Passage Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "raw",
+        "kind",
+        "document_id"
+      ],
+      "title": "PinCite",
+      "type": "object"
+    },
+    "PriorArtDocument": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "description": "US publication (11 digits), US patent (number without commas), or foreign/non-patent identifier, as normalized by the office action parser.",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "us_publication",
+            "us_patent",
+            "foreign",
+            "non_patent"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "title": {
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
+        "passages": {
+          "description": "Retrieved passages. Empty means the document is known only by its ID.",
+          "items": {
+            "$ref": "#/$defs/Passage"
+          },
+          "title": "Passages",
+          "type": "array"
+        }
+      },
+      "required": [
+        "document_id",
+        "kind"
+      ],
+      "title": "PriorArtDocument",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "application_id": {
+          "title": "Application Id",
+          "type": "string"
+        },
+        "office_action_id": {
+          "description": "File-wrapper document ID (= OARD ifw_number).",
+          "title": "Office Action Id",
+          "type": "string"
+        },
+        "document_code": {
+          "description": "CTNF (non-final) or CTFR (final).",
+          "title": "Document Code",
+          "type": "string"
+        },
+        "mail_date": {
+          "title": "Mail Date",
+          "type": "string"
+        },
+        "art_unit": {
+          "default": "",
+          "title": "Art Unit",
+          "type": "string"
+        },
+        "uspc_class": {
+          "default": "",
+          "title": "Uspc Class",
+          "type": "string"
+        },
+        "decision_source": {
+          "description": "Where the decision comes from in the office action text.",
+          "enum": [
+            "rejection_statement",
+            "allowable_dependent",
+            "allowed"
+          ],
+          "title": "Decision Source",
+          "type": "string"
+        },
+        "oard_agrees": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the OARD rows give the same statutes for this claim; None if OARD has no row covering it.",
+          "title": "Oard Agrees"
+        },
+        "claims_source": {
+          "enum": [
+            "publication",
+            "as_filed_ocr"
+          ],
+          "title": "Claims Source",
+          "type": "string"
+        },
+        "claims_amended_before_action": {
+          "title": "Claims Amended Before Action",
+          "type": "boolean"
+        },
+        "claim_text_verified": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the examiner's restatement of the claim matches the input claim text; None if not checked.",
+          "title": "Claim Text Verified"
+        },
+        "examiner_text": {
+          "default": "",
+          "description": "The examiner's statement and reasoning for this claim, verbatim. Reference material only; never model input.",
+          "title": "Examiner Text",
+          "type": "string"
+        },
+        "pin_cites": {
+          "items": {
+            "$ref": "#/$defs/PinCite"
+          },
+          "title": "Pin Cites",
+          "type": "array"
+        },
+        "explanation_source": {
+          "default": "none",
+          "enum": [
+            "examiner_reasoning",
+            "none"
+          ],
+          "title": "Explanation Source",
+          "type": "string"
+        },
+        "flags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Flags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "application_id",
+        "office_action_id",
+        "document_code",
+        "mail_date",
+        "decision_source",
+        "claims_source",
+        "claims_amended_before_action"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "example_id": {
+      "description": "'<office_action_id>:<claim number>'.",
+      "title": "Example Id",
+      "type": "string"
+    },
+    "input": {
+      "$ref": "#/$defs/ExampleInput"
+    },
+    "target": {
+      "$ref": "#/$defs/ModelOutput"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    }
+  },
+  "required": [
+    "example_id",
+    "input",
+    "target",
+    "provenance"
+  ],
+  "title": "Example",
+  "type": "object"
+}

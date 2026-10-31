@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "example_id": "I1HUBKC5PXXIFW4:4",
+  "input": {
+    "claim": {
+      "number": 4,
+      "text": "4. The method according to claim 1 comprising: before a preplanned disconnection of said given enclosure: identifying a RAID GROUP having more than a predefined number of members stored in the given enclosure, wherein said predefined number corresponds to a number of said N parity members in said RAID groups; allocating an alternative RAID group for the identified RAID group; wherein said alternative RAID group does not have more than said predefined number of members in said given enclosure; copying data from said identified RAID group to said alternative RAID group; and disconnecting said given enclosure upon successful copying."
+    },
+    "parent_claims": [
+      {
+        "number": 1,
+        "text": "1. For use with a storage system comprising a plurality of disk enclosures constituting a physical storage space, each disk enclosure comprising a plurality of physical disks, said physical storage space is configured as a plurality of RAID groups, each RAID group comprising N parity members; a method of managing allocation of data in case an enclosure becomes unavailable, the method comprising: responsive to a write request: identifying in a stripe to be written to a given RAID group at least one section allocated to a disk in an unavailable enclosure; allocating at least one temporary RAID group in a spare storage space of the storage system; and writing data related to the write request in the alternative RAID group."
+      }
+    ],
+    "prior_art": [
+      {
+        "document_id": "20130173955",
+        "kind": "us_publication",
+        "title": "DATA PROTECTION IN A RANDOM ACCESS DISK ARRAY",
+        "passages": [
+          {
+            "passage_id": "20130173955:0092",
+            "locator": "[0092]",
+            "text": "A common fault of memory arrays is that a disk may be temporarily unavailable, known as a hiccup. For data write a hiccup can be ameliorated by using the memory table 18 to divert a current write operation from the disk which is temporarily unavailable, and thus avoid having to wait for the particular disk to become available again. For a data read, the parity information present on other disks can be used to reconstruct data that is currently on the unavailable disk."
+          },
+          {
+            "passage_id": "20130173955:0131",
+            "locator": "[0131]",
+            "text": "Reference is now made to FIG. 7, which is a simplified flow diagram illustrating a procedure for aborting a data rebuild process that has already begun but not yet finished. When re-inserting a disk, or when a disk comes back to life, the array may take advantage of the data on this disk by aborting the rebuild process 7.1. If the rebuild process was in progress, it may be aborted. All zeroed blocks, marked as not in parity, have been removed from their stripe's parity blocks. If they were previously used they were also recovered and are present elsewhere. All non-zeroed blocks may be used as they are. Thus the disk may simply be marked as available—stage 7.2."
+          }
+        ]
+      }
+    ]
+  },
+  "target": {
+    "grounds": [],
+    "claim_mapping": [],
+    "explanation": null,
+    "evidence_status": "not_applicable"
+  },
+  "provenance": {
+    "application_id": "13624988",
+    "office_action_id": "I1HUBKC5PXXIFW4",
+    "document_code": "CTNF",
+    "mail_date": "2014-10-22",
+    "art_unit": "2137",
+    "uspc_class": "711",
+    "decision_source": "allowable_dependent",
+    "oard_agrees": true,
+    "claims_source": "publication",
+    "claims_amended_before_action": false,
+    "claim_text_verified": null,
+    "examiner_text": "Claims 4-5 and 16-17 are objected to as being dependent upon a rejected base claim, but would be allowable if rewritten in independent form including all of the limitations of the base claim and any intervening claims.",
+    "pin_cites": [],
+    "explanation_source": "none",
+    "flags": [
+      "no_reference_explanation"
+    ]
+  }
+}

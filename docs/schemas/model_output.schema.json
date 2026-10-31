@@ -1,0 +1,121 @@
+{
+  "$defs": {
+    "Ground": {
+      "additionalProperties": false,
+      "properties": {
+        "statute": {
+          "enum": [
+            "101",
+            "102",
+            "103",
+            "112"
+          ],
+          "title": "Statute",
+          "type": "string"
+        },
+        "references": {
+          "description": "Document IDs the ground relies on. 102 needs exactly one, 103 at least one, and 101/112 none.",
+          "items": {
+            "type": "string"
+          },
+          "title": "References",
+          "type": "array"
+        }
+      },
+      "required": [
+        "statute"
+      ],
+      "title": "Ground",
+      "type": "object"
+    },
+    "LimitationMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "limitation": {
+          "description": "A limitation of this claim, verbatim.",
+          "minLength": 1,
+          "title": "Limitation",
+          "type": "string"
+        },
+        "disclosed": {
+          "description": "Whether the cited art discloses or suggests it.",
+          "title": "Disclosed",
+          "type": "boolean"
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Id"
+        },
+        "passage_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Passage Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "limitation",
+        "disclosed"
+      ],
+      "title": "LimitationMapping",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "What the model produces for one claim, and the shape of every reference target.",
+  "properties": {
+    "grounds": {
+      "description": "Rejection grounds. Empty means no rejection.",
+      "items": {
+        "$ref": "#/$defs/Ground"
+      },
+      "title": "Grounds",
+      "type": "array"
+    },
+    "claim_mapping": {
+      "description": "This claim's own limitations (parent limitations belong to the parent claim's example).",
+      "items": {
+        "$ref": "#/$defs/LimitationMapping"
+      },
+      "title": "Claim Mapping",
+      "type": "array"
+    },
+    "explanation": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Reasoning for the decision. Null in a target when the examiner gave none.",
+      "title": "Explanation"
+    },
+    "evidence_status": {
+      "enum": [
+        "supported",
+        "partially_supported",
+        "unsupported",
+        "not_applicable"
+      ],
+      "title": "Evidence Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "evidence_status"
+  ],
+  "title": "ModelOutput",
+  "type": "object"
+}
