@@ -65,7 +65,7 @@ class ODPClient:
         return self.cache_dir / kind / f"{digest}{suffix}"
 
     def _get(self, url: str, params: dict[str, Any] | None = None) -> requests.Response | None:
-        """GET with throttling and retry on 429/5xx. Returns None on 404."""
+        """GET with throttling and retry on 429/5xx and network errors. Returns None on 404."""
         for attempt in range(self.max_retries):
             wait = self.min_interval - (time.monotonic() - self._last)
             if wait > 0:
@@ -73,14 +73,15 @@ class ODPClient:
             self._last = time.monotonic()
             self.requests_made += 1
             try:
-                resp = self.session.get(url, params=params, timeout=120)
-            except requests.ConnectionError:
+                resp = self.session.get(url, params=params, timeout=(15, 90))
+            except (requests.ConnectionError, requests.Timeout):
                 time.sleep(2**attempt)
                 continue
             if resp.status_code == 404:
                 return None
             if resp.status_code == 429 or resp.status_code >= 500:
-                time.sleep(float(resp.headers.get("Retry-After", 2**attempt)))
+                # Cap the server's Retry-After so one throttled response can't stall a run.
+                time.sleep(min(60.0, float(resp.headers.get("Retry-After", 2**attempt))))
                 continue
             resp.raise_for_status()
             return resp

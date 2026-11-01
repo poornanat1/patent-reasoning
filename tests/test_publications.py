@@ -32,3 +32,10 @@ def test_parse_publication():
     assert pub.claims[1].independent
     assert pub.claims[2].depends_on == [1]
     assert pub.abstract == "An apparatus."
+
+
+def test_unparseable_xml_gives_an_empty_publication():
+    from patent_reasoning.data.publications import parse_claim_statuses
+
+    assert parse_publication("\x00not xml").claims == {}
+    assert parse_claim_statuses("\x00not xml") == {}

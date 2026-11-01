@@ -50,10 +50,47 @@ def claims_amended_before(docs: list[dict[str, Any]], app: dict[str, Any], mail_
     return False
 
 
+def xml_download_url(doc: dict[str, Any] | None) -> str | None:
+    return next(
+        (o["downloadUrl"] for o in (doc or {}).get("downloadOptionBag", [])
+         if o.get("mimeTypeIdentifier") == "XML"),
+        None,
+    )  # fmt: skip
+
+
+def latest_claims_listing(
+    docs: list[dict[str, Any]], app: dict[str, Any], mail_date: str
+) -> dict[str, Any] | None:
+    """The last CLM document filed after the application and before ``mail_date``, if any.
+
+    This is the claim listing of the most recent amendment, i.e. the claims the examiner
+    actually examined.
+    """
+    filed = (app.get("applicationMetaData") or {}).get("filingDate", "")[:10]
+    later = [d for d in docs if d.get("documentCode") == "CLM"
+             and filed < d.get("officialDate", "")[:10] < mail_date]  # fmt: skip
+    return max(later, key=lambda d: d["officialDate"], default=None)
+
+
 def select_office_actions(
-    con: duckdb.DuckDBPyConnection, n: int, year_min: int, year_max: int, salt: str
+    con: duckdb.DuckDBPyConnection,
+    n: int,
+    year_min: int,
+    year_max: int,
+    salt: str,
+    first_only: bool = False,
 ) -> list[dict[str, Any]]:
-    """Deterministically pick non-final actions with a 102/103 rejection and clean parsing flags."""
+    """Deterministically pick non-final actions with a 102/103 rejection and clean parsing flags.
+
+    With ``first_only``, keep only each application's first office action, where the pending
+    claims are most likely still the claims as filed.
+    """
+    first = (
+        """AND o.mail_dt = (SELECT min(f.mail_dt) FROM office_actions f
+                            WHERE f.app_id = o.app_id AND f.document_cd IN ('CTNF', 'CTFR'))"""
+        if first_only
+        else ""
+    )
     rows = con.execute(
         f"""
         SELECT o.app_id, o.ifw_number, o.document_cd, o.mail_dt, o.art_unit, o.uspc_class
@@ -63,6 +100,7 @@ def select_office_actions(
           AND year(o.mail_dt::DATE) BETWEEN {int(year_min)} AND {int(year_max)}
           AND EXISTS (SELECT 1 FROM rejections r WHERE r.ifw_number = o.ifw_number
                       AND r.action_type IN ('102', '103'))
+          {first}
         """
     ).fetchall()
     cols = ["app_id", "ifw_number", "document_cd", "mail_dt", "art_unit", "uspc_class"]
@@ -74,7 +112,7 @@ def select_office_actions(
     return sorted(actions, key=key)[:n]
 
 
-def _fulltext_uri(app: dict[str, Any], kind: str) -> str | None:
+def fulltext_uri(app: dict[str, Any], kind: str) -> str | None:
     meta = app.get("grantDocumentMetaData" if kind == "grant" else "pgpubDocumentMetaData") or {}
     return meta.get("fileLocationURI")
 
@@ -134,33 +172,39 @@ class Joiner:
 
     # -- prior art ----------------------------------------------------------
 
-    def _fetch_reference(self, doc_id: str) -> tuple[str | None, Publication | None]:
+    def reference_application(self, doc_id: str) -> dict[str, Any] | None:
+        """The file-wrapper record of a US patent or publication, or None."""
+        if len(doc_id) == 11 and doc_id.isdigit():
+            queries = [f"applicationMetaData.earliestPublicationNumber:US{doc_id}{k}"
+                       for k in ("A1", "A2", "A9")]  # fmt: skip
+        elif doc_id.isdigit():
+            queries = [f"applicationMetaData.patentNumber:{doc_id}"]
+        else:
+            queries = []
+        for q in queries:
+            if apps := self.client.search_applications(q):
+                return apps[0]
+        return None
+
+    def fetch_reference(self, doc_id: str) -> tuple[str | None, Publication | None]:
         """Resolve a US patent/publication number to its application and full text."""
         if doc_id in self._pub_cache:
             return self._pub_cache[doc_id]
         result: tuple[str | None, Publication | None] = (None, None)
-        if len(doc_id) == 11 and doc_id.isdigit():
-            queries = [f"applicationMetaData.earliestPublicationNumber:US{doc_id}{k}"
-                       for k in ("A1", "A2", "A9")]  # fmt: skip
-            kind = "pgpub"
-        elif doc_id.isdigit():
-            queries = [f"applicationMetaData.patentNumber:{doc_id}"]
-            kind = "grant"
-        else:
-            queries, kind = [], ""
-        for q in queries:
-            apps = self.client.search_applications(q)
-            if not apps:
-                continue
-            app = apps[0]
-            uri = _fulltext_uri(app, kind)
+        if app := self.reference_application(doc_id):
+            uri = fulltext_uri(app, "pgpub" if len(doc_id) == 11 else "grant")
             pub = None
             if uri and (xml := self.client.fulltext_xml(uri)):
                 pub = parse_publication(xml)
             result = (app["applicationNumberText"], pub)
-            break
         self._pub_cache[doc_id] = result
         return result
+
+    def first_inventor(self, doc_id: str) -> str | None:
+        """Last name of a US reference's first inventor, which examiners use as shorthand."""
+        app = self.reference_application(doc_id) or {}
+        inventors = (app.get("applicationMetaData") or {}).get("inventorBag") or []
+        return (inventors[0].get("lastName") or None) if inventors else None
 
     # -- per office action --------------------------------------------------
 
@@ -173,11 +217,7 @@ class Joiner:
         docs = self.client.documents(app_id)
         oa_doc = next((d for d in docs if d.get("documentIdentifier") == ifw), None)
         funnel["oa_in_file_wrapper"] = oa_doc is not None
-        xml_url = next(
-            (o["downloadUrl"] for o in (oa_doc or {}).get("downloadOptionBag", [])
-             if o.get("mimeTypeIdentifier") == "XML"),
-            None,
-        )  # fmt: skip
+        xml_url = xml_download_url(oa_doc)
         funnel["oa_xml_available"] = xml_url is not None
         oa_xml = self.client.document_xml(xml_url) if xml_url else None
         funnel["oa_text"] = bool(oa_xml)
@@ -194,7 +234,7 @@ class Joiner:
 
         app = self.client.application(app_id) or {}
         amended = claims_amended_before(docs, app, mail_date)
-        pgpub_uri = _fulltext_uri(app, "pgpub")
+        pgpub_uri = fulltext_uri(app, "pgpub")
         own_pub = (
             parse_publication(xml)
             if pgpub_uri and (xml := self.client.fulltext_xml(pgpub_uri))
@@ -203,7 +243,7 @@ class Joiner:
         funnel["published_claims"] = bool(own_pub and own_pub.claims)
         funnel["claims_amended_before_action"] = amended
         own_claims, claims_source = (own_pub.claims, "publication") if own_pub else ({}, "")
-        if not own_claims and (as_filed := self._as_filed_claims(docs, app)):
+        if not own_claims and (as_filed := self.as_filed_claims(docs, app)):
             # Unpublished applications: fall back to the OCR'd claims filed with the application.
             own_claims, claims_source = as_filed, "as_filed_ocr"
         funnel["claims_source"] = claims_source
@@ -242,7 +282,7 @@ class Joiner:
             )
         return records, funnel
 
-    def _as_filed_claims(self, docs: list[dict[str, Any]], app: dict[str, Any]) -> dict[int, Claim]:
+    def as_filed_claims(self, docs: list[dict[str, Any]], app: dict[str, Any]) -> dict[int, Claim]:
         filed = (app.get("applicationMetaData") or {}).get("filingDate", "")[:10]
         for d in docs:
             if d.get("documentCode") != "CLM" or d.get("officialDate", "")[:10] != filed:
@@ -300,7 +340,7 @@ class Joiner:
                 doc_id, doc_id in oard_doc_ids, doc_id in in_text, alias_of.get(doc_id), kind
             )
             if kind != "foreign":
-                ref.source_app, pubs[doc_id] = self._fetch_reference(doc_id)
+                ref.source_app, pubs[doc_id] = self.fetch_reference(doc_id)
                 ref.fulltext = pubs[doc_id] is not None
             record.references.append(ref)
 

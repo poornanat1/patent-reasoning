@@ -83,6 +83,14 @@ def test_pin_cites_are_attributed_to_the_right_reference(rejections):
         ("U.S. 2004/0126415 A1", ["20040126415"]),
         ("WO 2005/012345 and JP 2004-123456", ["WO2005012345", "JP2004123456"]),
         ("claims 1-3, 5 and 7", []),
+        ("Schubert ( 6, 817, 711 B2) in view of Simone (5, 720, 040)", ["6817711", "5720040"]),
+        ("anticipated by Spahrbier 3843410.", ["3843410"]),
+        ("over US patent 6127444 by Kadri", ["6127444"]),
+        ("Parnell (Des. 373,240) in view of Willows et al. (D 497,245)", ["D373240", "D497245"]),
+        ("about 1000000 cells per well", []),
+        ("anticipated by US patent 5,003,185, hereafter Burgio.", ["5003185"]),
+        ("over EP 1 192 959 as applied to claims 1, 3-4 above", ["EP1192959"]),
+        ("by European Patent Application 1 455 128 A1 to Scanferia", ["EP1455128"]),
     ],
 )
 def test_find_references(text, expected):
@@ -173,3 +181,12 @@ def test_cites_to_own_specification_are_tagged_self():
     rej = RejectionText("103", [1], "", text, find_pin_cites(text))
     attribute_pin_cites(rej, find_aliases(text))
     assert [c.document_id for c in rej.pin_cites] == ["20070019864", SELF]
+
+
+def test_statement_is_not_cut_at_initials():
+    from patent_reasoning.data.office_action import Block
+
+    text = ("Claim 7 is rejected under 35 U.S.C. 103(a) as being unpatentable over Scheiner in "
+            "view of St. Germain and F.C. Smith. Scheiner discloses a lid.")  # fmt: skip
+    (rej,) = extract_rejections([Block("07-21", text)])
+    assert rej.statement.endswith("F.C. Smith.")

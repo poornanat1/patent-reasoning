@@ -111,6 +111,7 @@ def parse_claim_list(text: str) -> list[int]:
 _ABBREVIATIONS = {
     "u", "s", "u.s", "u.s.c", "pat", "no", "nos", "app", "appl", "pub", "publ", "al", "et",
     "fig", "figs", "col", "cols", "para", "paras", "e.g", "i.e", "ser", "seq", "vs",
+    "st", "jr", "sr", "dr", "inc", "corp", "co", "ltd",
 }  # fmt: skip
 
 
@@ -119,6 +120,8 @@ def sentence_end(text: str, start: int) -> int:
     for m in re.finditer(r"\.(?=\s+[A-Z(]|\s*$)", text[start:]):
         word = re.search(r"([A-Za-z.]+)$", text[: start + m.start()])
         if word and word.group(1).lower().rstrip(".") in _ABBREVIATIONS:
+            continue
+        if word and re.fullmatch(r"(?:[A-Z]\.)*[A-Z]", word.group(1)):  # initials: "F.C", "St. K.N"
             continue
         return start + m.end()
     return len(text)
@@ -157,19 +160,29 @@ def extract_rejections(blocks: list[Block]) -> list[RejectionText]:
 # Prior-art references and pin cites
 # ---------------------------------------------------------------------------
 
-# Patent "5,688,523" anywhere, or a bare 7-8 digit number after a cue such as "US", "Pat.",
-# "No." or "#" ("US Patent #7679495", "U.S. Pat. No. 7679495"); publication "2004/0126415".
+# Patent "5,688,523" (or "6, 817, 711") anywhere, or a bare 7-8 digit number after a cue such
+# as "US", "Pat.", "No." or "#" ("US Patent #7679495", "U.S. Pat. No. 7679495"); publication
+# "2004/0126415".
 _PATENT = re.compile(
-    r"(?<![\d/,])(\d{1,2},\d{3},\d{3})(?![\d,])"
-    r"|(?:U\.?\s?S\.?|USPN|Pat(?:ent)?\.?|No\.?|#)[\s#.:]*(?:Pat(?:ent)?\.?\s*)?(?:No\.?\s*)?#?\s*"
+    r"(?<![\d/,])(\d{1,2},\s?\d{3},\s?\d{3})(?!\d|,\d)"
+    r"|(?:U\.?\s?S\.?|USPN|[Pp]at(?:ent)?\.?|No\.?|#)[\s#.:]*(?:[Pp]at(?:ent)?\.?\s*)?"
+    r"(?:[Nn]o\.?\s*)?#?\s*"
     r"(\d{7,8})(?![\d/])"
 )
+# A bare 7-digit number right after a name: "Spahrbier 3843410", "Smith (3843410)".
+_NAMED_NUMBER = re.compile(r"\b[A-Z][A-Za-z'’\-]+(?:\s+et\.?\s+al\.?)?,?\s*\(?\s*(\d{7})(?![\d/,])")
+# Design patents: "Des. 373,240", "D 497,245" -> "D373240".
+_DESIGN = re.compile(r"\b(?:Des\.?|D)\s?(\d{3},\d{3}|\d{6})(?![\d,])")
 _PUB = re.compile(r"(?<!\d)((?:19|20)\d{2})\s?[/-]?\s?(\d{7})(?!\d)")
 
 # Foreign documents (EP 1449527, EP 1,621,137, WO 2005/012345, KR10-2004-0042965) can't be
 # fetched from the USPTO, but must be recognized so their pin cites aren't attributed to a
 # US reference and their digits aren't read as US numbers.
-_FOREIGN = re.compile(r"\b(EP|WO|JP|DE|GB|FR|CN|KR|CA|AU)\s?(\d[\d/,\-]{4,16}\d)(?![\d/])")
+_FOREIGN = re.compile(
+    r"\b(EP|WO|JP|DE|GB|FR|CN|KR|CA|AU)\s?(\d\s\d{3}\s\d{3}(?!\s?\d)|\d[\d/,\-]{4,16}\d)(?![\d/])"
+    r"|\b(European)\s+Patent(?:\s+(?:Application|Publication))?(?:\s+No\.?)?\s+"
+    r"(\d[\s,]?\d{3}[\s,]?\d{3})(?!\d)"
+)
 
 
 def normalize_patent(number: str) -> str:
@@ -179,11 +192,15 @@ def normalize_patent(number: str) -> str:
 def find_references(text: str) -> list[tuple[int, str]]:
     """(offset, normalized document number) for every patent/publication number mentioned.
 
-    US patents normalize to their number without commas ("5688523"), US publications to
-    11 digits ("20040126415"), foreign documents to country code + digits ("EP1449527").
+    US patents normalize to their number without commas ("5688523"), design patents to
+    "D" + digits, US publications to 11 digits ("20040126415"), foreign documents to country
+    code + digits ("EP1449527").
     """
     foreign = list(_FOREIGN.finditer(text))
-    refs = [(m.start(), m.group(1) + re.sub(r"\D", "", m.group(2))) for m in foreign]
+    refs = [
+        (m.start(), (m.group(1) or "EP") + re.sub(r"\D", "", m.group(2) or m.group(4)))
+        for m in foreign
+    ]
 
     def inside_foreign(pos: int) -> bool:
         return any(m.start() <= pos < m.end() for m in foreign)
@@ -193,12 +210,15 @@ def find_references(text: str) -> list[tuple[int, str]]:
         for m in _PUB.finditer(text)
         if not inside_foreign(m.start())
     ]
+    refs += [(m.start(1), "D" + re.sub(r"\D", "", m.group(1))) for m in _DESIGN.finditer(text)]
     taken = {o for o, _ in refs}
-    for m in _PATENT.finditer(text):
-        number = m.group(1) or m.group(2)
-        start = m.start(1) if m.group(1) else m.start(2)
+    patents = [(m.start(1) if m.group(1) else m.start(2), m.group(1) or m.group(2))
+               for m in _PATENT.finditer(text)]  # fmt: skip
+    patents += [(m.start(1), m.group(1)) for m in _NAMED_NUMBER.finditer(text)]
+    for start, number in sorted(patents):
         if not inside_foreign(start) and not any(abs(start - o) < 12 for o in taken):
             refs.append((start, normalize_patent(number)))
+            taken.add(start)
     return sorted(refs)
 
 
