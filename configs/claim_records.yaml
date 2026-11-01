@@ -1,0 +1,17 @@
+# Claim-level records: every claim the examiner rejected, allowed or found allowable in the
+# first non-final office action of each sampled application.
+name: claim-records
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  sample_dir: data/interim/oard_sample
+  cache_dir: data/raw/odp
+  out_dir: data/interim/claim_records
+  report: docs/reports/claim_records_summary.json
+  n_office_actions: 500
+  first_only: true
+  year_min: 2008
+  year_max: 2014
+  salt: claims-v1

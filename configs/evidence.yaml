@@ -1,0 +1,29 @@
+# Evidence dataset: the cited prior art as passages, and the passages every experiment
+# shows the model for each claim (BM25 on the claim and its parents, fixed budget).
+name: evidence
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  claim_records: data/interim/claim_records/claims.jsonl
+  claim_funnel: data/interim/claim_records/funnel.jsonl
+  cache_dir: data/raw/odp
+  out_dir: data/interim/evidence
+  report: docs/reports/evidence_summary.json
+  # action_cited (examiner-cited passages of the whole action, then BM25) or retrieved
+  condition: action_cited
+  # 4096 max sequence - ~550 tokens of claim + parents (p95) - 1000 reserve leaves ~2550.
+  budget:
+    max_tokens: 2500
+    max_passages: 16
+    max_passage_tokens: 300
+    min_per_document: 1
+    claim_weight: 2
+    limitation_depth: 2
+    cited_share: 0.7
+  # Recall of the examiner's pin cites at other evidence budgets, to justify the choice.
+  compare_max_tokens: [500, 1000, 2000, 3000, 4000]
+  max_seq_len: 4096
+  # Instructions plus the structured output the model must leave room for.
+  prompt_reserve_tokens: 1000

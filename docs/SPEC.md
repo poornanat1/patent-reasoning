@@ -11,7 +11,7 @@ The model plays the examiner. It sees one claim and the prior art the examiner h
 **Input**
 
 - The claim text, plus the text of any claims it depends on
-- The cited prior-art documents, as retrieved passages under a fixed context budget that is the same for every experiment
+- The cited prior-art documents, as passages under a fixed context budget that is the same for every experiment (see [Evidence](#evidence))
 
 The examiner's office action is **never** part of the input. It states the outcome ("Claims 1-5 are rejected under 35 U.S.C. 103"), so including it would leak the label.
 
@@ -36,13 +36,31 @@ The examiner's office action is **never** part of the input. It states the outco
 
 ## Labels and negatives
 
-Each example is one claim in one non-final office action.
+Each example is one claim in an application's first non-final office action, where the pending claims are closest to the claims as filed.
 
-- **Rejection grounds:** taken from the examiner's rejection statements in the office action text, cross-checked against the Office Action Research Dataset (OARD). The OARD claim lists miss claims in about 18% of rejections ([feasibility.md](reports/feasibility.md)).
+- **Rejection grounds:** taken from the examiner's rejection statements in the office action text: the statute, plus the references the statement relies on. They're cross-checked against the Office Action Research Dataset (OARD), whose claim lists miss claims in about 18% of rejections ([feasibility.md](reports/feasibility.md)) and also fold in claims named in "as applied to claim 1 above". "Anticipated by or, in the alternative, obvious over X" gives both a 102 and a 103 ground.
 - **No-rejection examples:** claims in the same office action that the examiner *allowed* or *objected to as allowable but dependent on a rejected claim*. The examiner judged these against the same cited art and found it didn't disclose or suggest the added limitations. They share the input distribution of the positives, so the decision can't be read off the context.
 - **Reference targets:** the examiner's reasoning for that claim, with pin cites resolved to the cited passages. For 102/103 these are mapping and explanation targets. For 101/112, only the explanation.
 
 Examiner statements are what the examiner asserted, not independently verified conclusions, and records keep that distinction. Generated text is never treated as ground truth.
+
+**Claim text.** The claims come from the application's publication, or from the claims filed with it when it was never published. The text counts as verified when:
+
+- the latest amendment before the action lists the claim as "(original)", or
+- the examiner's restatement of the claim repeats at least half of its word 4-grams.
+
+An amendment status such as "(currently amended)" or "(new)" marks the text as not what was examined. A loose restatement alone proves nothing, because examiners often argue by reference ("arguments analogous to claim 1 apply").
+
+## Evidence
+
+The prior art for a claim is every document cited in its office action: the documents OARD links to the action, plus those named in the rejections. Each document is split into its abstract and description paragraphs. The same documents go into every claim's input from that action, rejected or allowable.
+
+Passages are chosen under a fixed budget of 2,500 tokens and 16 passages, with each passage capped at 300 tokens. With 4,096 tokens of context, this leaves room for the claim and its parents (549 tokens at the 95th percentile) and 1,000 tokens of instructions and output. There are two conditions:
+
+- **`action_cited` (primary).** First come the passages the examiner pin-cited anywhere in the action, taking up to 70% of the budget. Then BM25 fills the rest, with the best two passages per limitation first, then the best for the claim as a whole. The cited pool is identical for every claim in the action, so it reveals what the examiner looked at, not what the examiner decided about this claim.
+- **`retrieved`.** BM25 only. This is the realistic setting with no examiner involvement, kept as an ablation.
+
+Ranking only ever uses the claim text, never the office action or the label. The examiner's own pin cites for a claim are used only to measure recall, and recall for both conditions is in [evidence_summary.json](reports/evidence_summary.json).
 
 ## Data sources
 

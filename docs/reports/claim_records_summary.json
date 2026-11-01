@@ -1,0 +1,126 @@
+{
+  "office_actions": 500,
+  "office_actions_with_text": 500,
+  "office_actions_with_claims": 490,
+  "office_actions_with_records": 469,
+  "errors": 0,
+  "claims_in_dispositions": 7196,
+  "claims_missing_text": 191,
+  "records": 7005,
+  "applications": 469,
+  "decisions": {
+    "103": 3070,
+    "102": 2062,
+    "103+112": 527,
+    "no_rejection": 324,
+    "102+112": 275,
+    "102+103": 155,
+    "101+103": 135,
+    "101+102": 127,
+    "101+103+112": 112,
+    "112": 85,
+    "102+103+112": 47,
+    "101": 24,
+    "101+102+103": 22,
+    "101+102+112": 21,
+    "101+112": 14,
+    "101+102+103+112": 5
+  },
+  "decision_source": {
+    "rejection_statement": 6681,
+    "allowable_dependent": 256,
+    "allowed": 68
+  },
+  "decision_class_counts": {
+    "102": 2714,
+    "103": 4073,
+    "no_rejection": 324,
+    "101": 460,
+    "112": 1086
+  },
+  "negatives": 324,
+  "negatives_share": 0.046,
+  "art_allowable_with_112_only": 18,
+  "oard_covered": 6663,
+  "oard_agrees": 6350,
+  "oard_agreement_rate": 0.953,
+  "grounds_invalid": 1059,
+  "grounds": 9094,
+  "claims_source": {
+    "publication": 6629,
+    "as_filed_ocr": 376
+  },
+  "claims_amended_before_action": 2587,
+  "pending_status": {
+    "None": 6194,
+    "original": 461,
+    "previously presented": 113,
+    "currently amended": 138,
+    "new": 91,
+    "withdrawn": 8
+  },
+  "claim_text_verified": {
+    "True": 2621,
+    "None": 4034,
+    "False": 350
+  },
+  "claim_text_reliable": 6423,
+  "restatement_threshold": 0.5,
+  "restatement_checked": 3480,
+  "restatement_overlap_quartiles": [
+    0.35,
+    0.731,
+    0.897
+  ],
+  "explanation_source": {
+    "examiner_reasoning": 6132,
+    "none": 822,
+    "reasons_for_allowance": 51
+  },
+  "limitations_per_claim": 1.649,
+  "art_rejections": 6558,
+  "art_rejections_with_paragraph_evidence": 1567,
+  "art_limitation_coverage_mean": 0.397,
+  "pin_cites": 12295,
+  "pin_cites_paragraph_resolved": 5151,
+  "pin_cites_mapped_to_limitation": 3802,
+  "quality": {
+    "labeled": 3990,
+    "grounded": 1557,
+    "weak": 1458
+  },
+  "quality_by_decision_source": {
+    "rejection_statement": {
+      "labeled": 3919,
+      "grounded": 1330,
+      "weak": 1432
+    },
+    "allowable_dependent": {
+      "grounded": 171,
+      "labeled": 66,
+      "weak": 19
+    },
+    "allowed": {
+      "grounded": 56,
+      "labeled": 5,
+      "weak": 7
+    }
+  },
+  "flags": {
+    "no_paragraph_evidence": 5113,
+    "reasoning_mention": 1773,
+    "no_prior_art_text": 1696,
+    "restatement_low_overlap": 924,
+    "no_reference_explanation": 822,
+    "ground_references_unresolved": 680,
+    "reasoning_shared": 388,
+    "claims_as_filed_ocr": 376,
+    "ground_non_patent_literature": 293,
+    "claim_status_currently_amended": 138,
+    "claim_status_previously_presented": 113,
+    "claim_status_new": 91,
+    "conflicting_disposition": 32,
+    "claim_status_withdrawn": 8
+  },
+  "api_requests": 0
+}

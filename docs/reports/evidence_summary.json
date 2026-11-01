@@ -1,0 +1,113 @@
+{
+  "budget": {
+    "max_tokens": 2500,
+    "max_passages": 16,
+    "max_passage_tokens": 300,
+    "min_per_document": 1,
+    "claim_weight": 2,
+    "limitation_depth": 2,
+    "cited_share": 0.7
+  },
+  "documents": 1345,
+  "documents_by_kind": {
+    "us_patent": 633,
+    "us_publication": 647,
+    "foreign": 65
+  },
+  "documents_with_fulltext": {
+    "us_patent": 187,
+    "us_publication": 504
+  },
+  "passages": 88935,
+  "passages_per_document_median": 83,
+  "records": 7005,
+  "records_without_any_passages": 1696,
+  "records_without_any_passages_by_quality": {
+    "labeled": 1259,
+    "weak": 437
+  },
+  "records_by_quality": {
+    "labeled": 3990,
+    "grounded": 1557,
+    "weak": 1458
+  },
+  "evidence_tokens_median": 2469,
+  "claim_tokens_p50_p95_max": [
+    237,
+    549,
+    3604
+  ],
+  "prompt_reserve_tokens": 1000,
+  "max_seq_len": 4096,
+  "records_within_max_seq_len": 6892,
+  "condition": "action_cited",
+  "action_cited_pool_size_median": 1,
+  "pin_cite_recall": {
+    "action_cited": {
+      "records": 1568,
+      "passage_recall": 0.594,
+      "any_hit_rate": 0.908
+    },
+    "retrieved": {
+      "records": 1568,
+      "passage_recall": 0.207,
+      "any_hit_rate": 0.487
+    }
+  },
+  "pin_cite_recall_by_max_tokens": {
+    "action_cited": {
+      "500": {
+        "records": 1568,
+        "passage_recall": 0.228,
+        "any_hit_rate": 0.586
+      },
+      "1000": {
+        "records": 1568,
+        "passage_recall": 0.357,
+        "any_hit_rate": 0.74
+      },
+      "2000": {
+        "records": 1568,
+        "passage_recall": 0.537,
+        "any_hit_rate": 0.88
+      },
+      "3000": {
+        "records": 1568,
+        "passage_recall": 0.649,
+        "any_hit_rate": 0.945
+      },
+      "4000": {
+        "records": 1568,
+        "passage_recall": 0.722,
+        "any_hit_rate": 0.967
+      }
+    },
+    "retrieved": {
+      "500": {
+        "records": 1568,
+        "passage_recall": 0.069,
+        "any_hit_rate": 0.228
+      },
+      "1000": {
+        "records": 1568,
+        "passage_recall": 0.116,
+        "any_hit_rate": 0.335
+      },
+      "2000": {
+        "records": 1568,
+        "passage_recall": 0.181,
+        "any_hit_rate": 0.441
+      },
+      "3000": {
+        "records": 1568,
+        "passage_recall": 0.246,
+        "any_hit_rate": 0.538
+      },
+      "4000": {
+        "records": 1568,
+        "passage_recall": 0.295,
+        "any_hit_rate": 0.599
+      }
+    }
+  }
+}
