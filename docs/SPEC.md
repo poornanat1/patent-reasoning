@@ -134,7 +134,7 @@ All variants use the same evidence retrieval and context budget, so differences 
 
 Thinking mode stays off everywhere. Otherwise prompt-optimized variants could reason at length while fine-tuned ones don't, which would confound both accuracy and cost.
 
-**Cross-model check.** If budget allows, the best fine-tuned variant and the best prompt-optimized variant are rerun on Gemma 4, to test whether the conclusion depends on the base model. The evidence budget is re-measured with each model's tokenizer; until then, tokens are estimated at 4 characters each.
+The evidence budget is re-measured with the Qwen3 tokenizer; until then, tokens are estimated at 4 characters each.
 
 ## Reproducibility
 
