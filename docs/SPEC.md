@@ -119,12 +119,22 @@ All variants use the same evidence retrieval and context budget, so differences 
 
 | Setting | Value |
 | --- | --- |
-| Base model | 7B–8B instruct (Qwen or Llama class) |
+| Base model | Qwen3-8B, thinking mode off for every variant |
 | Quantization | 4-bit NF4 |
 | LoRA rank / alpha | 16 / 32 |
 | Learning rate | 2e-4 |
 | Epochs | 2 |
 | Max sequence length | 4,096 |
+
+**Why Qwen3-8B.** All six variants share one base model, so what matters is that each gets a stable, fair run, not peak quality:
+
+- QLoRA SFT, DPO and vLLM serving for GEPA all have well-tested support for it.
+- Its size matches the compute plan.
+- It's licensed under Apache 2.0.
+
+Thinking mode stays off everywhere. Otherwise prompt-optimized variants could reason at length while fine-tuned ones don't, which would confound both accuracy and cost.
+
+**Cross-model check.** If budget allows, the best fine-tuned variant and the best prompt-optimized variant are rerun on Gemma 4, to test whether the conclusion depends on the base model. The evidence budget is re-measured with each model's tokenizer; until then, tokens are estimated at 4 characters each.
 
 ## Reproducibility
 
