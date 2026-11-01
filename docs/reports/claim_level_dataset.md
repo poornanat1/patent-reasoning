@@ -5,7 +5,7 @@
 **Result.**
 
 - **Records:** 7,005 claim records from 500 office actions in 469 applications.
-- **Grounded records:** 1,557 (22%). These have a trustworthy label and claim text, cited art with full text, and for 102/103 rejections at least one examiner pin cite resolved to a paragraph.
+- **Grounded records:** 1,561 (22%). These have a trustworthy label and claim text, cited art with full text, and for 102/103 rejections at least one examiner pin cite resolved to a paragraph.
 - **Evidence coverage:** the primary evidence setting puts at least one of the examiner's own cited passages in front of the model for 91% of claims that have resolved pin cites.
 
 Raw numbers: [claim_records_summary.json](claim_records_summary.json) and [evidence_summary.json](evidence_summary.json). Pipelines:
@@ -69,6 +69,7 @@ Fixing reference parsing along the way, with a regression test for each:
 - statements cut off at initials ("in view of St. Germain", "F.C.")
 - explicit numbers now take precedence over a name used for a different document elsewhere in the action
 - priority applications ("claims foreign priority to EP 05001407.5") are no longer counted as references
+- bracketed per-claim headings ("[Claim 5]") now start a claim's segment
 
 ## Claim text
 
@@ -80,9 +81,9 @@ Fixing reference parsing along the way, with a regression test for each:
 Before this work, a claim counted as unreliable whenever *any* amendment preceded the action. That was too cautious: it covered 2,587 records (37%), most of them from preliminary amendments that never touched the claims. It's replaced by two checks:
 
 1. **The amendment's status labels.** Any change to the claims has to come with a full claim listing that labels each claim "(original)", "(currently amended)", "(new)" and so on (37 CFR 1.121(c)). The file wrapper stores this listing as a later `CLM` document. "(original)" verifies the as-filed text (461 claims). Any other status marks it as not the claim examined (350 claims: 138 currently amended, 113 previously presented, 91 new, 8 withdrawn).
-2. **The examiner's restatement.** Examiners usually restate the claim while mapping it to the art. When the examiner's text for that claim repeats at least half of the claim's word 4-grams (ignoring bracketed and parenthetical cites), the text is verified. Of 3,480 claims with a single-claim segment, the quartiles of overlap are 0.35, 0.73 and 0.90. Low overlap doesn't mark a claim unverified, because examiners often argue by reference ("arguments analogous to claim 1 apply").
+2. **The examiner's restatement.** Examiners usually restate the claim while mapping it to the art. When the examiner's text for that claim repeats at least half of the claim's word 4-grams (ignoring bracketed and parenthetical cites), the text is verified. Of 3,504 claims with a single-claim segment, the quartiles of overlap are 0.35, 0.73 and 0.90. Low overlap doesn't mark a claim unverified, because examiners often argue by reference ("arguments analogous to claim 1 apply").
 
-When no listing was filed after the application, the claims as filed are the claims examined. Overall, claim text is reliable for 6,423 records (91.7%): 2,621 verified, plus 3,802 with no later claim listing.
+When no listing was filed after the application, the claims as filed are the claims examined. Overall, claim text is reliable for 6,423 records (91.7%): 2,645 verified, plus 3,778 with no later claim listing.
 
 The OCR'd claims carried page headers and line numbers in the text ("further 15 step"), and these are now stripped.
 
@@ -91,13 +92,13 @@ The OCR'd claims carried page headers and line numbers in the text ("further 15 
 - **Limitations:** each claim is split into its own limitations, 1.65 per claim on average. An independent claim drops its preamble and splits at semicolons and before ", wherein". A dependent claim drops "The method of claim 1, further comprising". Every limitation is a verbatim substring of the claim.
 - **The examiner's text for a claim** comes from:
   - "Regarding claim N" style segments (and "As to", "With respect to" and similar)
-  - otherwise, sentences that name the claim ("[as in claims 3-4]", "addresses claim 19"; 1,773 claims)
+  - otherwise, sentences that name the claim ("[as in claims 3-4]", "addresses claim 19"; 1,753 claims)
   - otherwise, for 101/112, the rejection's whole argument, which usually covers the claim group (388 claims)
 - **Allowable claims:** the explanation is the statement of reasons for allowable subject matter, when it names the claim (51 claims).
-- **No examiner text:** 822 claims, most of them allowable claims, where examiners usually give no reasons.
-- **Pin cites:** 12,295 in claims' reasoning.
-  - 5,151 resolve to publication paragraphs.
-  - 3,802 are matched to the limitation the examiner restated just before the cite, which needs 60% of the limitation's content words in that span.
+- **No examiner text:** 811 claims, most of them allowable claims, where examiners usually give no reasons.
+- **Pin cites:** 12,246 in claims' reasoning.
+  - 5,146 resolve to publication paragraphs.
+  - 3,810 are matched to the limitation the examiner restated just before the cite, which needs 60% of the limitation's content words in that span.
   - On average, the pin cites cover 40% of an art-rejected claim's limitations.
   - Granted patents are cited by column and line, which the XML can't resolve.
 
@@ -105,8 +106,8 @@ The OCR'd claims carried page headers and line numbers in the text ("further 15 
 
 | Tier | Rejected | Allowable dependent | Allowed | Total |
 | --- | --- | --- | --- | --- |
-| Grounded | 1,330 | 171 | 56 | 1,557 |
-| Labeled | 3,919 | 66 | 5 | 3,990 |
+| Grounded | 1,334 | 171 | 56 | 1,561 |
+| Labeled | 3,915 | 66 | 5 | 3,986 |
 | Weak | 1,432 | 19 | 7 | 1,458 |
 
 - **Grounded:** reliable claim text, valid grounds, no conflicting dispositions, and cited art with full text. For a 102/103 rejection it also needs at least one resolved pin cite.
@@ -117,15 +118,17 @@ Validation and test sets take only grounded records.
 
 ## Evidence
 
-**Documents.** The cited art across the 500 actions is 1,345 documents:
+**Documents.** The cited art across the 500 actions is 1,344 documents:
 
 | Kind | Documents | With full text |
 | --- | --- | --- |
 | US publications | 647 | 504 |
-| US patents | 633 | 187 |
+| US patents | 632 | 186 |
 | Foreign | 65 | 0 |
 
-They split into 88,935 passages (abstract plus description paragraphs, median 83 per document, each capped at 300 tokens). Publications keep their printed paragraph numbers as locators ("[0092]"). Grant paragraphs get a position locator that can't be mistaken for an examiner cite.
+They split into 88,749 passages (abstract plus description paragraphs, median 83 per document, each capped at 300 tokens). Publications keep their printed paragraph numbers as locators ("[0092]"). Grant paragraphs get a position locator that can't be mistaken for an examiner cite.
+
+Cited "patents" dated on or after the action are dropped as misread numbers. The one case found was an application serial number read as a patent number.
 
 Document IDs are normalized to one form for both OARD and the office action text:
 - US publications: 11 digits
@@ -138,7 +141,7 @@ Kind codes are dropped, and a test checks that the two sides agree on every form
 
 - **Fixed limit:** 2,500 evidence tokens and 16 passages per claim.
 - **Why this size:** with a 4,096-token context, the claim and its parents (237 tokens at the median, 549 at the 95th percentile) and 1,000 tokens of instructions and output still fit.
-- **Fit:** 98.4% of records (6,892) fit within the limit.
+- **Fit:** 98.4% of records (6,893) fit within the limit.
 - **Token counts:** estimated at 4 characters per token until the base model's tokenizer is fixed.
 
 **Conditions.** Two evidence conditions use this budget. Ranking only ever uses the claim text.
@@ -146,14 +149,14 @@ Kind codes are dropped, and a test checks that the two sides agree on every form
 - **`action_cited` (primary).** First, every passage the examiner pin-cited anywhere in the action, best match to the claim first, up to 70% of the budget. Then BM25 fills the rest: each document's best passage, the best two per limitation, then the best for the whole claim. The cited pool is the same for every claim in the action, rejected or allowable, so it shows what the examiner looked at but not the decision on this claim.
 - **`retrieved`.** BM25 only, with no input from the office action. This is the realistic setting, and it's kept for the ablation.
 
-**Recall.** This measures how often the examiner's own pin cites for the claim reach the input. It covers the 1,568 claims that have resolved pin cites.
+**Recall.** This measures how often the examiner's own pin cites for the claim reach the input. It covers the 1,572 claims that have resolved pin cites.
 
 | Evidence tokens | `action_cited`: claims with ≥1 cited passage | `action_cited`: share of cited passages | `retrieved`: claims with ≥1 | `retrieved`: share |
 | --- | --- | --- | --- | --- |
 | 500 | 59% | 23% | 23% | 7% |
 | 1,000 | 74% | 36% | 34% | 12% |
-| 2,000 | 88% | 54% | 44% | 18% |
-| **2,500 (chosen)** | **91%** | **59%** | **49%** | **21%** |
+| 2,000 | 88% | 54% | 45% | 18% |
+| **2,500 (chosen)** | **91%** | **60%** | **49%** | **21%** |
 | 3,000 | 95% | 65% | 54% | 25% |
 | 4,000 | 97% | 72% | 60% | 30% |
 

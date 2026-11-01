@@ -298,6 +298,13 @@ _MARKER = re.compile(
 )
 
 
+# Bracketed headings some examiners use: "[Claim 5]", "[Claims 6-8]".
+_BRACKET_MARKER = re.compile(
+    r"\[\s*Claims?\s+(?P<claims>\d+(?:\s*(?:,|-|–|&|and|or|through|to)\s*\d+)*)\s*\]",
+    re.IGNORECASE,
+)
+
+
 def _at_sentence_start(text: str, pos: int) -> bool:
     before = text[:pos].rstrip()
     return not before or before[-1] in ".:;)\n" or bool(re.search(r"(?:^|\s)\d+\.$", before))
@@ -319,6 +326,7 @@ def claim_segments(rej: RejectionText) -> list[Segment]:
     """
     text = rej.reasoning
     markers = [m for m in _MARKER.finditer(text) if _at_sentence_start(text, m.start())]
+    markers = sorted(markers + list(_BRACKET_MARKER.finditer(text)), key=lambda m: m.start())
     segments = []
     for i, m in enumerate(markers):
         end = markers[i + 1].start() if i + 1 < len(markers) else len(text)
@@ -585,6 +593,13 @@ class ClaimRecordBuilder:
         relied_on = {d for rej in rejections for g in make_grounds(rej, aliases)
                      for d in g.references}  # fmt: skip
         cited = sorted((oard_cited | in_text | relied_on) - {SELF})
+        # Prior art can't post-date the action. A later "patent" is a misread number, e.g.
+        # an application serial number ("Ser. No. 11/113,115" read as 11,113,115).
+        postdating = [
+            d for d in cited if d.isdigit() and (self.joiner.reference_date(d) or "") >= mail_date
+        ]
+        cited = [d for d in cited if d not in postdating]
+        funnel["references_postdating_action"] = postdating
         pubs: dict[str, Publication | None] = {}
         for doc_id in cited:
             if doc_id.isdigit():
@@ -731,7 +746,8 @@ class ClaimRecordBuilder:
                 texts, explanation_source = named, "reasons_for_allowance"
         if not texts:
             flags.append("no_reference_explanation")
-        if grounds and not any(e.paragraphs for e in evidence):
+        has_art = any(g.statute in PRIOR_ART_STATUTES for g in grounds)
+        if has_art and not any(e.paragraphs for e in evidence):
             flags.append("no_paragraph_evidence")
 
         overlap = max((o for o in overlaps if o is not None), default=None)

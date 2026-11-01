@@ -117,7 +117,7 @@ _ABBREVIATIONS = {
 
 def sentence_end(text: str, start: int) -> int:
     """Index just past the sentence that contains ``start``, skipping citation abbreviations."""
-    for m in re.finditer(r"\.(?=\s+[A-Z(]|\s*$)", text[start:]):
+    for m in re.finditer(r"\.(?=\s+[A-Z(]|\s+\[\s*Claim|\s*$)", text[start:]):
         word = re.search(r"([A-Za-z.]+)$", text[: start + m.start()])
         if word and word.group(1).lower().rstrip(".") in _ABBREVIATIONS:
             continue

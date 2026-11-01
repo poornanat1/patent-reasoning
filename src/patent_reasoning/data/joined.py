@@ -200,6 +200,12 @@ class Joiner:
         self._pub_cache[doc_id] = result
         return result
 
+    def reference_date(self, doc_id: str) -> str | None:
+        """Grant date of a US patent, or first publication date of a US publication."""
+        meta = (self.reference_application(doc_id) or {}).get("applicationMetaData") or {}
+        date = meta.get("earliestPublicationDate" if len(doc_id) == 11 else "grantDate")
+        return date[:10] if date else None
+
     def first_inventor(self, doc_id: str) -> str | None:
         """Last name of a US reference's first inventor, which examiners use as shorthand."""
         app = self.reference_application(doc_id) or {}

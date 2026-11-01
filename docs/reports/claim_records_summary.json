@@ -60,39 +60,39 @@
     "withdrawn": 8
   },
   "claim_text_verified": {
-    "True": 2621,
-    "None": 4034,
+    "True": 2645,
+    "None": 4010,
     "False": 350
   },
   "claim_text_reliable": 6423,
   "restatement_threshold": 0.5,
-  "restatement_checked": 3480,
+  "restatement_checked": 3504,
   "restatement_overlap_quartiles": [
-    0.35,
+    0.353,
     0.731,
-    0.897
+    0.898
   ],
   "explanation_source": {
-    "examiner_reasoning": 6132,
-    "none": 822,
+    "examiner_reasoning": 6143,
+    "none": 811,
     "reasons_for_allowance": 51
   },
   "limitations_per_claim": 1.649,
   "art_rejections": 6558,
-  "art_rejections_with_paragraph_evidence": 1567,
-  "art_limitation_coverage_mean": 0.397,
-  "pin_cites": 12295,
-  "pin_cites_paragraph_resolved": 5151,
-  "pin_cites_mapped_to_limitation": 3802,
+  "art_rejections_with_paragraph_evidence": 1571,
+  "art_limitation_coverage_mean": 0.399,
+  "pin_cites": 12246,
+  "pin_cites_paragraph_resolved": 5146,
+  "pin_cites_mapped_to_limitation": 3810,
   "quality": {
-    "labeled": 3990,
-    "grounded": 1557,
+    "labeled": 3986,
+    "grounded": 1561,
     "weak": 1458
   },
   "quality_by_decision_source": {
     "rejection_statement": {
-      "labeled": 3919,
-      "grounded": 1330,
+      "labeled": 3915,
+      "grounded": 1334,
       "weak": 1432
     },
     "allowable_dependent": {
@@ -107,11 +107,11 @@
     }
   },
   "flags": {
-    "no_paragraph_evidence": 5113,
-    "reasoning_mention": 1773,
+    "no_paragraph_evidence": 4987,
+    "reasoning_mention": 1753,
     "no_prior_art_text": 1696,
     "restatement_low_overlap": 924,
-    "no_reference_explanation": 822,
+    "no_reference_explanation": 811,
     "ground_references_unresolved": 680,
     "reasoning_shared": 388,
     "claims_as_filed_ocr": 376,

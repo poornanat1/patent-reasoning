@@ -169,3 +169,13 @@ def test_parse_claim_statuses():
     assert parse_claim_statuses(xml) == {
         1: "currently amended", 2: "original", 3: "canceled", 4: "new"
     }  # fmt: skip
+
+
+def test_bracketed_claim_headings_start_a_segment():
+    rej = _rej("103", [4, 5], "Claims 4-5 are rejected under 35 U.S.C. 103(a) over Smith.",
+               "[Claim 4] Smith discloses a balloon with a hydrophilic surface (para. 29). "
+               "[Claim 5] Smith teaches a duration of 30 to 90 seconds (para. 41).")  # fmt: skip
+    (seg,), mode = claim_windows(rej, 5)
+    assert mode == "marker"
+    assert rej.reasoning[seg.start : seg.end].startswith("[Claim 5]")
+    assert "hydrophilic" not in rej.reasoning[seg.start : seg.end]
