@@ -34,4 +34,5 @@ uv run python scripts/export_schemas.py --check  # fail if stale (also covered b
 - **No-rejection examples** come from the office action text. Claims are either "allowed" or "objected to as being dependent upon a rejected base claim, but would be allowable if rewritten…". They don't come from OARD's `objected` rows, which also include objections for informalities. The examiner judged these claims against the same cited art.
 - **Explanations for allowable claims.** When the action has a statement of reasons for allowable subject matter that names the claim, it is the explanation (`explanation_source: "reasons_for_allowance"`).
 - **Missing explanations.** When the examiner gives no reasons (common for allowable claims), `target.explanation` is `null`, `provenance.explanation_source` is `"none"`, and the example is flagged `no_reference_explanation`.
+- **Evidence condition.** `provenance.evidence_condition` records how the input passages were chosen: `action_cited` (primary) or `retrieved`. See the [spec](../SPEC.md#evidence).
 - **Examiner text** is kept verbatim in `provenance.examiner_text`. It records what the examiner asserted, not a verified conclusion.

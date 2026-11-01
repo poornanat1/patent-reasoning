@@ -8,6 +8,7 @@ Raw and processed data live here but are not committed. Scripts regenerate them 
 - `interim/joined_sample/`: joined records (`records.jsonl`, one per office action × 102/103 rejection), a per-action funnel, a summary, and the manual inspection sheet
 - `interim/claim_records/`: one record per claim per first non-final action (`claims.jsonl`), with a per-action funnel that includes the examiner-cited passage pool
 - `interim/evidence/`: every cited document as passages (`documents.jsonl`), and each claim's selected passages under the fixed budget (`retrieval.jsonl`)
+- `interim/sft_corpus/`: schema-valid examples (`examples.jsonl`), and every other claim record with the reason it was excluded (`excluded.jsonl`)
 - `processed/`: SFT / DPO / validation / test splits (later)
 
 The OARD tables join on `ifw_number` (one per office action). Citations link to a specific rejection through `ifw_number` + `action_type` + `action_subtype`. Read every ID column as a string so `app_id` keeps its leading zeros.

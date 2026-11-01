@@ -52,9 +52,10 @@ Next, build one record per claim from each application's first non-final action,
 ```bash
 uv run python scripts/build_claim_records.py   # -> data/interim/claim_records/claims.jsonl
 uv run python scripts/build_evidence.py        # -> data/interim/evidence/{documents,retrieval}.jsonl
+uv run python scripts/build_sft_corpus.py      # -> data/interim/sft_corpus/{examples,excluded}.jsonl
 ```
 
-Findings so far: [audit](docs/reports/oard_audit_findings.md), [feasibility](docs/reports/feasibility.md), [claim-level dataset and evidence](docs/reports/claim_level_dataset.md).
+Findings so far: [audit](docs/reports/oard_audit_findings.md), [feasibility](docs/reports/feasibility.md), [claim-level dataset and evidence](docs/reports/claim_level_dataset.md), [SFT corpus](docs/reports/sft_corpus.md).
 
 The sample takes whole applications, chosen by a salted SHA-256 of `app_id`. Rerunning it gives the same sample regardless of row order, and every office action, rejection and citation for a chosen application stays together. That keeps later family-level splits clean. Sample settings live in [configs/oard_sample.yaml](configs/oard_sample.yaml).
 

@@ -1,0 +1,14 @@
+# Initial SFT corpus: schema-valid examples built from claim records and their evidence.
+name: sft-corpus
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  claim_records: data/interim/claim_records/claims.jsonl
+  documents: data/interim/evidence/documents.jsonl
+  retrieval: data/interim/evidence/retrieval.jsonl
+  out_dir: data/interim/sft_corpus
+  report: docs/reports/sft_corpus_summary.json
+  # Targets above this are excluded: the 1,000-token reserve also holds the instructions.
+  max_target_tokens: 700

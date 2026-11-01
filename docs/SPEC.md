@@ -42,6 +42,15 @@ Each example is one claim in an application's first non-final office action, whe
 - **No-rejection examples:** claims in the same office action that the examiner *allowed* or *objected to as allowable but dependent on a rejected claim*. The examiner judged these against the same cited art and found it didn't disclose or suggest the added limitations. They share the input distribution of the positives, so the decision can't be read off the context.
 - **Reference targets:** the examiner's reasoning for that claim, with pin cites resolved to the cited passages. For 102/103 these are mapping and explanation targets. For 101/112, only the explanation.
 
+**What becomes a training example.** A claim becomes an example only when its target is grounded in the input:
+
+- trustworthy claim text
+- 102/103 grounds whose references resolve to cited documents
+- for a 102/103 rejection, at least one of the examiner's cited passages in the input, plus an explanation that restates the claim's own limitations
+- for a no-rejection claim, cited art with text
+
+The claim mapping only ever cites passages that are in the input. Excluded records are kept with their reason. Details: [sft_corpus.md](reports/sft_corpus.md).
+
 Examiner statements are what the examiner asserted, not independently verified conclusions, and records keep that distinction. Generated text is never treated as ground truth.
 
 **Claim text.** The claims come from the application's publication, or from the claims filed with it when it was never published. The text counts as verified when:

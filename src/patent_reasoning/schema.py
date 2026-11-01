@@ -20,7 +20,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-SCHEMA_VERSION = "1.1"
+SCHEMA_VERSION = "1.2"
 
 Statute = Literal["101", "102", "103", "112"]
 PRIOR_ART_STATUTES = ("102", "103")
@@ -192,6 +192,11 @@ class Provenance(_Strict):
         "text; None if not checked.",
     )
 
+    evidence_condition: Literal["action_cited", "retrieved"] = Field(
+        default="action_cited",
+        description="How the input passages were chosen (see docs/SPEC.md, Evidence).",
+    )
+
     examiner_text: str = Field(
         default="",
         description="The examiner's statement and reasoning for this claim, verbatim. "
@@ -213,7 +218,7 @@ class Provenance(_Strict):
 
 
 class Example(_Strict):
-    schema_version: Literal["1.1"] = SCHEMA_VERSION
+    schema_version: Literal["1.2"] = SCHEMA_VERSION
     example_id: str = Field(description="'<office_action_id>:<claim number>'.")
     input: ExampleInput
     target: ModelOutput

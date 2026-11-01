@@ -357,6 +357,16 @@
           "description": "Whether the examiner's restatement of the claim matches the input claim text; None if not checked.",
           "title": "Claim Text Verified"
         },
+        "evidence_condition": {
+          "default": "action_cited",
+          "description": "How the input passages were chosen (see docs/SPEC.md, Evidence).",
+          "enum": [
+            "action_cited",
+            "retrieved"
+          ],
+          "title": "Evidence Condition",
+          "type": "string"
+        },
         "examiner_text": {
           "default": "",
           "description": "The examiner's statement and reasoning for this claim, verbatim. Reference material only; never model input.",
@@ -405,8 +415,8 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "const": "1.1",
-      "default": "1.1",
+      "const": "1.2",
+      "default": "1.2",
       "title": "Schema Version",
       "type": "string"
     },

@@ -1,0 +1,84 @@
+{
+  "records": 7005,
+  "examples": 1144,
+  "excluded": 5861,
+  "excluded_by_reason": {
+    "claim_text_unreliable": 582,
+    "conflicting_disposition": 32,
+    "non_patent_literature": 265,
+    "references_unresolved": 579,
+    "ground_reference_not_cited": 0,
+    "no_prior_art_text": 1204,
+    "evidence_not_in_input": 2859,
+    "explanation_off_claim": 84,
+    "target_too_long": 256,
+    "schema_invalid": 0
+  },
+  "evidence_not_in_input_detail": {
+    "column/line cites only": 2727,
+    "cited passages cut": 132
+  },
+  "schema_invalid_examples": [],
+  "decisions": {
+    "103": 479,
+    "102": 249,
+    "no_rejection": 224,
+    "112": 69,
+    "103+112": 31,
+    "101+103": 24,
+    "102+112": 22,
+    "101+102": 16,
+    "101+112": 10,
+    "101+103+112": 10,
+    "101": 7,
+    "102+103": 2,
+    "101+102+112": 1
+  },
+  "decision_class_counts": {
+    "102": 290,
+    "103": 546,
+    "no_rejection": 224,
+    "112": 143,
+    "101": 68
+  },
+  "decision_source": {
+    "rejection_statement": 920,
+    "allowable_dependent": 168,
+    "allowed": 56
+  },
+  "evidence_status": {
+    "partially_supported": 253,
+    "supported": 581,
+    "not_applicable": 310
+  },
+  "with_explanation": 965,
+  "explanation_source": {
+    "examiner_reasoning": 919,
+    "reasons_for_allowance": 46,
+    "none": 179
+  },
+  "with_claim_mapping": 777,
+  "mapped_limitations": 1024,
+  "oard_disagrees": 41,
+  "applications": 206,
+  "target_tokens_p50_p95_max": [
+    224,
+    595,
+    699
+  ],
+  "flags": {
+    "mapping_partial": 240,
+    "no_reference_explanation": 179,
+    "reasoning_mention": 171,
+    "mapping_unknown": 106,
+    "restatement_low_overlap": 90,
+    "reasoning_shared": 51,
+    "no_prior_art_text": 47,
+    "claims_as_filed_ocr": 45
+  },
+  "excluded_records_by_decision_source": {
+    "rejection_statement": 5761,
+    "allowable_dependent": 88,
+    "allowed": 12
+  }
+}
