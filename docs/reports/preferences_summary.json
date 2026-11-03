@@ -1,0 +1,75 @@
+{
+  "pair_types": [
+    "citation_corruption",
+    "unsupported_rejection",
+    "false_rejection",
+    "overconfident_support",
+    "false_allowance"
+  ],
+  "splits": {
+    "train": {
+      "examples": 751,
+      "examples_with_pairs": 692,
+      "pairs": 1344,
+      "pairs_by_type": {
+        "citation_corruption": 471,
+        "unsupported_rejection": 471,
+        "false_rejection": 132,
+        "overconfident_support": 138,
+        "false_allowance": 132
+      },
+      "chosen_decision": {
+        "103": 654,
+        "102": 413,
+        "no_rejection": 132,
+        "102+112": 36,
+        "101+103": 32,
+        "103+112": 29,
+        "101+102": 24,
+        "101+103+112": 22,
+        "102+103": 2
+      },
+      "rejected_decision": {
+        "103": 581,
+        "102": 503,
+        "no_rejection": 132,
+        "102+112": 33,
+        "103+112": 28,
+        "101+103": 28,
+        "101+102": 19,
+        "101+103+112": 18,
+        "102+103": 2
+      }
+    },
+    "val": {
+      "examples": 99,
+      "examples_with_pairs": 92,
+      "pairs": 184,
+      "pairs_by_type": {
+        "citation_corruption": 50,
+        "unsupported_rejection": 50,
+        "false_rejection": 42,
+        "overconfident_support": 0,
+        "false_allowance": 42
+      },
+      "chosen_decision": {
+        "103": 51,
+        "102": 46,
+        "no_rejection": 42,
+        "101+103": 17,
+        "103+112": 13,
+        "101+102": 12,
+        "102+112": 3
+      },
+      "rejected_decision": {
+        "102": 74,
+        "no_rejection": 42,
+        "103": 36,
+        "101+103": 12,
+        "103+112": 10,
+        "101+102": 8,
+        "102+112": 2
+      }
+    }
+  }
+}

@@ -97,11 +97,23 @@ The schemas live in `src/patent_reasoning/schema.py`, with JSON Schema exports i
 | DPO preference pairs | ~3,000 |
 | Validation | 1,000 |
 | In-distribution test | 1,000 |
-| OOD test (technology class / period) | 500–1,000 |
+| OOD test (technology centers 1600 and 1700) | 500–1,000 |
 
-- Splits are disjoint by application family.
-- Validation and test sets contain only fully grounded examples: claims as filed, and paragraph evidence for 102/103.
-- The final test sets are never shown to any optimizer.
+- **Families.** Splits are disjoint by application family. A family is every application linked through continuity (continuation, divisional, continuation-in-part, national stage of the same PCT application) or a shared foreign priority filing.
+- **Out-of-distribution test.** The OOD test set is every family examined in technology centers 1600 (biotechnology) and 1700 (chemistry). The other families go to train, validation or in-distribution test by salted hash (80/10/10).
+- **Fully grounded only.** Validation and test sets contain only fully grounded examples: claims from the publication (not OCR), paragraph evidence for 102/103, no partial mapping, a close claim restatement, and an explanation for every rejection. Other examples of those families are dropped, not moved to train.
+- **No leakage through prior art.** A train example whose prior art includes an evaluation application's own publication is dropped.
+- **Test sets stay unseen.** The final test sets are never shown to any optimizer, and never used to build preference pairs.
+
+**Preference pairs.** Each pair contrasts the example's target, which is always preferred, with a programmatic corruption that stays schema-valid and inside the input:
+
+- a swapped citation
+- the same rejection with no cited passages
+- a false rejection of an allowable claim
+- full support claimed for a partially supported rejection
+- a false allowance of a rejected claim
+
+False-allowance pairs are capped at the number of false-rejection pairs, so DPO doesn't shift the decision prior. Details: [splits_and_preferences.md](reports/splits_and_preferences.md).
 
 ## Experimental matrix
 

@@ -1,0 +1,15 @@
+# Preference pairs for DPO: the examiner-grounded target versus a programmatic corruption.
+# Built from the train and validation splits only; test sets never contribute.
+name: preferences
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  splits_dir: data/processed/splits
+  claim_records: data/interim/claim_records/claims.jsonl
+  splits: [train, val]
+  out_dir: data/processed/preferences
+  report: docs/reports/preferences_summary.json
+  # Cap false-allowance pairs at the number of false-rejection pairs per split.
+  balance_decision_pairs: true
