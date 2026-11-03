@@ -1,0 +1,86 @@
+{
+  "examples_in": 1144,
+  "applications": 206,
+  "families": 206,
+  "families_with_several_applications": 0,
+  "applications_in_shared_families": 0,
+  "applications_with_continuity_or_priority_links": 177,
+  "dropped_from_eval_not_fully_grounded": 132,
+  "dropped_from_train_cites_eval_application": 0,
+  "families_spanning_splits": 0,
+  "applications_spanning_splits": 0,
+  "splits": {
+    "train": {
+      "examples": 751,
+      "applications": 137,
+      "families": 137,
+      "decision_class_counts": {
+        "102": 217,
+        "103": 357,
+        "no_rejection": 132,
+        "101": 49,
+        "112": 81
+      },
+      "no_rejection_share": 0.176,
+      "evidence_status": {
+        "partially_supported": 151,
+        "supported": 422,
+        "not_applicable": 178
+      },
+      "sharing_prior_art_with_train": null
+    },
+    "val": {
+      "examples": 99,
+      "applications": 15,
+      "families": 15,
+      "decision_class_counts": {
+        "112": 10,
+        "no_rejection": 45,
+        "102": 21,
+        "103": 29,
+        "101": 10
+      },
+      "no_rejection_share": 0.455,
+      "evidence_status": {
+        "not_applicable": 49,
+        "supported": 50
+      },
+      "sharing_prior_art_with_train": 0
+    },
+    "test": {
+      "examples": 129,
+      "applications": 20,
+      "families": 20,
+      "decision_class_counts": {
+        "103": 59,
+        "102": 23,
+        "no_rejection": 39,
+        "112": 9,
+        "101": 8
+      },
+      "no_rejection_share": 0.302,
+      "evidence_status": {
+        "supported": 82,
+        "not_applicable": 47
+      },
+      "sharing_prior_art_with_train": 0
+    },
+    "ood_test": {
+      "examples": 33,
+      "applications": 12,
+      "families": 12,
+      "decision_class_counts": {
+        "112": 20,
+        "no_rejection": 3,
+        "102": 5,
+        "103": 9
+      },
+      "no_rejection_share": 0.091,
+      "evidence_status": {
+        "not_applicable": 19,
+        "supported": 14
+      },
+      "sharing_prior_art_with_train": 0
+    }
+  }
+}

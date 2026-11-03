@@ -1,0 +1,17 @@
+# Family-disjoint splits of the SFT corpus. Validation and test keep only fully grounded
+# examples; technology centers 1600 (biotechnology) and 1700 (chemistry) are held out as
+# the out-of-distribution test.
+name: splits
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  examples: data/interim/sft_corpus/examples.jsonl
+  cache_dir: data/raw/odp
+  out_dir: data/processed/splits
+  report: docs/reports/splits_summary.json
+  salt: splits-v1
+  val_fraction: 0.1
+  test_fraction: 0.1
+  ood_technology_centers: ["16", "17"]
