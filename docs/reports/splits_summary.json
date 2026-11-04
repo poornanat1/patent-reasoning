@@ -1,84 +1,91 @@
 {
-  "examples_in": 1144,
-  "applications": 206,
-  "families": 206,
+  "examples_in": 1146,
+  "applications": 210,
+  "families": 210,
   "families_with_several_applications": 0,
   "applications_in_shared_families": 0,
-  "applications_with_continuity_or_priority_links": 177,
-  "dropped_from_eval_not_fully_grounded": 132,
+  "applications_with_family_links": 181,
+  "dropped_from_eval_not_fully_grounded": 187,
   "dropped_from_train_cites_eval_application": 0,
+  "dropped_from_eval_audited_wrong": [
+    "G7JTADTWPPOPPY5:4",
+    "G7JTADTWPPOPPY5:5",
+    "HEBAILS7PXXIFW4:5",
+    "HK40SW1GPXXIFW4:11",
+    "HNHDHGNYPXXIFW4:10",
+    "HNHDHGNYPXXIFW4:11",
+    "HNHDHGNYPXXIFW4:8"
+  ],
   "families_spanning_splits": 0,
   "applications_spanning_splits": 0,
   "splits": {
     "train": {
-      "examples": 751,
-      "applications": 137,
-      "families": 137,
+      "examples": 754,
+      "applications": 139,
+      "families": 139,
       "decision_class_counts": {
-        "102": 217,
-        "103": 357,
+        "102": 218,
+        "103": 366,
         "no_rejection": 132,
-        "101": 49,
-        "112": 81
+        "101": 47,
+        "112": 79
       },
-      "no_rejection_share": 0.176,
+      "no_rejection_share": 0.175,
       "evidence_status": {
-        "partially_supported": 151,
-        "supported": 422,
-        "not_applicable": 178
+        "partially_supported": 245,
+        "supported": 338,
+        "not_applicable": 171
       },
       "sharing_prior_art_with_train": null
     },
     "val": {
-      "examples": 99,
-      "applications": 15,
-      "families": 15,
+      "examples": 78,
+      "applications": 13,
+      "families": 13,
       "decision_class_counts": {
-        "112": 10,
+        "103": 17,
         "no_rejection": 45,
-        "102": 21,
-        "103": 29,
-        "101": 10
+        "112": 6,
+        "102": 14,
+        "101": 5
       },
-      "no_rejection_share": 0.455,
+      "no_rejection_share": 0.577,
       "evidence_status": {
-        "not_applicable": 49,
-        "supported": 50
-      },
-      "sharing_prior_art_with_train": 0
-    },
-    "test": {
-      "examples": 129,
-      "applications": 20,
-      "families": 20,
-      "decision_class_counts": {
-        "103": 59,
-        "102": 23,
-        "no_rejection": 39,
-        "112": 9,
-        "101": 8
-      },
-      "no_rejection_share": 0.302,
-      "evidence_status": {
-        "supported": 82,
+        "supported": 31,
         "not_applicable": 47
       },
       "sharing_prior_art_with_train": 0
     },
-    "ood_test": {
-      "examples": 33,
-      "applications": 12,
-      "families": 12,
+    "test": {
+      "examples": 99,
+      "applications": 17,
+      "families": 17,
       "decision_class_counts": {
-        "112": 20,
-        "no_rejection": 3,
-        "102": 5,
-        "103": 9
+        "103": 48,
+        "102": 12,
+        "no_rejection": 39
       },
-      "no_rejection_share": 0.091,
+      "no_rejection_share": 0.394,
       "evidence_status": {
-        "not_applicable": 19,
-        "supported": 14
+        "supported": 60,
+        "not_applicable": 39
+      },
+      "sharing_prior_art_with_train": 0
+    },
+    "ood_test": {
+      "examples": 21,
+      "applications": 11,
+      "families": 11,
+      "decision_class_counts": {
+        "112": 15,
+        "no_rejection": 3,
+        "102": 4,
+        "103": 1
+      },
+      "no_rejection_share": 0.143,
+      "evidence_status": {
+        "not_applicable": 16,
+        "supported": 5
       },
       "sharing_prior_art_with_train": 0
     }

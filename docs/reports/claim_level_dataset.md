@@ -1,5 +1,7 @@
 # Claim-level records and evidence
 
+> **Superseded numbers.** Parser fixes from the dataset audit changed these counts; the current ones are in [claim_records_summary.json](claim_records_summary.json) and [dataset_v1.md](dataset_v1.md).
+
 **What this covers.** Each claim in an application's first non-final office action becomes one record. The record holds the examiner's decision on that claim, its text and parent claims, its limitations, and the examiner's reasoning and pin cites for it. Each record is then paired with the cited prior art as passages, chosen under the fixed budget that every experiment uses.
 
 **Result.**

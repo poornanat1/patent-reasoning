@@ -1,0 +1,724 @@
+{
+  "sampled": 170,
+  "sampled_by_decision": {
+    "101": 7,
+    "101+102": 12,
+    "101+103": 13,
+    "101+103+112": 8,
+    "101+112": 10,
+    "102": 26,
+    "102+103": 1,
+    "102+112": 12,
+    "103": 27,
+    "103+112": 14,
+    "112": 16,
+    "no_rejection": 24
+  },
+  "examples_with_an_error": 46,
+  "adjudicated": 3,
+  "manual_before_adjudication": {
+    "decision": {
+      "wrong": 16,
+      "correct": 152,
+      "unclear": 2
+    },
+    "claim_text": {
+      "ok": 166,
+      "unclear": 4
+    },
+    "mapping": {
+      "n/a": 57,
+      "ok": 57,
+      "partly": 31,
+      "wrong": 25
+    },
+    "explanation": {
+      "ok": 132,
+      "n/a": 22,
+      "off_claim": 15,
+      "wrong": 1
+    },
+    "leak": {
+      "none": 170
+    }
+  },
+  "manual": {
+    "all": {
+      "decision": {
+        "wrong": 13,
+        "correct": 155,
+        "unclear": 2
+      },
+      "claim_text": {
+        "ok": 166,
+        "unclear": 4
+      },
+      "mapping": {
+        "n/a": 57,
+        "ok": 57,
+        "partly": 31,
+        "wrong": 25
+      },
+      "explanation": {
+        "ok": 132,
+        "n/a": 22,
+        "off_claim": 15,
+        "wrong": 1
+      },
+      "leak": {
+        "none": 170
+      }
+    },
+    "train": {
+      "decision": {
+        "wrong": 4,
+        "correct": 76
+      },
+      "claim_text": {
+        "ok": 79,
+        "unclear": 1
+      },
+      "mapping": {
+        "n/a": 23,
+        "ok": 27,
+        "partly": 22,
+        "wrong": 8
+      },
+      "explanation": {
+        "ok": 71,
+        "n/a": 7,
+        "off_claim": 2
+      },
+      "leak": {
+        "none": 80
+      }
+    },
+    "val": {
+      "decision": {
+        "correct": 29,
+        "unclear": 1
+      },
+      "claim_text": {
+        "ok": 30
+      },
+      "mapping": {
+        "wrong": 8,
+        "ok": 11,
+        "n/a": 8,
+        "partly": 3
+      },
+      "explanation": {
+        "ok": 24,
+        "off_claim": 2,
+        "n/a": 4
+      },
+      "leak": {
+        "none": 30
+      }
+    },
+    "test": {
+      "decision": {
+        "correct": 32,
+        "wrong": 8
+      },
+      "claim_text": {
+        "ok": 37,
+        "unclear": 3
+      },
+      "mapping": {
+        "ok": 16,
+        "partly": 5,
+        "n/a": 18,
+        "wrong": 1
+      },
+      "explanation": {
+        "ok": 21,
+        "off_claim": 10,
+        "n/a": 8,
+        "wrong": 1
+      },
+      "leak": {
+        "none": 40
+      }
+    },
+    "ood_test": {
+      "decision": {
+        "correct": 18,
+        "wrong": 1,
+        "unclear": 1
+      },
+      "claim_text": {
+        "ok": 20
+      },
+      "mapping": {
+        "wrong": 8,
+        "ok": 3,
+        "n/a": 8,
+        "partly": 1
+      },
+      "explanation": {
+        "ok": 16,
+        "n/a": 3,
+        "off_claim": 1
+      },
+      "leak": {
+        "none": 20
+      }
+    }
+  },
+  "errors_in_current_build": {
+    "dropped": 35,
+    "unchanged": 9,
+    "target_changed": 2
+  },
+  "automatic": {
+    "train": {
+      "examples": 754,
+      "limitation_not_in_claim": 0,
+      "parent_claim_missing": 0,
+      "mapped_passage_no_overlap": 0,
+      "explanation_missing": 1,
+      "examiner_text_missing": 1,
+      "provenance_incomplete": 0,
+      "conflicting_duplicate": 0
+    },
+    "val": {
+      "examples": 78,
+      "limitation_not_in_claim": 0,
+      "parent_claim_missing": 0,
+      "mapped_passage_no_overlap": 0,
+      "explanation_missing": 0,
+      "examiner_text_missing": 0,
+      "provenance_incomplete": 0,
+      "conflicting_duplicate": 0
+    },
+    "test": {
+      "examples": 99,
+      "limitation_not_in_claim": 0,
+      "parent_claim_missing": 0,
+      "mapped_passage_no_overlap": 0,
+      "explanation_missing": 0,
+      "examiner_text_missing": 0,
+      "provenance_incomplete": 0,
+      "conflicting_duplicate": 0
+    },
+    "ood_test": {
+      "examples": 21,
+      "limitation_not_in_claim": 0,
+      "parent_claim_missing": 0,
+      "mapped_passage_no_overlap": 0,
+      "explanation_missing": 0,
+      "examiner_text_missing": 0,
+      "provenance_incomplete": 0,
+      "conflicting_duplicate": 0
+    }
+  },
+  "errors": [
+    {
+      "example_id": "GLFFWNP8PPOPPY5:33",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Missing 103: 'Claims 3, 8, 13, 18, 20, 23 and 33 rejected under 35 U.S.C. 103(a) ... over Merritt ... in view of Koonce' names claim 33; target is 101 only.",
+      "split": "train",
+      "now": "dropped"
+    },
+    {
+      "example_id": "GLFFWNP8PPOPPY5:8",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Missing 103 over Merritt (20080052242) in view of Koonce (20080091517); claim 8 is in the 'Claims 3, 8, 13, ... rejected under 35 U.S.C. 103(a)' list (no 'are').",
+      "split": "train",
+      "now": "dropped"
+    },
+    {
+      "example_id": "GLFFWNP8PPOPPY5:13",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Missing 103: claim 13 is in 'Claims 3, 8, 13, 18, 20, 23 and 33 rejected under 35 U.S.C. 103(a)'; target is 101 only.",
+      "split": "train",
+      "now": "dropped"
+    },
+    {
+      "example_id": "GU6WVUTLPPOPPY5:8",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "No limitation mapping at all (evidence 'partially_supported') even though the examiner's pin cite [0118] resolved to 20070124208:0118.",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "HX5ZY5BEPXXIFW4:16",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Mapped 20100086317:0061 is boilerplate about drawings; Park's passage text in the input appears to come from an unrelated developer/printer document, so it cannot support 'sensing the presence of a hand'.",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HX5ZY5BEPXXIFW4:3",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Examiner cites Brisebois [0043]-[0046], but the pipeline resolved them to Park 20100086317:0043-0046 (FIG. descriptions of developer vessels). Wrong reference.",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HX5ZY5BEPXXIFW4:15",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Mapped passages are 'FIG. 23 shows ... ejection screen for developer ejection' and terminology boilerplate. The Park text looks like the wrong document. The determining limitation also omits the examiner's [0062] cite.",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "G7JTADTWPPOPPY5:5",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Explanation discusses only the conflicting torsion-spring limitations of 'claims 1 and 10'; nothing about claim 5 (which the action says would be allowable once the 112 issue is overcome).",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "GWJDWNEJPXXIFW4:4",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "partly",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Examiner cites only Fig. 2A for claim 4, but the target maps par. 71 (cited for claims 6/11). The explanation is the whole claims 1-12 block, mostly about other claims.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "GWJDWNEJPXXIFW4:3",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "ok",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Explanation is the entire claims 1-12 anticipation block (claims 1, 2, 4, 5, 6, ...); only one sentence ('Claim 3, 9: ... (par. 116.)') is about claim 3.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HNHDHGNYPXXIFW4:8",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Examiner's 'paragraphs 30-33' are Eyre's (20070187465), but they were resolved to Liu 20070119276:0030-0033 (item lists about Mo and nitrides), which say nothing of a coating layer.",
+      "split": "ood_test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "GVWDWLU5PXXIFW4:14",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Missing 102: 'Claims 1-3 and 8-14 rejected under 35 U.S.C. 102(b) as being anticipated by Archer (5,523,194)' includes claim 14; target is 112 only.",
+      "split": "ood_test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HNHDHGNYPXXIFW4:11",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Examiner says 'Ishida teaches ... (paragraph 25)', but this was resolved to Liu 20070119276:0025 ('metal element is tantalum'), which does not disclose the 8-28% binder volume ratio.",
+      "split": "ood_test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "H4TTV6OKPXXIFW4:9",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Explanation is 112 reasoning about claims 1 and 13 ('means for connecting', 'sufficiently loose'); nothing specific to claim 9, which inherits the rejection.",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "HX5ZY5BEPXXIFW4:19",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Park is resolved to 20100086317, whose passages are about a printer (photoconductor drum, transfer belt); Brisebois [0074]-[0078] pins were mapped into that printer document, so a reference and the whole mapping are wrong.",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "G7JTADTWPPOPPY5:4",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Explanation is about conflicting torsion-spring limitations in claims 1 and 10; nothing about claim 4 (allowable if 112 is overcome).",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HX5ZY5BEPXXIFW4:2",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Park is resolved to 20100086317 (a printer: '[0053] FIG. 21 shows a developer vessel attachment request screen'), but the examiner's Park [0053] is a tactile sensor unit; wrong reference ID, wrong passage.",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "I0FABORYPXXIFW4:8",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "The thread/rotary joint/pegs limitation is mapped to Vogt [0108] ('used for packing... bone cements'), which the examiner cited only for the field of use; the substantive cites ([0075], [0053], [0130]) are not used.",
+      "split": "ood_test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "H0MHLNA6PXXIFW4:20",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "103 ground but no limitation mapping at all; examiner pin-cites Rogers [0032],[0037],[0058] for the ad-exchange/snippets limitation.",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "HA47TVVFPXXIFW4:3",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "103 ground but no limitation mapping; examiner cites Nelms [0022]-[0023],[0025]-[0028] for the age/popularity referral-credit limitation.",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "HBGPOQ7APXXIFW4:21",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "103 ground but no limitation mapping; examiner cites Weber [0007],[0044] for paclitaxel.",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "GSXDD88RPPOPPY5:1",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "102 ground but no limitation mapping despite many examiner pin cites to Gatto ([0010],[0013],[0019],[0050]).",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "H0MHLNA6PXXIFW4:7",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Examiner says the claim 7 site list is a 'wherein' clause that 'does not limit the scope'; the [0034] mapping is borrowed from the claims 9/19 pin cite. Explanation also trails into claims 8/18 and 9/19.",
+      "split": "train",
+      "now": "target_changed"
+    },
+    {
+      "example_id": "HTSRG1F8PXXIFW4:2",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "103 ground but no limitation mapping; examiner cites Harumoto pars. 220-223 (unresolved) for forwarding the stored value.",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "HEBAILS7PXXIFW4:5",
+      "decision": "unclear",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "The statement says 'Ravi ... as applied to claims 1-24 above', so an earlier Ravi-only rejection covering claim 5 probably exists but isn't shown, and the examiner's 'Ravi discloses' reads as anticipation. Mapped [0076]-[0077] cover epitaxial layers, not same-metal contacts.",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HX5ZY5BEPXXIFW4:17",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Mapped passages 20100086317:0053/0054 are 'FIG. 21 shows a developer vessel attachment request screen' etc., unrelated to handedness sensing, so the reference text or its paragraph numbering looks wrong.",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HXDHRNQSPXXIFW4:7",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Missing 102: 'Claims 1-8 and 10 ... in the alternative, are also rejected under pre-AIA 35 U.S.C. 102(e) as being taught by ... Gillenson'. The explanation is about claim 1's 'potential transaction', not claim 7.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "GWJDWNEJPXXIFW4:5",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "partly",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Examiner cites Fig. 13-15 for claim 5, but the target maps it to par. 71, which comes from the claims 6/11 cites. The explanation is the whole claims 1-12 analysis.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HK40SW1GPXXIFW4:11",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Examiner relies on Figures 1-2 (clamps 34a-34d) for claim 11; [0040] (moving mold part) is the cite for claim 12's limitation.",
+      "split": "ood_test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "GY4IZRQCPXXIFW4:7",
+      "decision": "unclear",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Claim 7 is listed as 'withdrawn from further consideration' yet falls within 'Claims 5-10 are rejected under 35 U.S.C. 112'. The explanation is about claim 6 ('p190Bcr-Abl').",
+      "split": "ood_test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HNHDHGNYPXXIFW4:9",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Examiner cites Eyre (20070187465) paragraphs 30-33, but the pin cite resolved to Liu (20070119276) paragraphs 30-33, which are claim items about Mo/nitrides.",
+      "split": "ood_test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HNHDHGNYPXXIFW4:6",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Examiner cites Ishida (20100255264) paragraph 24, but the cite resolved to Liu 20070119276:0024 ('metal element is titanium'), which says nothing about WC particle size.",
+      "split": "ood_test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HA47TVVFPXXIFW4:8",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "partly",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Grounds match (101 1-12, 112 1-12, 103 Jain/Marples/Cahill 1-2,4-11). The target has no limitation->passage rows. The only prior-art reasoning in the explanation is 'As to claim 9: Jain teaches...', not claim 8.",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "H5CU96QIPXXIFW4:4",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "The mapped passage [0021] is about adjacent-channel noise and says nothing about an input device linked to preset groups. This looks like a paragraph-numbering mismatch with the examiner's cite.",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "GLFFWNP8PPOPPY5:3",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "103 is missing. The action says 'Claims 3, 8, 13, 18, 20, 23 and 33 rejected under 35 U.S.C. 103(a) ... over Merritt ... in view of Koonce'. The explanation is generic 101 boilerplate.",
+      "split": "train",
+      "now": "target_changed"
+    },
+    {
+      "example_id": "HX5ZY5BEPXXIFW4:18",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "The passages fetched for 20100086317 describe an image-forming apparatus ('developer ejection' screens, toner cartridges, boilerplate), not handedness detection. The wrong document text is attached to Park.",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HUFL1BOZPXXIFW4:4",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "The passage mapped to Dassanayake [0023] is 'FIG. 13 is a schematic of the microreplicated lens', which says nothing about lamp functions; this is a paragraph-numbering mismatch. Fioravanti has no passages.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HXDHRNQSPXXIFW4:6",
+      "decision": "wrong",
+      "claim_text": "unclear",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "102(e) over Gillenson is missing: 'Claims 1-8 and 10 ... are also rejected under pre-AIA 35 U.S.C. 102(e) as being taught by US 20110029363'. The explanation is claim 1 boilerplate, and the examiner text ends with claim 7's limitation ('The method of claim 6, wherein inducing...').",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HXDHRNQSPXXIFW4:10",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "102(e) over Gillenson (20110029363) is missing for claims 1-8 and 10. The explanation is claim 1 boilerplate with nothing about 'user-initiated event'.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HXDHRNQSPXXIFW4:8",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "wrong",
+      "leak": "none",
+      "notes": "102(e) over Gillenson is missing. The explanation itself says claims 1-8 and 10 'are also rejected under pre-AIA 35 U.S.C. 102(e)', which contradicts the target's 101+112.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HXDHRNQSPXXIFW4:5",
+      "decision": "wrong",
+      "claim_text": "unclear",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "102(e) over Gillenson is missing. The explanation is claim 1 boilerplate, and the examiner text quotes claim 6's limitation ('The method of claim 5, further comprising inducing...').",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HXDHRNQSPXXIFW4:4",
+      "decision": "wrong",
+      "claim_text": "unclear",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "102(e) over Gillenson is missing. The examiner text ends with claim 5's limitation ('The method of claim 4, wherein determining...'), an off-by-one segmentation; the explanation is claim 1 boilerplate.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HXDHRNQSPXXIFW4:3",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "102(e) over Gillenson is missing for claims 1-8 and 10. The explanation is claim 1 boilerplate with nothing about verifying completion.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HXDHRNQSPXXIFW4:2",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "102(e) over Gillenson is missing for claims 1-8 and 10. The explanation is claim 1 boilerplate with nothing about 'indoor location'.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "I0FABORYPXXIFW4:11",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "The only mapped passage, Vogt 0108, is a generic use statement ('used for packing, storing, and applying paste-shaped bone cements'). The examiner relies on paras 75, 53 and 130 for the thread, rotary joint and pegs.",
+      "split": "ood_test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HNHDHGNYPXXIFW4:10",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "The examiner says 'Ishida teaches ... (paragraphs 24-27...)', but the cite is resolved to Liu (20070119276). Liu's 0024-0027 are claim-like items about metal elements, not a 36-87% volume ratio.",
+      "split": "ood_test",
+      "now": "dropped"
+    }
+  ]
+}

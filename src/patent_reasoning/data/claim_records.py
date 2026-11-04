@@ -62,6 +62,8 @@ RESTATEMENT_THRESHOLD = 0.5
 # A limitation is matched to a pin cite when this share of its content words appears in the
 # examiner's text just before the cite.
 MAPPING_THRESHOLD = 0.6
+# "(Fig. 13)", "(see figures 2-3)", "(FIG. 4A, element 110)": a cite to a drawing only.
+_FIGURE_CITE = re.compile(r"\(\s*(?:see\s+)?fig(?:ure)?s?\.?\s*\d+[^()]{0,60}\)", re.IGNORECASE)
 
 # ---------------------------------------------------------------------------
 # Dispositions
@@ -82,7 +84,13 @@ _ALLOWABLE_OVER_ART = re.compile(
     r"allowable\s+if\s+rewritten\s+to\s+overcome",
     re.IGNORECASE,
 )
-_WITHDRAWN = re.compile(_SUBJECT + r"withdrawn\b", re.IGNORECASE)
+# "Claims 1-4 are withdrawn", "Claims 1-4, 7 and 12-13 have been withdrawn from further
+# consideration"
+_WITHDRAWN = re.compile(
+    rf"Claims?(?:\(s\))?\s+{_LIST},?\s+(?:is/are|is|are|have\s+been|has\s+been|stand)\s+"
+    r"(?:(?:now|also|hereby)\s+)?withdrawn\b",
+    re.IGNORECASE,
+)
 _REASONS = re.compile(r"statement of reasons for (?:the indication of allowable subject matter|"
                       r"allowance)|reasons for allowance", re.IGNORECASE)  # fmt: skip
 
@@ -511,17 +519,28 @@ def map_evidence(
 
     A limitation goes to the cite whose preceding examiner text (back to the previous cite)
     best restates it, if that covers at least ``MAPPING_THRESHOLD`` of its content words.
+    A figure-only parenthetical such as "(Fig. 13)" also ends a window: the text before it
+    is supported by the figure, not by the next paragraph cite.
     """
     in_segment = sorted((c for c in cites if start <= c.offset < end), key=lambda c: c.offset)
-    windows, prev = [], start
-    for cite in in_segment:
-        windows.append(text[prev : cite.offset])
-        prev = cite.offset + len(cite.raw)
+    spans = [(c.offset, c.offset + len(c.raw)) for c in in_segment]
+    figures = [(m.start(), m.end()) for m in _FIGURE_CITE.finditer(text, start, end)
+               if not any(a < m.end() and m.start() < b for a, b in spans)]  # fmt: skip
+    # (offset, end, index of the cite or None for a figure)
+    bounds = sorted([(a, b, i) for i, (a, b) in enumerate(spans)]
+                    + [(a, b, None) for a, b in figures], key=lambda x: x[0])  # fmt: skip
+    windows, owners, prev = [], [], start
+    for a, b, i in bounds:
+        windows.append(text[prev:a])
+        owners.append(i)
+        prev = b
     hits: list[list[int]] = [[] for _ in in_segment]
-    for i, lim in enumerate(limitations):
+    for n, lim in enumerate(limitations):
         scores = [word_coverage(lim, w) for w in windows]
         if scores and max(scores) >= MAPPING_THRESHOLD:
-            hits[scores.index(max(scores))].append(i)
+            owner = owners[scores.index(max(scores))]
+            if owner is not None:
+                hits[owner].append(n)
     return list(zip(in_segment, hits, strict=True))
 
 

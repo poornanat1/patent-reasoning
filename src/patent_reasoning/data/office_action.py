@@ -90,7 +90,12 @@ def parse_blocks(xml: str) -> list[Block]:
 # ---------------------------------------------------------------------------
 
 _STATEMENT = re.compile(
-    r"Claims?(?:\(s\))?\s+(?P<claims>\d[\d,;\s\-–&and/through]*?)\s+(?:is/are|is|are|stand|stands)\s+"
+    # The verb is optional: about 4% of statements read "Claims 1-5 rejected under ...". A
+    # short aside may follow the claims: "Claims 1-8 and 10, per above incorporated art
+    # rejections, are in the alternative, are also rejected under ...".
+    r"Claims?(?:\(s\))?\s+(?P<claims>\d[\d,;\s\-–&and/through]*?)\s*(?:,\s*[^,.;]{1,60},)?\s+"
+    r"(?:(?:is/are|is|are|stand|stands|have\s+been|has\s+been)\s+)?"
+    r"(?:in\s+the\s+alternative,?\s+(?:(?:is|are)\s+)?)?"
     r"(?:also\s+|further\s+|again\s+)?rejected\s+under\s+(?:pre-AIA\s+)?35\s*U\.?\s*S\.?\s*C\.?"
     r"\s*§*\s*(?P<statute>101|102|103|112)",
     re.IGNORECASE,
@@ -281,7 +286,8 @@ _COL_LINE_SHORT = re.compile(
 )
 _PARA = re.compile(
     r"(?:(?:paragraphs?|paras?\.?|pars?\.|¶+)\s*\[?(?P<p1>\d{1,4})\]?|\[(?P<b1>\d{4})\]"
-    r"|\((?P<b2>\d{4})\))"
+    # "(0092)", but not a case citation's year: "Diamond v. Diehr, 450 U.S. 175 (1981)".
+    r"|\((?!(?:18|19|20)\d\d\))(?P<b2>\d{4})\))"
     r"(?:\s*(?:-|–|to|through)\s*\[?(?P<p2>\d{1,4})\]?)?",
     re.IGNORECASE,
 )

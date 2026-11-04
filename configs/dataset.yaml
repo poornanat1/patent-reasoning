@@ -1,0 +1,45 @@
+# Dataset v1: the manifest that pins every stage's config and output, the splits and pairs,
+# and the audit. Run after all build scripts and the audit.
+name: dataset
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  version: v1
+  out: data/processed/manifest.json
+  # Committed copy, so a checkout records exactly which examples v1 contains.
+  report: docs/reports/dataset_v1_manifest.json
+  stages:
+    oard_sample:
+      config: configs/oard_sample.yaml
+      outputs: [data/interim/oard_sample/manifest.json]
+    claim_records:
+      config: configs/claim_records.yaml
+      outputs: [data/interim/claim_records/claims.jsonl, data/interim/claim_records/funnel.jsonl]
+    evidence:
+      config: configs/evidence.yaml
+      outputs: [data/interim/evidence/documents.jsonl, data/interim/evidence/retrieval.jsonl]
+    sft_corpus:
+      config: configs/sft_corpus.yaml
+      outputs: [data/interim/sft_corpus/examples.jsonl, data/interim/sft_corpus/excluded.jsonl]
+    splits:
+      config: configs/splits.yaml
+      outputs:
+        - data/processed/splits/train.jsonl
+        - data/processed/splits/val.jsonl
+        - data/processed/splits/test.jsonl
+        - data/processed/splits/ood_test.jsonl
+        - data/processed/splits/families.json
+    preferences:
+      config: configs/preferences.yaml
+      outputs: [data/processed/preferences/train.jsonl, data/processed/preferences/val.jsonl]
+    audit:
+      config: configs/dataset_audit.yaml
+      outputs:
+        - docs/reports/dataset_audit_sample.json
+        - docs/reports/dataset_audit_verdicts.jsonl
+        - docs/reports/dataset_audit_summary.json
+  splits_dir: data/processed/splits
+  preferences_dir: data/processed/preferences
+  audit_summary: docs/reports/dataset_audit_summary.json

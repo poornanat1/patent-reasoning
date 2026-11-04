@@ -55,9 +55,12 @@ uv run python scripts/build_evidence.py        # -> data/interim/evidence/{docum
 uv run python scripts/build_sft_corpus.py      # -> data/interim/sft_corpus/{examples,excluded}.jsonl
 uv run python scripts/build_splits.py          # -> data/processed/splits/{train,val,test,ood_test}.jsonl
 uv run python scripts/build_preferences.py     # -> data/processed/preferences/{train,val}.jsonl
+uv run python scripts/audit_dataset.py sheet   # -> data/interim/audit/batch-*.md (manual review sheets)
+uv run python scripts/audit_dataset.py summarize  # -> docs/reports/dataset_audit_summary.json
+uv run python scripts/build_manifest.py        # -> data/processed/manifest.json (dataset v1)
 ```
 
-Findings so far: [audit](docs/reports/oard_audit_findings.md), [feasibility](docs/reports/feasibility.md), [claim-level dataset and evidence](docs/reports/claim_level_dataset.md), [SFT corpus](docs/reports/sft_corpus.md), [splits and preference pairs](docs/reports/splits_and_preferences.md).
+Findings so far: [audit](docs/reports/oard_audit_findings.md), [feasibility](docs/reports/feasibility.md), [claim-level dataset and evidence](docs/reports/claim_level_dataset.md), [SFT corpus](docs/reports/sft_corpus.md), [splits and preference pairs](docs/reports/splits_and_preferences.md), [dataset v1 audit](docs/reports/dataset_v1.md).
 
 The sample takes whole applications, chosen by a salted SHA-256 of `app_id`. Rerunning it gives the same sample regardless of row order, and every office action, rejection and citation for a chosen application stays together. That keeps later family-level splits clean. Sample settings live in [configs/oard_sample.yaml](configs/oard_sample.yaml).
 

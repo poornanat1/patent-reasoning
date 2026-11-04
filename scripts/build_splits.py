@@ -8,7 +8,9 @@ Writes to the config's out_dir:
 
 Leakage checks and counts go to the config's report path and MLflow. Train examples whose
 prior art includes an evaluation application's own publication are dropped, since that
-passage text would repeat the evaluation claim.
+passage text would repeat the evaluation claim. Evaluation examples the manual audit found
+wrong (``audit_verdicts``) are dropped too, so no score is computed against a known-bad
+label; audited errors in train stay, as measured noise.
 
 Usage: uv run python scripts/build_splits.py [configs/splits.yaml]
 """
@@ -22,6 +24,7 @@ from pathlib import Path
 import mlflow
 
 from patent_reasoning.config import load_config
+from patent_reasoning.data.dataset_audit import is_error
 from patent_reasoning.data.evidence import normalize_document_id
 from patent_reasoning.data.families import families, family_links
 from patent_reasoning.data.odp import ODPClient
@@ -69,6 +72,13 @@ def main() -> None:
                    and by_id[eid].input.document_ids() & eval_docs]  # fmt: skip
         for eid in leaking:
             del split_of_example[eid]
+        audited_wrong = []
+        if p.get("audit_verdicts"):
+            wrong = {v["example_id"] for v in map(json.loads, open(p["audit_verdicts"]))
+                     if is_error(v)}  # fmt: skip
+            audited_wrong = sorted(eid for eid in wrong if split_of_example.get(eid) in EVAL_SPLITS)
+            for eid in audited_wrong:
+                del split_of_example[eid]
 
         manifest = {"params": p, "splits": {}}
         for split in SPLITS:
@@ -126,6 +136,7 @@ def main() -> None:
             "applications_with_family_links": sum(len(v) > 1 for v in links.values()),
             "dropped_from_eval_not_fully_grounded": len(dropped),
             "dropped_from_train_cites_eval_application": len(leaking),
+            "dropped_from_eval_audited_wrong": audited_wrong,
             "families_spanning_splits": sum(len(v) > 1 for v in split_sets.values()),
             "applications_spanning_splits": sum(len(v) > 1 for v in app_splits.values()),
             "splits": {s: describe(s) for s in SPLITS},

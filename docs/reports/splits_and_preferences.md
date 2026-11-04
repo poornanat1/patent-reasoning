@@ -1,5 +1,7 @@
 # Splits and preference pairs
 
+> **Superseded numbers.** Parser fixes from the dataset audit changed these counts; the current ones are in [dataset_v1.md](dataset_v1.md).
+
 **What this covers.** The SFT corpus (1,144 examples) split into train, validation, in-distribution test and out-of-distribution test sets, with no application family in more than one. Then a first set of DPO preference pairs built from the train and validation splits.
 
 **Result.**

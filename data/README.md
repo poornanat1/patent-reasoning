@@ -11,5 +11,7 @@ Raw and processed data live here but are not committed. Scripts regenerate them 
 - `interim/sft_corpus/`: schema-valid examples (`examples.jsonl`), and every other claim record with the reason it was excluded (`excluded.jsonl`)
 - `processed/splits/`: family-disjoint `train`, `val`, `test` and `ood_test` examples, `families.json` (application → family → split) and `manifest.json` (example IDs and SHA-256 per split)
 - `processed/preferences/`: DPO preference pairs from the train and validation splits
+- `processed/manifest.json`: the dataset v1 manifest (every stage's config and outputs with SHA-256, example IDs per split with application and family, pair counts, audit result); a copy is committed at `docs/reports/dataset_v1_manifest.json`
+- `interim/audit/`: the Markdown sheets the manual audit was done from
 
 The OARD tables join on `ifw_number` (one per office action). Citations link to a specific rejection through `ifw_number` + `action_type` + `action_subtype`. Read every ID column as a string so `app_id` keeps its leading zeros.

@@ -1,5 +1,7 @@
 # Initial SFT corpus
 
+> **Superseded numbers.** Parser fixes from the dataset audit changed these counts; the current ones are in [dataset_v1.md](dataset_v1.md).
+
 **What this covers.** Each claim record becomes a schema-valid `Example` (see [docs/schemas/](../schemas/)), but only when its target is grounded in what the model will see. Every other record is kept in an exclusion file, with the reason it was left out.
 
 **Result.** 1,144 examples from 206 applications, out of 7,005 claim records (16%). None failed schema validation.

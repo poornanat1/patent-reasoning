@@ -24,6 +24,7 @@ def test_dispositions():
               "under 35 U.S.C. 112, 2nd paragraph, set forth in this Office action."),
         Block("08-06", "Claims 30-31 are withdrawn from further consideration pursuant to 37 CFR "
               "1.142(b), there being no allowable generic or linking claim."),
+        Block("08-06", "Claims 40-41 and 44 have been withdrawn from further consideration."),
         Block("07-05-05", "Applicant is advised that should claims 1-9 be found allowable, claims "
               "10-20 will be objected to under 37 CFR 1.75."),
         Block("13-03-01", "The following is a statement of reasons for the indication of "
@@ -34,7 +35,7 @@ def test_dispositions():
     assert d.allowable_dependent == {4, 5, 6, 7, 8, 9, 16}
     assert d.allowed == {21, 22}
     assert d.allowable_over_art == {13}
-    assert d.withdrawn == {30, 31}
+    assert d.withdrawn == {30, 31, 40, 41, 44}
     assert len(d.reasons_for_allowance) == 1 and "hinge" in d.reasons_for_allowance[0]
 
 
@@ -135,6 +136,14 @@ def test_map_evidence():
     limitations = ["a steel hinge", "a latch mounted on the frame", "a battery"]
     mapped = map_evidence(limitations, text, 0, len(text), find_pin_cites(text))
     assert [(c.start, hits) for c, hits in mapped] == [("2:5", [0]), ("3:1", [1])]
+
+
+def test_map_evidence_stops_at_figure_cites():
+    text = ("Smith discloses a steel hinge (Fig. 13) and a latch mounted on the frame "
+            "(paragraph [0071]).")  # fmt: skip
+    mapped = map_evidence(["a steel hinge", "a latch mounted on the frame"], text, 0, len(text),
+                          find_pin_cites(text))  # fmt: skip
+    assert [(c.start, hits) for c, hits in mapped] == [("0071", [1])]
 
 
 def test_restatement_overlap_ignores_interleaved_cites():

@@ -15,3 +15,5 @@ params:
   val_fraction: 0.1
   test_fraction: 0.1
   ood_technology_centers: ["16", "17"]
+  # Evaluation examples with an error verdict in the manual audit are dropped, not moved.
+  audit_verdicts: docs/reports/dataset_audit_verdicts.jsonl

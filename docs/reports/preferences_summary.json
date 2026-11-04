@@ -8,67 +8,63 @@
   ],
   "splits": {
     "train": {
-      "examples": 751,
-      "examples_with_pairs": 692,
-      "pairs": 1344,
+      "examples": 754,
+      "examples_with_pairs": 702,
+      "pairs": 1302,
       "pairs_by_type": {
-        "citation_corruption": 471,
-        "unsupported_rejection": 471,
+        "citation_corruption": 403,
+        "unsupported_rejection": 403,
         "false_rejection": 132,
-        "overconfident_support": 138,
+        "overconfident_support": 232,
         "false_allowance": 132
       },
       "chosen_decision": {
-        "103": 654,
-        "102": 413,
+        "103": 628,
+        "102": 407,
         "no_rejection": 132,
-        "102+112": 36,
-        "101+103": 32,
-        "103+112": 29,
-        "101+102": 24,
-        "101+103+112": 22,
-        "102+103": 2
+        "102+112": 34,
+        "101+103": 29,
+        "103+112": 25,
+        "101+102": 25,
+        "101+103+112": 21,
+        "102+103": 1
       },
       "rejected_decision": {
-        "103": 581,
-        "102": 503,
+        "103": 553,
+        "102": 499,
         "no_rejection": 132,
-        "102+112": 33,
-        "103+112": 28,
-        "101+103": 28,
-        "101+102": 19,
-        "101+103+112": 18,
-        "102+103": 2
+        "102+112": 31,
+        "101+103": 26,
+        "103+112": 23,
+        "101+102": 20,
+        "101+103+112": 17,
+        "102+103": 1
       }
     },
     "val": {
-      "examples": 99,
-      "examples_with_pairs": 92,
-      "pairs": 184,
+      "examples": 78,
+      "examples_with_pairs": 73,
+      "pairs": 135,
       "pairs_by_type": {
-        "citation_corruption": 50,
-        "unsupported_rejection": 50,
+        "citation_corruption": 31,
+        "unsupported_rejection": 31,
         "false_rejection": 42,
         "overconfident_support": 0,
-        "false_allowance": 42
+        "false_allowance": 31
       },
       "chosen_decision": {
-        "103": 51,
-        "102": 46,
         "no_rejection": 42,
-        "101+103": 17,
-        "103+112": 13,
-        "101+102": 12,
-        "102+112": 3
+        "102": 42,
+        "103": 24,
+        "101+103": 15,
+        "103+112": 12
       },
       "rejected_decision": {
-        "102": 74,
-        "no_rejection": 42,
-        "103": 36,
-        "101+103": 12,
-        "103+112": 10,
-        "101+102": 8,
-        "102+112": 2
+        "102": 70,
+        "no_rejection": 31,
+        "103": 16,
+        "101+103": 10,
+        "103+112": 8
       }
     }
   }

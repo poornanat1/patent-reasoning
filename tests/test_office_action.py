@@ -109,6 +109,7 @@ def test_pin_cite_forms():
         ("column_line", "4:1", "4:5"),
         ("paragraph", "0021", "0021"),
     ]
+    assert find_pin_cites("Diamond v. Diehr, 450 U.S. 175 (1981); see (0092).")[0].start == "0092"
 
 
 @pytest.mark.parametrize(
@@ -117,6 +118,11 @@ def test_pin_cite_forms():
         ("Claims 5-7, 9-12 & 20-24 are rejected under 35 U.S.C. 103(a) as obvious.",
          ("103", [5, 6, 7, 9, 10, 11, 12, 20, 21, 22, 23, 24])),
         ("Claim(s) 1-3 is/are rejected under 35 U.S.C. 102(b) as anticipated.", ("102", [1, 2, 3])),
+        ("Claims 3, 8 and 13 rejected under pre-AIA 35 U.S.C. 103(a) as obvious.",
+         ("103", [3, 8, 13])),
+        ("Claims 1-3 and 10 , per above incorporated art rejections, are in the alternative, are "
+         "also rejected under pre-AIA 35 U.S.C. 102(e) as being taught by Gillenson.",
+         ("102", [1, 2, 3, 10])),
     ],
 )  # fmt: skip
 def test_statement_variants(text, expected):

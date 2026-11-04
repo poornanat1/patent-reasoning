@@ -49,6 +49,9 @@ from patent_reasoning.schema import (
 )
 
 # Exclusion reasons, in the order they are checked.
+# Share of a limitation's content words a mapped passage must contain (see ``_mapping``).
+PASSAGE_FLOOR = 0.1
+
 REASONS = (
     "claim_text_unreliable",
     "conflicting_disposition",
@@ -109,8 +112,14 @@ def _grounds(record: dict) -> list[Ground]:
     return out
 
 
-def _mapping(record: dict, visible: set[str], docs: set[str]) -> list[LimitationMapping]:
-    """Limitations the examiner tied to a pin cite whose passages are in the input."""
+def _mapping(record: dict, visible: dict[str, str], docs: set[str]) -> list[LimitationMapping]:
+    """Limitations the examiner tied to a pin cite whose passages are in the input.
+
+    ``visible`` is passage ID -> text. A cited passage that shares fewer than
+    ``PASSAGE_FLOOR`` of the limitation's content words is left out: the audit found these
+    are almost always a cite resolved to the wrong document, or the part of a cited range
+    about something else.
+    """
     out = []
     for i, limitation in enumerate(record["limitations"]):
         by_doc: dict[str, list[str]] = {}
@@ -118,7 +127,11 @@ def _mapping(record: dict, visible: set[str], docs: set[str]) -> list[Limitation
             if i not in e["limitations"] or e["document_id"] not in docs:
                 continue
             ids = [f"{e['document_id']}:{p}" for p in e["paragraphs"]]
-            by_doc.setdefault(e["document_id"], []).extend(x for x in ids if x in visible)
+            by_doc.setdefault(e["document_id"], []).extend(
+                x
+                for x in ids
+                if x in visible and word_coverage(limitation, visible[x]) >= PASSAGE_FLOOR
+            )
         best = max(by_doc.items(), key=lambda kv: len(kv[1]), default=None)
         if best and best[1]:
             doc_id, passage_ids = best
@@ -191,7 +204,8 @@ def build_example(
         ):
             out.reason = "explanation_off_claim"
             return out
-        mapping = _mapping(record, visible, docs)
+        texts = {p.passage_id: p.text for d in inp.prior_art for p in d.passages}
+        mapping = _mapping(record, texts, docs)
         complete = bool(record["limitations"]) and len(mapping) == len(record["limitations"])
         status = "supported" if complete else "partially_supported"
         if len(mapping) < len(record["limitations"]):

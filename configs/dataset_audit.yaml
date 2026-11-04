@@ -1,0 +1,18 @@
+# Audit of the split dataset: automatic checks on every example, and a stratified sample
+# for manual review (round-robin over decision classes within each split).
+name: dataset-audit
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  splits_dir: data/processed/splits
+  cache_dir: data/raw/odp
+  sheet_dir: data/interim/audit
+  # The drawn sample (with each target's hash) and the manual verdicts, both committed.
+  sample: docs/reports/dataset_audit_sample.json
+  verdicts: docs/reports/dataset_audit_verdicts.jsonl
+  report: docs/reports/dataset_audit_summary.json
+  salt: audit-v1
+  quotas: {train: 80, val: 30, test: 40, ood_test: 20}
+  batches: 4
