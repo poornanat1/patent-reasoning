@@ -173,17 +173,17 @@
   },
   "automatic": {
     "train": {
-      "examples": 754,
+      "examples": 20851,
       "limitation_not_in_claim": 0,
-      "parent_claim_missing": 0,
+      "parent_claim_missing": 61,
       "mapped_passage_no_overlap": 0,
-      "explanation_missing": 1,
-      "examiner_text_missing": 1,
+      "explanation_missing": 22,
+      "examiner_text_missing": 22,
       "provenance_incomplete": 0,
       "conflicting_duplicate": 0
     },
     "val": {
-      "examples": 78,
+      "examples": 1557,
       "limitation_not_in_claim": 0,
       "parent_claim_missing": 0,
       "mapped_passage_no_overlap": 0,
@@ -193,7 +193,7 @@
       "conflicting_duplicate": 0
     },
     "test": {
-      "examples": 99,
+      "examples": 1543,
       "limitation_not_in_claim": 0,
       "parent_claim_missing": 0,
       "mapped_passage_no_overlap": 0,
@@ -203,7 +203,7 @@
       "conflicting_duplicate": 0
     },
     "ood_test": {
-      "examples": 21,
+      "examples": 1181,
       "limitation_not_in_claim": 0,
       "parent_claim_missing": 0,
       "mapped_passage_no_overlap": 0,

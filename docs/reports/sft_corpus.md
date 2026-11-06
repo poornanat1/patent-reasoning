@@ -1,6 +1,6 @@
 # Initial SFT corpus
 
-> **Superseded numbers.** Parser fixes from the dataset audit changed these counts; the current ones are in [dataset_v1.md](dataset_v1.md).
+> **Superseded numbers.** Parser fixes from the dataset audit and the full 1% sample build changed these counts; the current ones are in [dataset_v1.md](dataset_v1.md).
 
 **What this covers.** Each claim record becomes a schema-valid `Example` (see [docs/schemas/](../schemas/)), but only when its target is grounded in what the model will see. Every other record is kept in an exclusion file, with the reason it was left out.
 
@@ -88,3 +88,5 @@ The spec aims for about 20,000 SFT claims, and the corpus is 1,144. Two levers w
 2. **Column and line cites.** Granted patents cited by column and line make up 2,727 exclusions, the biggest single loss. The full-text XML has no column or line numbers, so resolving these cites needs the printed page layout.
 
 The first lever is mechanical, and the plan's split day can start on this corpus while the fetch continues.
+
+The first lever has since been pulled: the full sample gives 28,348 examples. See [dataset_v1.md](dataset_v1.md).

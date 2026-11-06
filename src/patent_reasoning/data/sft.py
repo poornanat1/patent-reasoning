@@ -27,6 +27,7 @@ Target construction:
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -48,12 +49,15 @@ from patent_reasoning.schema import (
     Provenance,
 )
 
-# Exclusion reasons, in the order they are checked.
 # Share of a limitation's content words a mapped passage must contain (see ``_mapping``).
 PASSAGE_FLOOR = 0.1
+# A listing that shows only "4. (canceled)": the action's label has no claim text to apply to.
+_CANCELED = re.compile(r"^\s*\d+\s*\.?\s*\(\s*cancell?ed\s*\)", re.IGNORECASE)
 
+# Exclusion reasons, in the order they are checked.
 REASONS = (
     "claim_text_unreliable",
+    "claim_canceled",
     "conflicting_disposition",
     "non_patent_literature",
     "references_unresolved",
@@ -166,6 +170,8 @@ def build_example(
     flags = set(record["flags"])
     if not record["claim_text_reliable"]:
         out.reason = "claim_text_unreliable"
+    elif _CANCELED.match(record["claim_text"]):
+        out.reason = "claim_canceled"
     elif "conflicting_disposition" in flags:
         out.reason = "conflicting_disposition"
     elif "ground_non_patent_literature" in flags:
@@ -208,7 +214,7 @@ def build_example(
         mapping = _mapping(record, texts, docs)
         complete = bool(record["limitations"]) and len(mapping) == len(record["limitations"])
         status = "supported" if complete else "partially_supported"
-        if len(mapping) < len(record["limitations"]):
+        if not complete:
             out.flags.append("mapping_partial")
     elif not grounds:
         if record["decision_source"] == "allowable_dependent" and len(record["limitations"]) == 1:

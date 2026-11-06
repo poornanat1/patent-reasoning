@@ -1,84 +1,88 @@
 {
-  "records": 7163,
-  "examples": 1146,
-  "excluded": 6017,
+  "records": 155138,
+  "examples": 28348,
+  "excluded": 126790,
   "excluded_by_reason": {
-    "claim_text_unreliable": 587,
-    "conflicting_disposition": 32,
-    "non_patent_literature": 265,
-    "references_unresolved": 581,
-    "ground_reference_not_cited": 0,
-    "no_prior_art_text": 1284,
-    "evidence_not_in_input": 2935,
-    "explanation_off_claim": 84,
-    "target_too_long": 249,
+    "claim_text_unreliable": 10167,
+    "claim_canceled": 234,
+    "conflicting_disposition": 340,
+    "non_patent_literature": 4053,
+    "references_unresolved": 12923,
+    "ground_reference_not_cited": 21,
+    "no_prior_art_text": 27949,
+    "evidence_not_in_input": 64080,
+    "explanation_off_claim": 1853,
+    "target_too_long": 5170,
     "schema_invalid": 0
   },
   "evidence_not_in_input_detail": {
-    "column/line cites only": 2803,
-    "cited passages cut": 132
+    "column/line cites only": 61919,
+    "cited passages cut": 2161
   },
   "schema_invalid_examples": [],
   "decisions": {
-    "103": 491,
-    "102": 253,
-    "no_rejection": 224,
-    "112": 63,
-    "103+112": 32,
-    "101+103": 25,
-    "102+112": 23,
-    "101+102": 16,
-    "101+103+112": 11,
-    "101": 4,
-    "102+103": 2,
-    "101+112": 1,
-    "101+102+112": 1
+    "103": 9394,
+    "102": 6913,
+    "no_rejection": 4995,
+    "112": 2998,
+    "103+112": 1011,
+    "102+112": 655,
+    "101+103": 630,
+    "101+102": 601,
+    "101": 428,
+    "102+103": 316,
+    "101+112": 145,
+    "101+103+112": 140,
+    "101+102+112": 68,
+    "102+103+112": 46,
+    "101+102+103": 5,
+    "101+102+103+112": 3
   },
   "decision_class_counts": {
-    "102": 295,
-    "103": 561,
-    "no_rejection": 224,
-    "101": 58,
-    "112": 131
+    "102": 8607,
+    "103": 11545,
+    "no_rejection": 4995,
+    "112": 5066,
+    "101": 2020
   },
   "decision_source": {
-    "rejection_statement": 922,
-    "allowable_dependent": 168,
-    "allowed": 56
+    "rejection_statement": 23353,
+    "allowable_dependent": 3789,
+    "allowed": 1206
   },
   "evidence_status": {
-    "partially_supported": 404,
-    "supported": 450,
-    "not_applicable": 292
+    "partially_supported": 9332,
+    "supported": 10450,
+    "not_applicable": 8566
   },
-  "with_explanation": 967,
+  "with_explanation": 24098,
   "explanation_source": {
-    "examiner_reasoning": 921,
-    "reasons_for_allowance": 46,
-    "none": 179
+    "examiner_reasoning": 23318,
+    "reasons_for_allowance": 780,
+    "none": 4250
   },
-  "with_claim_mapping": 664,
-  "mapped_limitations": 828,
-  "oard_disagrees": 20,
-  "applications": 210,
+  "with_claim_mapping": 15582,
+  "mapped_limitations": 19604,
+  "oard_disagrees": 1218,
+  "applications": 4655,
   "target_tokens_p50_p95_max": [
-    217,
-    572,
-    699
+    213,
+    599,
+    700
   ],
   "flags": {
-    "mapping_partial": 391,
-    "no_reference_explanation": 179,
-    "reasoning_mention": 163,
-    "mapping_unknown": 106,
-    "restatement_low_overlap": 92,
-    "claims_as_filed_ocr": 46,
-    "reasoning_shared": 40,
-    "no_prior_art_text": 39
+    "mapping_partial": 9332,
+    "reasoning_mention": 5161,
+    "no_reference_explanation": 4250,
+    "mapping_unknown": 2265,
+    "restatement_low_overlap": 2224,
+    "reasoning_shared": 2212,
+    "no_prior_art_text": 1441,
+    "claims_as_filed_ocr": 1009
   },
   "excluded_records_by_decision_source": {
-    "rejection_statement": 5917,
-    "allowable_dependent": 88,
-    "allowed": 12
+    "rejection_statement": 123210,
+    "allowable_dependent": 2435,
+    "allowed": 1145
   }
 }

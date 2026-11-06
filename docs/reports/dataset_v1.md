@@ -1,13 +1,14 @@
 # Dataset v1: audit and manifest
 
-**What this covers.** A manual audit of 170 examples drawn from the splits, the fixes it led to, and the dataset v1 manifest built after them.
+**What this covers.** A manual audit of 170 examples, the fixes it led to, and dataset v1: the full 1% sample built with those fixes, and its manifest.
 
 **Result.**
 
 - **Decision labels hold up.** After adjudication, 155 of 170 audited decisions were correct, 13 wrong and 2 unclear. Every wrong one traced to two parser gaps, both now fixed.
 - **Claim-to-passage mappings were the weak part.** Of the 113 audited 102/103 targets, 57 mappings were right, 31 partly right and 25 wrong.
-- **Evaluation sets are clean of every audited error.** All errors left in v1 are in train.
-- **v1 size:** 754 train, 78 validation, 99 test and 21 OOD examples, plus 1,302 + 135 preference pairs.
+- **Audited errors are out of evaluation.** All audited errors left in v1 are in train.
+- **v1 size:** 20,851 train, 1,557 validation, 1,543 test and 1,181 OOD examples, plus 33,981 + 2,690 preference pairs. Every spec target is met.
+- **The audit predates the full build.** It sampled the 500-action build, so v1 has about 30 times as many examples as the audit's source. Its error rates are an estimate for v1, not a measurement. A fresh audit hasn't been run.
 
 Raw files:
 
@@ -23,7 +24,7 @@ Pipelines:
 
 ## How the audit was done
 
-- **Sample.** 80 train, 30 validation, 40 test and 20 OOD examples. Within each split, examples were taken round-robin over decision classes in salted-hash order (`audit-v1`), so rare classes such as 101+112 are represented. The sample was drawn from the build before the fixes below.
+- **Sample.** 80 train, 30 validation, 40 test and 20 OOD examples. Within each split, examples were taken round-robin over decision classes in salted-hash order (`audit-v1`), so rare classes such as 101+112 are represented. The sample was drawn from the 500-action build, before the fixes below.
 - **Sheets.** Each example was shown with:
   - the claim and its parents, and the prior-art documents in the input
   - the target with every mapped passage's text
@@ -78,22 +79,31 @@ Pipelines:
 | "Claims 1-4, 7 and 12-13 have been withdrawn" is read as withdrawn | Withdrawn claims no longer get a rejection target |
 | Evaluation examples with an audited error are dropped (not moved to train) | 7 examples, whose errors (examiner typos, a cite borrowed from another claim, group explanations) no rule catches |
 
-Where each of the 46 examples with an error ended up in v1:
+Two more bugs surfaced when the full build was checked, rather than in the audit:
+
+| Fix | Effect |
+| --- | --- |
+| A claim with no limitations of its own ("An apparatus comprising a sensor according to claim 1") is flagged `mapping_partial` when rejected over art | 46 evaluation examples with no mapping had passed as fully grounded. They're out of evaluation |
+| A claim listed only as "4. (canceled)" is excluded | 234 records, 60 of which had reached the splits with a label and no claim text |
+
+Where each of the 46 examples with an error ended up in v1 (the same in the 500-action build and the full one):
 - **Dropped (35).** Mostly they now have rejection grounds whose evidence is cited only by column and line, or a partial mapping that keeps them out of evaluation.
 - **Target changed (2).**
 - **Unchanged (9).** All 9 are in train.
 
-The automatic checks run on every example and find no remaining problems:
+The automatic checks run on every example:
 - every mapped limitation appears verbatim in its claim
-- every dependent claim has its parents
 - every mapped passage shares words with its limitation
 - no two examples share an input with different decisions
 - provenance is complete
+- every evaluation example passes all of the checks
 
-The exceptions are one train example with no explanation and one train example with no examiner text.
+Train has 105 exceptions out of 20,851:
+- **61 examples name a parent claim missing from the input.** They come from 14 applications. In the ones inspected, the claim named in the text isn't in the parent chain, so the listing and the text disagree or the parent isn't in the listing. These aren't fixed.
+- **22 examples have no explanation, and 22 have no examiner text.**
 
-**Residual error estimate.** 58 audited evaluation examples survive the systematic rules. 7 of them (12%) still had an error, and only the audit caught them. All 7 were mapping or explanation errors; none was a decision error. So:
-- About 12% of the 147 unaudited evaluation examples may have a wrong mapping or explanation target.
+**Residual error estimate.** 58 audited evaluation examples survived the systematic rules of the 500-action build. 7 of them (12%) still had an error, and only the audit caught them. All 7 were mapping or explanation errors; none was a decision error. So, if the full build behaves like the sample:
+- About 12% of evaluation examples may have a wrong mapping or explanation target. The interval is wide with only 58 examples, and the audit removed only those 7, so this applies to nearly all of the 4,281.
 - The decision label error rate in evaluation is likely below 5% (0 of 58 seen).
 - Mapping and explanation scores need this caveat; decision scores less so.
 
@@ -101,18 +111,23 @@ The exceptions are one train example with no explanation and one train example w
 
 | | Train | Validation | Test | OOD test |
 | --- | --- | --- | --- | --- |
-| Examples | 754 | 78 | 99 | 21 |
-| Families | 139 | 13 | 17 | 11 |
-| 102 / 103 / 112 / 101 | 218 / 366 / 79 / 47 | 14 / 17 / 6 / 5 | 12 / 48 / 0 / 0 | 4 / 1 / 15 / 0 |
-| No rejection | 132 (17.5%) | 45 (57.7%) | 39 (39.4%) | 3 (14.3%) |
-| Preference pairs | 1,302 | 135 | | |
+| Examples | 20,851 | 1,557 | 1,543 | 1,181 |
+| Spec target | about 20,000 | 1,000 | 1,000 | 500–1,000 |
+| Families | 3,272 | 327 | 319 | 322 |
+| 102 / 103 / 112 / 101 | 6,436 / 8,398 / 3,341 / 1,635 | 543 / 467 / 292 / 113 | 375 / 481 / 215 / 88 | 119 / 198 / 695 / 19 |
+| No rejection | 3,843 (18.4%) | 362 (23.2%) | 520 (33.7%) | 232 (19.6%) |
+| Preference pairs | 33,981 | 2,690 | | |
 
-- **Why the evaluation sets shrank** (from 99 / 129 / 33):
-  - The 10% passage floor turns more mappings partial, and validation and test keep only fully grounded examples.
-  - The verbless-statement fix gave some evaluation claims a 102/103 ground whose evidence isn't in the input.
-  - Audited errors were dropped.
-- **The test set has no 101 or 112 example.** Macro-F1 over five classes can't be computed on it until the corpus grows, so test scores must be reported per class.
-- **Pair mix:** more `overconfident_support` pairs (232, from 138), because more examples are partially supported.
+**Source.** All 10,588 eligible first actions in the 1% sample (the salted-hash order means the earlier 500 are a prefix). They give 155,138 claim records and 28,348 examples from 4,655 applications, an 18% yield. The fetch took about 20 hours and 92,034 API requests. Run it with `scripts/build_dataset.sh`; it resumes from the cache.
+
+What to keep in mind when using these numbers:
+
+- **The biggest exclusion remains column and line cites.** 61,919 records rejected over art have evidence the input can't show, because the full-text XML has no column or line numbers. Together with records with no prior art text at all (27,949), this means rejections over granted patents are underrepresented compared with those over published applications.
+- **Class balance differs between train and evaluation.** No-rejection is 18% of train but 34% of test, because a no-rejection target is more likely to pass the fully grounded rule. Report per-class scores next to any aggregate, and don't read train's balance into test.
+- **OOD is mostly 112.** 112 is the largest class in technology centers 1600 and 1700, and 101 has only 19 examples there, so OOD 101 scores will be noisy.
+- **Family links barely apply.** Only 10 families span more than one application, which is expected from a 1% random sample. The disjointness assert still runs.
+- **Prior art overlap is measured, not removed.** 55 validation and 62 test applications share a cited document with train; OOD shares none.
+- **Preference pairs far exceed the spec's 3,000.** The DPO phase should subsample them, with the mix decided then. The pairs are still template corruptions. Harder negatives need the fine-tuned model.
 
 **Manifest** ([dataset_v1_manifest.json](dataset_v1_manifest.json), with a copy at `data/processed/manifest.json`). It records:
 - the git commit and schema version
@@ -134,4 +149,4 @@ The build fails if a split file no longer matches the splits manifest, if a fami
 
 Examiner statements remain what the examiner asserted. The audit verdicts are kept separately, so asserted facts and independent checks never mix.
 
-**Next.** The evaluation sets are small and, in test, missing two classes. They grow only with the corpus: fetching the rest of the 1% sample (about 11.5k first actions) is the main lever, and the audit should be repeated on a fresh sample once it is built.
+**Next.** Repeat the audit on a fresh sample of this build before treating the corpus as final, since the existing audit saw only about 3% of it.

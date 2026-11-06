@@ -50,6 +50,7 @@ uv run python scripts/inspection_sheet.py      # Markdown sheet for manual revie
 Next, build one record per claim from each application's first non-final action, and the evidence each claim's input will show:
 
 ```bash
+scripts/build_dataset.sh                      # every step below through the manifest; resumes from the ODP cache
 uv run python scripts/build_claim_records.py   # -> data/interim/claim_records/claims.jsonl
 uv run python scripts/build_evidence.py        # -> data/interim/evidence/{documents,retrieval}.jsonl
 uv run python scripts/build_sft_corpus.py      # -> data/interim/sft_corpus/{examples,excluded}.jsonl

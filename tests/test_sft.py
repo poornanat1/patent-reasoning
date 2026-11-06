@@ -105,6 +105,17 @@ def test_unresolved_labels_are_excluded_with_a_reason():
     assert build(_record(flags=["ground_non_patent_literature"])).reason == "non_patent_literature"
 
 
+def test_canceled_claim_is_excluded():
+    assert build(_record(claim_text="4. (canceled)")).reason == "claim_canceled"
+
+
+def test_claim_with_no_limitations_is_flagged_partial():
+    # "An apparatus comprising a sensor according to claim 1" has nothing left to map.
+    outcome = build(_record(limitations=[]))
+    assert outcome.example.target.evidence_status == "partially_supported"
+    assert "mapping_partial" in outcome.flags
+
+
 def test_duplicate_grounds_collapse():
     g = {"statute": "103", "references": [DOC], "statement": "", "valid": True}
     out = build(_record(grounds=[g, dict(g)]))

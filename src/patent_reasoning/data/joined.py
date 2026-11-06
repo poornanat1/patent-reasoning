@@ -74,7 +74,7 @@ def latest_claims_listing(
 
 def select_office_actions(
     con: duckdb.DuckDBPyConnection,
-    n: int,
+    n: int | None,
     year_min: int,
     year_max: int,
     salt: str,

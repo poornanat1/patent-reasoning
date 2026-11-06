@@ -8,63 +8,83 @@
   ],
   "splits": {
     "train": {
-      "examples": 754,
-      "examples_with_pairs": 702,
-      "pairs": 1302,
+      "examples": 20851,
+      "examples_with_pairs": 18427,
+      "pairs": 33981,
       "pairs_by_type": {
-        "citation_corruption": 403,
-        "unsupported_rejection": 403,
-        "false_rejection": 132,
-        "overconfident_support": 232,
-        "false_allowance": 132
+        "citation_corruption": 9854,
+        "unsupported_rejection": 9854,
+        "false_rejection": 3836,
+        "overconfident_support": 6601,
+        "false_allowance": 3836
       },
       "chosen_decision": {
-        "103": 628,
-        "102": 407,
-        "no_rejection": 132,
-        "102+112": 34,
-        "101+103": 29,
-        "103+112": 25,
-        "101+102": 25,
-        "101+103+112": 21,
-        "102+103": 1
+        "103": 13955,
+        "102": 11217,
+        "no_rejection": 3836,
+        "103+112": 1294,
+        "101+102": 1075,
+        "102+112": 951,
+        "101+103": 928,
+        "102+103": 355,
+        "101+103+112": 252,
+        "101+102+112": 88,
+        "101+102+103": 12,
+        "102+103+112": 11,
+        "101+102+103+112": 7
       },
       "rejected_decision": {
-        "103": 553,
-        "102": 499,
-        "no_rejection": 132,
-        "102+112": 31,
-        "101+103": 26,
-        "103+112": 23,
-        "101+102": 20,
-        "101+103+112": 17,
-        "102+103": 1
+        "102": 13685,
+        "103": 12165,
+        "no_rejection": 3836,
+        "103+112": 1100,
+        "101+102": 924,
+        "102+112": 825,
+        "101+103": 824,
+        "102+103": 312,
+        "101+103+112": 215,
+        "101+102+112": 72,
+        "102+103+112": 10,
+        "101+102+103": 8,
+        "101+102+103+112": 5
       }
     },
     "val": {
-      "examples": 78,
-      "examples_with_pairs": 73,
-      "pairs": 135,
+      "examples": 1557,
+      "examples_with_pairs": 1345,
+      "pairs": 2690,
       "pairs_by_type": {
-        "citation_corruption": 31,
-        "unsupported_rejection": 31,
-        "false_rejection": 42,
+        "citation_corruption": 983,
+        "unsupported_rejection": 983,
+        "false_rejection": 362,
         "overconfident_support": 0,
-        "false_allowance": 31
+        "false_allowance": 362
       },
       "chosen_decision": {
-        "no_rejection": 42,
-        "102": 42,
-        "103": 24,
-        "101+103": 15,
-        "103+112": 12
+        "102": 1031,
+        "103": 834,
+        "no_rejection": 362,
+        "102+112": 117,
+        "103+112": 104,
+        "101+103": 95,
+        "101+102": 58,
+        "102+103": 58,
+        "101+102+112": 17,
+        "101+103+112": 7,
+        "102+103+112": 7
       },
       "rejected_decision": {
-        "102": 70,
-        "no_rejection": 31,
-        "103": 16,
-        "101+103": 10,
-        "103+112": 8
+        "102": 1230,
+        "103": 706,
+        "no_rejection": 362,
+        "102+112": 98,
+        "103+112": 88,
+        "101+103": 80,
+        "101+102": 52,
+        "102+103": 48,
+        "101+102+112": 14,
+        "101+103+112": 6,
+        "102+103+112": 6
       }
     }
   }
