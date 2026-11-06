@@ -110,7 +110,7 @@ Ranges are 95% Wilson intervals. Of the audited 102/103 targets, 36 of 50 evalua
 | --- | --- |
 | Every rejection statement in a text block is read, not only the first | In a sample of 600 actions, 33 had lost at least one statement, about 3% of all statements. A claim could lose a whole ground, as HV850D45:6 lost its 103 |
 | Paragraph cite lists keep every item ("para. 31, 32, 43-45, and 78"; "[0050, 0055]"), and all items support the same limitation | Together with the fix above, 676 more examples have a mapping (16,258, from 15,582) |
-| Statements may carry a parenthetical aside ("(as best understood)") or the typo "area rejected" | Two audited examples had lost a ground this way |
+| Statements may carry a parenthetical aside ("(as best understood)") or the typo "area rejected" | Three audited examples had lost a ground this way |
 | Evaluation examples with an audited error are dropped | 7 examples |
 
 Two earlier bugs surfaced while checking the full build, before this audit's sample was drawn:
@@ -123,9 +123,9 @@ Two earlier bugs surfaced while checking the full build, before this audit's sam
 The fixes moved numbers as expected. OARD disagreement falls from 1,218 to 1,018 examples, and the 93 mid-block statements in a 1,500-action sample all turned out to be real rejections.
 
 **Where the audited examples ended up.**
-- All 9 evaluation errors are gone: 7 dropped by verdict, 2 no longer pass the evidence rules once the fix gave them their missing grounds.
-- 10 other audited evaluation targets changed, mostly from fuller mappings, and weren't reviewed again.
-- In train, 3 examples with errors are gone, 1 has a changed target and 3 are unchanged.
+- All 9 evaluation errors are gone: 7 dropped by verdict, and 2 now carry their missing ground, whose evidence is cited only by column and line, so they're excluded.
+- 10 other audited evaluation targets changed. Their decisions stayed the same. They weren't reviewed again.
+- In train, 2 examples with errors are gone, 1 has a changed target and 3 are unchanged.
 
 ### What remains
 
