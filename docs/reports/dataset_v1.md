@@ -8,7 +8,7 @@
 - **Claim-to-passage mappings were the weak part.** Of the 113 audited 102/103 targets, 57 mappings were right, 31 partly right and 25 wrong.
 - **Audited errors are out of evaluation.** All audited errors left in v1 are in train.
 - **v1 size:** 20,851 train, 1,557 validation, 1,543 test and 1,181 OOD examples, plus 33,981 + 2,690 preference pairs. Every spec target is met.
-- **The audit predates the full build.** It sampled the 500-action build, so v1 has about 30 times as many examples as the audit's source. Its error rates are an estimate for v1, not a measurement. A fresh audit hasn't been run.
+- **The audit predates the full build.** It sampled the 500-action build, so v1 has about 25 times as many examples as the build it sampled. Its error rates are an estimate for v1, not a measurement. A fresh audit hasn't been run.
 
 Raw files:
 
@@ -98,7 +98,7 @@ The automatic checks run on every example:
 - provenance is complete
 - every evaluation example passes all of the checks
 
-Train has 105 exceptions out of 20,851:
+Train has a few exceptions out of 20,851:
 - **61 examples name a parent claim missing from the input.** They come from 14 applications. In the ones inspected, the claim named in the text isn't in the parent chain, so the listing and the text disagree or the parent isn't in the listing. These aren't fixed.
 - **22 examples have no explanation, and 22 have no examiner text.**
 
@@ -149,4 +149,4 @@ The build fails if a split file no longer matches the splits manifest, if a fami
 
 Examiner statements remain what the examiner asserted. The audit verdicts are kept separately, so asserted facts and independent checks never mix.
 
-**Next.** Repeat the audit on a fresh sample of this build before treating the corpus as final, since the existing audit saw only about 3% of it.
+**Next.** Repeat the audit on a fresh sample of this build before treating the corpus as final, since the existing 170 examples came from a build about 25 times smaller.
