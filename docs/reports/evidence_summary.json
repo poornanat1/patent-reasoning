@@ -8,30 +8,30 @@
     "limitation_depth": 2,
     "cited_share": 0.7
   },
-  "documents": 28670,
+  "documents": 28680,
   "documents_by_kind": {
-    "us_patent": 13346,
-    "us_publication": 13576,
+    "us_patent": 13351,
+    "us_publication": 13581,
     "foreign": 1748
   },
   "documents_with_fulltext": {
-    "us_publication": 10624,
-    "us_patent": 3825
+    "us_publication": 10628,
+    "us_patent": 3827
   },
-  "passages": 1691599,
+  "passages": 1692022,
   "passages_per_document_median": 80,
-  "records": 155138,
-  "records_without_any_passages": 40311,
+  "records": 156165,
+  "records_without_any_passages": 40436,
   "records_without_any_passages_by_quality": {
-    "labeled": 29604,
-    "weak": 10707
+    "labeled": 29688,
+    "weak": 10748
   },
   "records_by_quality": {
-    "labeled": 91616,
-    "grounded": 36011,
-    "weak": 27511
+    "labeled": 91787,
+    "grounded": 36601,
+    "weak": 27777
   },
-  "evidence_tokens_median": 2461,
+  "evidence_tokens_median": 2460,
   "claim_tokens_p50_p95_max": [
     238,
     565,
@@ -39,74 +39,74 @@
   ],
   "prompt_reserve_tokens": 1000,
   "max_seq_len": 4096,
-  "records_within_max_seq_len": 151698,
+  "records_within_max_seq_len": 152696,
   "condition": "action_cited",
   "action_cited_pool_size_median": 0,
   "pin_cite_recall": {
     "action_cited": {
-      "records": 32391,
-      "passage_recall": 0.627,
-      "any_hit_rate": 0.925
+      "records": 33282,
+      "passage_recall": 0.58,
+      "any_hit_rate": 0.92
     },
     "retrieved": {
-      "records": 32391,
-      "passage_recall": 0.211,
-      "any_hit_rate": 0.481
+      "records": 33282,
+      "passage_recall": 0.203,
+      "any_hit_rate": 0.506
     }
   },
   "pin_cite_recall_by_max_tokens": {
     "action_cited": {
       "500": {
-        "records": 32391,
-        "passage_recall": 0.219,
-        "any_hit_rate": 0.569
+        "records": 33282,
+        "passage_recall": 0.195,
+        "any_hit_rate": 0.575
       },
       "1000": {
-        "records": 32391,
-        "passage_recall": 0.364,
-        "any_hit_rate": 0.741
+        "records": 33282,
+        "passage_recall": 0.327,
+        "any_hit_rate": 0.738
       },
       "2000": {
-        "records": 32391,
-        "passage_recall": 0.564,
-        "any_hit_rate": 0.889
+        "records": 33282,
+        "passage_recall": 0.517,
+        "any_hit_rate": 0.884
       },
       "3000": {
-        "records": 32391,
-        "passage_recall": 0.685,
-        "any_hit_rate": 0.95
+        "records": 33282,
+        "passage_recall": 0.641,
+        "any_hit_rate": 0.946
       },
       "4000": {
-        "records": 32391,
-        "passage_recall": 0.762,
-        "any_hit_rate": 0.974
+        "records": 33282,
+        "passage_recall": 0.724,
+        "any_hit_rate": 0.971
       }
     },
     "retrieved": {
       "500": {
-        "records": 32391,
-        "passage_recall": 0.062,
-        "any_hit_rate": 0.196
+        "records": 33282,
+        "passage_recall": 0.059,
+        "any_hit_rate": 0.214
       },
       "1000": {
-        "records": 32391,
-        "passage_recall": 0.112,
-        "any_hit_rate": 0.317
+        "records": 33282,
+        "passage_recall": 0.107,
+        "any_hit_rate": 0.341
       },
       "2000": {
-        "records": 32391,
-        "passage_recall": 0.188,
-        "any_hit_rate": 0.448
+        "records": 33282,
+        "passage_recall": 0.181,
+        "any_hit_rate": 0.474
       },
       "3000": {
-        "records": 32391,
-        "passage_recall": 0.249,
-        "any_hit_rate": 0.529
+        "records": 33282,
+        "passage_recall": 0.241,
+        "any_hit_rate": 0.552
       },
       "4000": {
-        "records": 32391,
-        "passage_recall": 0.305,
-        "any_hit_rate": 0.591
+        "records": 33282,
+        "passage_recall": 0.296,
+        "any_hit_rate": 0.613
       }
     }
   }

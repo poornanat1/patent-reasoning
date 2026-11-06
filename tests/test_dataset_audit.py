@@ -5,8 +5,10 @@ from patent_reasoning.data.dataset_audit import (
     check,
     conflicting_duplicates,
     disposition_sentences,
+    random_sample,
     sample,
     stratum,
+    wilson,
 )
 from patent_reasoning.data.office_action import Block
 from patent_reasoning.schema import Example
@@ -72,3 +74,17 @@ def test_disposition_sentences_find_claims_in_ranges_and_statements_without_a_ve
     found = disposition_sentences(blocks, 8)
     assert len(found) == 2 and "101" in found[0] and "103" in found[1]
     assert disposition_sentences(blocks, 20)[0].startswith("Claim 20 is objected")
+
+
+def test_wilson_interval_brackets_the_rate():
+    low, high = wilson(7, 58)
+    assert low < 7 / 58 < high
+    assert wilson(0, 58)[0] == 0.0
+
+
+def test_random_sample_skips_excluded_examples_and_is_deterministic():
+    examples = [_example().model_copy(update={"example_id": f"OA:{i}"}) for i in range(10)]
+    picked = random_sample({"train": examples}, {"train": 4}, "s", {"OA:1", "OA:2"})
+    assert len(picked) == 4
+    assert not {e.example_id for e in picked} & {"OA:1", "OA:2"}
+    assert picked == random_sample({"train": examples}, {"train": 4}, "s", {"OA:1", "OA:2"})

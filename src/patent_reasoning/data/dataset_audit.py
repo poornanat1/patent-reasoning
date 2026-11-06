@@ -128,6 +128,34 @@ def sample(examples: dict[str, list[Example]], quotas: dict[str, int], salt: str
     return out
 
 
+def random_sample(
+    examples: dict[str, list[Example]], quotas: dict[str, int], salt: str, exclude: set[str]
+) -> list[Example]:
+    """Per split, the first ``quotas[split]`` examples in salted-hash order, skipping
+    ``exclude``. Every remaining example is equally likely, so error counts estimate the
+    split's rates directly, which the round-robin ``sample`` can't do."""
+
+    def order(e: Example) -> str:
+        return hashlib.sha256(f"{salt}:{e.example_id}".encode()).hexdigest()
+
+    out = []
+    for split, n in quotas.items():
+        eligible = [e for e in examples.get(split, []) if e.example_id not in exclude]
+        out += sorted(eligible, key=order)[:n]
+    return out
+
+
+def wilson(errors: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    """95% Wilson score interval for an error rate."""
+    if n == 0:
+        return (0.0, 1.0)
+    rate = errors / n
+    denom = 1 + z**2 / n
+    centre = (rate + z**2 / (2 * n)) / denom
+    margin = z * (rate * (1 - rate) / n + z**2 / (4 * n**2)) ** 0.5 / denom
+    return (max(0.0, centre - margin), min(1.0, centre + margin))
+
+
 _DISPOSITION = re.compile(r"rejected under|objected to|allow|withdrawn|cancel", re.IGNORECASE)
 _CLAIMS = re.compile(r"Claims?\s+(\d[\d,;\s\-–&and/through]*)", re.IGNORECASE)
 

@@ -103,7 +103,7 @@ The schemas live in `src/patent_reasoning/schema.py`, with JSON Schema exports i
 - **Out-of-distribution test.** The OOD test set is every family examined in technology centers 1600 (biotechnology) and 1700 (chemistry). The other families go to train, validation or in-distribution test by salted hash (80/10/10).
 - **Fully grounded only.** Validation and test sets contain only fully grounded examples: claims from the publication (not OCR), paragraph evidence for 102/103, no partial mapping, a close claim restatement, and an explanation for every rejection. Other examples of those families are dropped, not moved to train.
 - **No leakage through prior art.** A train example whose prior art includes an evaluation application's own publication is dropped.
-- **Audited.** Evaluation examples that the manual audit found wrong are dropped, not moved to train. The audit, its residual error estimate and the dataset manifest are in [dataset_v1.md](reports/dataset_v1.md).
+- **Audited.** Evaluation examples that either manual audit found wrong are dropped, not moved to train. The audits, their residual error estimate and the dataset manifest are in [dataset_v1.md](reports/dataset_v1.md).
 - **Test sets stay unseen.** The final test sets are never shown to any optimizer, and never used to build preference pairs.
 
 **Preference pairs.** Each pair contrasts the example's target, which is always preferred, with a programmatic corruption that stays schema-valid and inside the input:

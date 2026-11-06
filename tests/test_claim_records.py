@@ -188,3 +188,10 @@ def test_bracketed_claim_headings_start_a_segment():
     assert mode == "marker"
     assert rej.reasoning[seg.start : seg.end].startswith("[Claim 5]")
     assert "hydrophilic" not in rej.reasoning[seg.start : seg.end]
+
+
+def test_every_item_of_a_cite_list_supports_the_limitation():
+    limitation = "a sensor measuring pressure"
+    text = "Smith teaches a sensor measuring pressure (para. 31 and 78). Other text."
+    pairs = map_evidence([limitation], text, 0, len(text), find_pin_cites(text))
+    assert [(c.start, hits) for c, hits in pairs] == [("0031", [0]), ("0078", [0])]

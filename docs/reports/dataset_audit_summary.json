@@ -42,6 +42,7 @@
       "none": 170
     }
   },
+  "error_rates": null,
   "manual": {
     "all": {
       "decision": {
@@ -168,22 +169,22 @@
   },
   "errors_in_current_build": {
     "dropped": 35,
-    "unchanged": 9,
-    "target_changed": 2
+    "unchanged": 7,
+    "target_changed": 4
   },
   "automatic": {
     "train": {
-      "examples": 20851,
+      "examples": 20939,
       "limitation_not_in_claim": 0,
       "parent_claim_missing": 61,
       "mapped_passage_no_overlap": 0,
-      "explanation_missing": 22,
-      "examiner_text_missing": 22,
+      "explanation_missing": 30,
+      "examiner_text_missing": 30,
       "provenance_incomplete": 0,
       "conflicting_duplicate": 0
     },
     "val": {
-      "examples": 1557,
+      "examples": 1597,
       "limitation_not_in_claim": 0,
       "parent_claim_missing": 0,
       "mapped_passage_no_overlap": 0,
@@ -193,7 +194,7 @@
       "conflicting_duplicate": 0
     },
     "test": {
-      "examples": 1543,
+      "examples": 1627,
       "limitation_not_in_claim": 0,
       "parent_claim_missing": 0,
       "mapped_passage_no_overlap": 0,
@@ -203,7 +204,7 @@
       "conflicting_duplicate": 0
     },
     "ood_test": {
-      "examples": 1181,
+      "examples": 1194,
       "limitation_not_in_claim": 0,
       "parent_claim_missing": 0,
       "mapped_passage_no_overlap": 0,
@@ -421,7 +422,7 @@
       "leak": "none",
       "notes": "103 ground but no limitation mapping at all; examiner pin-cites Rogers [0032],[0037],[0058] for the ad-exchange/snippets limitation.",
       "split": "train",
-      "now": "unchanged"
+      "now": "target_changed"
     },
     {
       "example_id": "HA47TVVFPXXIFW4:3",
@@ -432,7 +433,7 @@
       "leak": "none",
       "notes": "103 ground but no limitation mapping; examiner cites Nelms [0022]-[0023],[0025]-[0028] for the age/popularity referral-credit limitation.",
       "split": "train",
-      "now": "unchanged"
+      "now": "target_changed"
     },
     {
       "example_id": "HBGPOQ7APXXIFW4:21",

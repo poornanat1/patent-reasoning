@@ -92,9 +92,11 @@ def parse_blocks(xml: str) -> list[Block]:
 _STATEMENT = re.compile(
     # The verb is optional: about 4% of statements read "Claims 1-5 rejected under ...". A
     # short aside may follow the claims: "Claims 1-8 and 10, per above incorporated art
-    # rejections, are in the alternative, are also rejected under ...".
-    r"Claims?(?:\(s\))?\s+(?P<claims>\d[\d,;\s\-–&and/through]*?)\s*(?:,\s*[^,.;]{1,60},)?\s+"
-    r"(?:(?:is/are|is|are|stand|stands|have\s+been|has\s+been)\s+)?"
+    # rejections, are in the alternative, are also rejected under ...", or "Claims 1-3 (as
+    # best understood) are rejected under ...". "area" is a recurring typo for "are".
+    r"Claims?(?:\(s\))?\s+(?P<claims>\d[\d,;\s\-–&and/through]*?)\s*"
+    r"(?:,\s*[^,.;]{1,60},|\([^()]{1,60}\))?\s+"
+    r"(?:(?:is/are|is|area|are|stand|stands|have\s+been|has\s+been)\s+)?"
     r"(?:in\s+the\s+alternative,?\s+(?:(?:is|are)\s+)?)?"
     r"(?:also\s+|further\s+|again\s+)?rejected\s+under\s+(?:pre-AIA\s+)?35\s*U\.?\s*S\.?\s*C\.?"
     r"\s*§*\s*(?P<statute>101|102|103|112)",
@@ -139,20 +141,25 @@ def is_heading(block: Block) -> bool:
 
 
 def extract_rejections(blocks: list[Block]) -> list[RejectionText]:
-    """Each rejection statement plus the untagged examiner text that follows it."""
+    """Each rejection statement plus the untagged examiner text that follows it. A block may
+    hold several statements; each owns the text up to the next one."""
     out: list[RejectionText] = []
     current: RejectionText | None = None
     for block in blocks:
-        m = _STATEMENT.search(block.text)
-        if m:
+        matches = list(_STATEMENT.finditer(block.text))
+        for i, m in enumerate(matches):
+            start = m.start() if i else 0
+            stop = matches[i + 1].start() if i + 1 < len(matches) else len(block.text)
             current = RejectionText(
                 statute=m.group("statute"),
                 claims=parse_claim_list(m.group("claims")),
                 statement=block.text[m.start() : sentence_end(block.text, m.end())],
-                reasoning=block.text,
+                reasoning=block.text[start:stop],
             )
             out.append(current)
-        elif is_heading(block):
+        if matches:
+            continue
+        if is_heading(block):
             current = None
         elif current is not None and block.text:
             current.reasoning += "\n" + block.text
@@ -285,12 +292,50 @@ _COL_LINE_SHORT = re.compile(
     r"(?<![\d:])(?P<col>\d{1,2}):(?P<l1>\d{1,2})\s*[-–]\s*(?P<l2>\d{1,2})\b"
 )
 _PARA = re.compile(
-    r"(?:(?:paragraphs?|paras?\.?|pars?\.|¶+)\s*\[?(?P<p1>\d{1,4})\]?|\[(?P<b1>\d{4})\]"
+    r"(?:(?:paragraphs?|paras?\.?|pars?\.|¶+)\s*\[?(?P<p1>\d{1,4})\]?"
+    # "[0050]", or a list or range inside the brackets: "[0050, 0055]", "[0023-0024]".
+    r"|\[(?P<b1>\d{4})(?P<inner>(?:\s*(?:,\s*and|,|and|&|-|–)\s*\d{4})*)\]"
     # "(0092)", but not a case citation's year: "Diamond v. Diehr, 450 U.S. 175 (1981)".
     r"|\((?!(?:18|19|20)\d\d\))(?P<b2>\d{4})\))"
     r"(?:\s*(?:-|–|to|through)\s*\[?(?P<p2>\d{1,4})\]?)?",
     re.IGNORECASE,
 )
+
+
+# A further item of a list: "para. 31, 32, 43-45, and 78". It shares the head's offset and raw
+# text, so all of a list's items support the same examiner text (see ``map_evidence``). Not a
+# patent number, a publication number, or a measurement.
+_PARA_ITEM = re.compile(
+    r"\s*(?:,\s*and|,|and|&)\s*(?P<bracket>\[)?(?P<p1>\d{1,4})\]?"
+    r"(?:\s*(?:-|–|to|through)\s*\[?(?P<p2>\d{1,4})\]?)?"
+    r"(?![\d/]|,\s?\d{3}\b|\.\d|\s*(?:%|°|wt\b|mol\b|[nµum]?m\b|cm\b))",
+    re.IGNORECASE,
+)
+_INNER_ITEM = re.compile(r"(?P<sep>,\s*and|,|and|&|-|–)\s*(?P<p>\d{4})")
+
+
+def _paragraph_ranges(text: str, m: re.Match[str]) -> tuple[list[tuple[str, str]], int]:
+    """Every (start, end) range of a paragraph cite, and where the cite's text ends."""
+    p1 = (m.group("p1") or m.group("b1") or m.group("b2")).zfill(4)
+    ranges = [(p1, (m.group("p2") or p1).zfill(4))]
+    for item in _INNER_ITEM.finditer(m.group("inner") or ""):
+        p = item.group("p")
+        if item.group("sep") in "-–":
+            ranges[-1] = (ranges[-1][0], p)
+        else:
+            ranges.append((p, p))
+    end = m.end()
+    if m.group("b2"):
+        return ranges, end
+    while item := _PARA_ITEM.match(text, end):
+        # After a bracketed head, a bare number only continues the list if it looks like one.
+        bare_short = not item.group("bracket") and len(item.group("p1")) < 4
+        if m.group("b1") and bare_short:
+            break
+        p = item.group("p1").zfill(4)
+        ranges.append((p, (item.group("p2") or p).zfill(4)))
+        end = item.end()
+    return ranges, end
 
 
 def find_pin_cites(text: str) -> list[PinCite]:
@@ -307,10 +352,14 @@ def find_pin_cites(text: str) -> list[PinCite]:
             col = m.group("col")
             cites.append(PinCite("column_line", f"{col}:{m.group('l1')}",
                                  f"{col}:{m.group('l2')}", m.start(), m.group(0)))  # fmt: skip
+    consumed = 0  # end of the previous list, whose bracketed items _PARA also matches
     for m in _PARA.finditer(text):
-        p1 = (m.group("p1") or m.group("b1") or m.group("b2")).zfill(4)
-        p2 = (m.group("p2") or p1).zfill(4)
-        cites.append(PinCite("paragraph", p1, p2, m.start(), m.group(0)))
+        if m.start() < consumed:
+            continue
+        ranges, consumed = _paragraph_ranges(text, m)
+        end = consumed
+        for p1, p2 in ranges:
+            cites.append(PinCite("paragraph", p1, p2, m.start(), text[m.start() : end]))
     return sorted(cites, key=lambda c: c.offset)
 
 

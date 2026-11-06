@@ -13,6 +13,7 @@ for step in build_claim_records build_evidence build_sft_corpus build_splits bui
 done
 echo "== audit summary $(date '+%F %T')"
 uv run python scripts/audit_dataset.py summarize
+uv run python scripts/audit_dataset.py summarize configs/dataset_audit_v2.yaml
 echo "== manifest $(date '+%F %T')"
 uv run python scripts/build_manifest.py
 echo "== done $(date '+%F %T')"

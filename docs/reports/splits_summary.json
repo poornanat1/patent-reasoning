@@ -1,94 +1,100 @@
 {
-  "examples_in": 28348,
-  "applications": 4655,
-  "families": 4645,
-  "families_with_several_applications": 10,
-  "applications_in_shared_families": 20,
-  "applications_with_family_links": 3802,
-  "dropped_from_eval_not_fully_grounded": 3207,
-  "dropped_from_train_cites_eval_application": 2,
+  "examples_in": 28541,
+  "applications": 4647,
+  "families": 4638,
+  "families_with_several_applications": 9,
+  "applications_in_shared_families": 18,
+  "applications_with_family_links": 3796,
+  "dropped_from_eval_not_fully_grounded": 3168,
+  "dropped_from_train_cites_eval_application": 3,
   "dropped_from_eval_audited_wrong": [
     "G7JTADTWPPOPPY5:4",
     "G7JTADTWPPOPPY5:5",
+    "H0CVX7R9PXXIFW4:18",
+    "H20FZ846PXXIFW4:14",
+    "H7N9MN0VPXXIFW4:6",
+    "HA46DUQYPXXIFW4:6",
+    "HBP2G915PXXIFW4:25",
     "HEBAILS7PXXIFW4:5",
-    "HK40SW1GPXXIFW4:11",
+    "HMM2OV10PXXIFW4:8",
     "HNHDHGNYPXXIFW4:10",
     "HNHDHGNYPXXIFW4:11",
-    "HNHDHGNYPXXIFW4:8"
+    "HNHDHGNYPXXIFW4:8",
+    "I10NKOHLPXXIFW4:29"
   ],
   "families_spanning_splits": 0,
   "applications_spanning_splits": 0,
   "splits": {
     "train": {
-      "examples": 20851,
-      "applications": 3281,
-      "families": 3272,
+      "examples": 20939,
+      "applications": 3273,
+      "families": 3264,
       "decision_class_counts": {
-        "102": 6436,
-        "103": 8398,
+        "102": 6544,
+        "103": 8554,
         "no_rejection": 3843,
-        "112": 3341,
-        "101": 1635
+        "101": 1591,
+        "112": 3231
       },
       "no_rejection_share": 0.184,
       "evidence_status": {
-        "partially_supported": 6657,
-        "supported": 7990,
-        "not_applicable": 6204
+        "partially_supported": 6395,
+        "supported": 8517,
+        "not_applicable": 6027
       },
       "sharing_prior_art_with_train": null
     },
     "val": {
-      "examples": 1557,
-      "applications": 327,
-      "families": 327,
+      "examples": 1597,
+      "applications": 331,
+      "families": 331,
       "decision_class_counts": {
-        "103": 467,
+        "103": 476,
         "no_rejection": 362,
-        "112": 292,
-        "102": 543,
-        "101": 113
+        "112": 309,
+        "102": 564,
+        "101": 118
       },
-      "no_rejection_share": 0.232,
+      "no_rejection_share": 0.227,
       "evidence_status": {
-        "supported": 983,
-        "not_applicable": 574
+        "supported": 1013,
+        "not_applicable": 584
       },
-      "sharing_prior_art_with_train": 55
+      "sharing_prior_art_with_train": 53
     },
     "test": {
-      "examples": 1543,
-      "applications": 319,
-      "families": 319,
-      "decision_class_counts": {
-        "103": 481,
-        "102": 375,
-        "no_rejection": 520,
-        "112": 215,
-        "101": 88
-      },
-      "no_rejection_share": 0.337,
-      "evidence_status": {
-        "supported": 852,
-        "not_applicable": 691
-      },
-      "sharing_prior_art_with_train": 62
-    },
-    "ood_test": {
-      "examples": 1181,
+      "examples": 1627,
       "applications": 322,
       "families": 322,
       "decision_class_counts": {
-        "112": 695,
-        "no_rejection": 232,
-        "102": 119,
-        "103": 198,
-        "101": 19
+        "103": 549,
+        "102": 401,
+        "no_rejection": 518,
+        "112": 213,
+        "101": 95
       },
-      "no_rejection_share": 0.196,
+      "no_rejection_share": 0.318,
       "evidence_status": {
-        "not_applicable": 883,
-        "supported": 298
+        "supported": 946,
+        "not_applicable": 681
+      },
+      "sharing_prior_art_with_train": 69
+    },
+    "ood_test": {
+      "examples": 1194,
+      "applications": 323,
+      "families": 323,
+      "decision_class_counts": {
+        "112": 690,
+        "no_rejection": 232,
+        "102": 126,
+        "103": 218,
+        "101": 18
+      },
+      "no_rejection_share": 0.194,
+      "evidence_status": {
+        "not_applicable": 874,
+        "supported": 320
       },
       "sharing_prior_art_with_train": 0
     }

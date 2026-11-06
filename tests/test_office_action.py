@@ -1,6 +1,7 @@
 import pytest
 
 from patent_reasoning.data.office_action import (
+    Block,
     attribute_pin_cites,
     extract_rejections,
     find_aliases,
@@ -196,3 +197,46 @@ def test_statement_is_not_cut_at_initials():
             "view of St. Germain and F.C. Smith. Scheiner discloses a lid.")  # fmt: skip
     (rej,) = extract_rejections([Block("07-21", text)])
     assert rej.statement.endswith("F.C. Smith.")
+
+
+def test_every_statement_in_a_block_is_a_rejection():
+    text = (
+        "Claims 5 and 7 are rejected under 35 U.S.C. 103(a) as being unpatentable over Dombrowski. "
+        "In reference to claim 5, see above. Claims 6 and 20 are rejected under 35 U.S.C. 103(a) "
+        "as being unpatentable over Mutabdzija. In reference to claim 6, see [0012]."
+    )
+    first, second = extract_rejections([Block(fp_number="", text=text)])
+    assert (first.claims, second.claims) == ([5, 7], [6, 20])
+    assert "Mutabdzija" not in first.reasoning and "Dombrowski" not in second.reasoning
+    assert [c.start for c in second.pin_cites] == ["0012"] and not first.pin_cites
+
+
+def test_statement_with_a_parenthetical_aside_or_the_area_typo():
+    for text in (
+        "Claims 1-3 (as best understood) are rejected under 35 U.S.C. 102(e) as anticipated.",
+        "Claims 1-3 area rejected under pre-AIA 35 U.S.C. 102(e) as anticipated.",
+    ):
+        assert extract_rejections([Block(fp_number="", text=text)])[0].claims == [1, 2, 3]
+
+
+def test_paragraph_cite_lists_keep_every_item():
+    def ranges(text):
+        return [(c.start, c.end) for c in find_pin_cites(text)]
+
+    assert ranges("para. 31, 32, 43-45, and 78") == [
+        ("0031", "0031"),
+        ("0032", "0032"),
+        ("0043", "0045"),
+        ("0078", "0078"),
+    ]
+    assert ranges("paragraphs 37 and 69") == [("0037", "0037"), ("0069", "0069")]
+    assert ranges("[0050, 0055]") == [("0050", "0050"), ("0055", "0055")]
+    assert ranges("[0023-0024]") == [("0023", "0024")]
+    assert ranges("paragraphs [0128], [0143]") == [("0128", "0128"), ("0143", "0143")]
+
+
+def test_paragraph_list_stops_at_numbers_that_are_not_paragraphs():
+    assert len(find_pin_cites("para. 12 and 6,123,456")) == 1
+    assert len(find_pin_cites("para. 12, 5 mm thick")) == 1
+    assert len(find_pin_cites("[0012], 5 sensors")) == 1
+    assert len(find_pin_cites("para. 12 and 2010/0012345")) == 1

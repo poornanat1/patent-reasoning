@@ -40,6 +40,13 @@ params:
         - docs/reports/dataset_audit_sample.json
         - docs/reports/dataset_audit_verdicts.jsonl
         - docs/reports/dataset_audit_summary.json
+    audit_v2:
+      config: configs/dataset_audit_v2.yaml
+      outputs:
+        - docs/reports/dataset_audit_v2_sample.json
+        - docs/reports/dataset_audit_v2_verdicts.jsonl
+        - docs/reports/dataset_audit_v2_summary.json
   splits_dir: data/processed/splits
   preferences_dir: data/processed/preferences
   audit_summary: docs/reports/dataset_audit_summary.json
+  audit_v2_summary: docs/reports/dataset_audit_v2_summary.json

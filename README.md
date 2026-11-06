@@ -58,6 +58,7 @@ uv run python scripts/build_splits.py          # -> data/processed/splits/{train
 uv run python scripts/build_preferences.py     # -> data/processed/preferences/{train,val}.jsonl
 uv run python scripts/audit_dataset.py sheet   # -> data/interim/audit/batch-*.md (manual review sheets)
 uv run python scripts/audit_dataset.py summarize  # -> docs/reports/dataset_audit_summary.json
+uv run python scripts/audit_dataset.py summarize configs/dataset_audit_v2.yaml  # second audit, with error rates
 uv run python scripts/build_manifest.py        # -> data/processed/manifest.json (dataset v1)
 ```
 

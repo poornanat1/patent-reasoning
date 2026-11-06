@@ -540,7 +540,10 @@ def map_evidence(
         if scores and max(scores) >= MAPPING_THRESHOLD:
             owner = owners[scores.index(max(scores))]
             if owner is not None:
-                hits[owner].append(n)
+                # All items of a list ("para. 31, 32 and 78") share one offset.
+                for i, cite in enumerate(in_segment):
+                    if cite.offset == in_segment[owner].offset:
+                        hits[i].append(n)
     return list(zip(in_segment, hits, strict=True))
 
 

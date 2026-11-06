@@ -74,8 +74,8 @@ def main() -> None:
             del split_of_example[eid]
         audited_wrong = []
         if p.get("audit_verdicts"):
-            wrong = {v["example_id"] for v in map(json.loads, open(p["audit_verdicts"]))
-                     if is_error(v)}  # fmt: skip
+            wrong = {v["example_id"] for path in p["audit_verdicts"]
+                     for v in map(json.loads, open(path)) if is_error(v)}  # fmt: skip
             audited_wrong = sorted(eid for eid in wrong if split_of_example.get(eid) in EVAL_SPLITS)
             for eid in audited_wrong:
                 del split_of_example[eid]

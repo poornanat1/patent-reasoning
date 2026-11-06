@@ -31,14 +31,16 @@ from patent_reasoning.data.dataset_audit import (
     disposition_sentences,
     final,
     is_error,
+    random_sample,
     render,
     sample,
     stratum,
+    wilson,
 )
 from patent_reasoning.data.joined import xml_download_url
 from patent_reasoning.data.odp import ODPClient
 from patent_reasoning.data.office_action import parse_blocks
-from patent_reasoning.data.splits import SPLITS
+from patent_reasoning.data.splits import EVAL_SPLITS, SPLITS
 from patent_reasoning.schema import Example
 from patent_reasoning.tracking import start_run
 
@@ -69,7 +71,12 @@ def sheet(p: dict) -> None:
     examples = load_splits(p["splits_dir"])
     issues, by_split = automatic(examples)
     split_of = {e.example_id: s for s, xs in examples.items() for e in xs}
-    chosen = sample(examples, p["quotas"], p["salt"])
+    if p.get("sampling") == "random":
+        exclude = {x["example_id"] for path in p.get("exclude_samples", [])
+                   for x in json.load(open(path))}  # fmt: skip
+        chosen = random_sample(examples, p["quotas"], p["salt"], exclude)
+    else:
+        chosen = sample(examples, p["quotas"], p["salt"])
     client = ODPClient(p["cache_dir"])
     blocks = {}
     out = Path(p["sheet_dir"])
@@ -132,12 +139,31 @@ def summarize(p: dict) -> None:
     manual = {s: tally([v for v in adjudicated if split_of[v["example_id"]] == s]) for s in SPLITS}
     strata = Counter(stratum_of.values())
     errors = [final(v) for v in verdicts if is_error(v)]
+
+    def rates(vs: list[dict]) -> dict:
+        n = len(vs)
+        out = {"n": n}
+        for name, wrong in (
+            ("any_error", is_error),
+            ("decision_wrong", lambda v: final(v)["decision"] == "wrong"),
+            ("mapping_wrong", lambda v: final(v)["mapping"] == "wrong"),
+            ("explanation_wrong", lambda v: final(v)["explanation"] in ("off_claim", "wrong")),
+        ):
+            k = sum(map(wrong, vs))
+            out[name] = {"count": k, "rate": round(k / n, 3) if n else None,
+                         "ci95": [round(x, 3) for x in wilson(k, n)]}  # fmt: skip
+        return out
+
+    groups = {s: [v for v in verdicts if split_of[v["example_id"]] == s] for s in SPLITS}
+    groups["evaluation"] = [v for v in verdicts if split_of[v["example_id"]] in EVAL_SPLITS]
     summary = {
         "sampled": len(verdicts),
         "sampled_by_decision": dict(strata),
         "examples_with_an_error": len(errors),
         "adjudicated": sum("adjudication" in v for v in verdicts),
         "manual_before_adjudication": tally(verdicts),
+        "error_rates": ({s: rates(vs) for s, vs in groups.items()}
+                        if p.get("sampling") == "random" else None),  # fmt: skip
         "manual": {"all": tally(adjudicated), **manual},
         "errors_in_current_build": dict(Counter(in_current_build(v["example_id"]) for v in errors)),
         "automatic": by_split,

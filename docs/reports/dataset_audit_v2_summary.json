@@ -1,0 +1,557 @@
+{
+  "sampled": 170,
+  "sampled_by_decision": {
+    "no_rejection": 35,
+    "101+103+112": 1,
+    "103": 51,
+    "102+112": 6,
+    "112": 22,
+    "101": 3,
+    "102": 42,
+    "101+103": 4,
+    "103+112": 3,
+    "101+102": 1,
+    "102+103+112": 1,
+    "102+103": 1
+  },
+  "examples_with_an_error": 15,
+  "adjudicated": 0,
+  "manual_before_adjudication": {
+    "decision": {
+      "correct": 163,
+      "wrong": 6,
+      "unclear": 1
+    },
+    "claim_text": {
+      "ok": 168,
+      "unclear": 2
+    },
+    "mapping": {
+      "n/a": 60,
+      "partly": 43,
+      "ok": 63,
+      "wrong": 4
+    },
+    "explanation": {
+      "n/a": 27,
+      "ok": 134,
+      "off_claim": 8,
+      "wrong": 1
+    },
+    "leak": {
+      "none": 170
+    }
+  },
+  "error_rates": {
+    "train": {
+      "n": 80,
+      "any_error": {
+        "count": 6,
+        "rate": 0.075,
+        "ci95": [
+          0.035,
+          0.154
+        ]
+      },
+      "decision_wrong": {
+        "count": 3,
+        "rate": 0.037,
+        "ci95": [
+          0.013,
+          0.105
+        ]
+      },
+      "mapping_wrong": {
+        "count": 1,
+        "rate": 0.013,
+        "ci95": [
+          0.002,
+          0.067
+        ]
+      },
+      "explanation_wrong": {
+        "count": 3,
+        "rate": 0.037,
+        "ci95": [
+          0.013,
+          0.105
+        ]
+      }
+    },
+    "val": {
+      "n": 30,
+      "any_error": {
+        "count": 3,
+        "rate": 0.1,
+        "ci95": [
+          0.035,
+          0.256
+        ]
+      },
+      "decision_wrong": {
+        "count": 1,
+        "rate": 0.033,
+        "ci95": [
+          0.006,
+          0.167
+        ]
+      },
+      "mapping_wrong": {
+        "count": 1,
+        "rate": 0.033,
+        "ci95": [
+          0.006,
+          0.167
+        ]
+      },
+      "explanation_wrong": {
+        "count": 2,
+        "rate": 0.067,
+        "ci95": [
+          0.018,
+          0.213
+        ]
+      }
+    },
+    "test": {
+      "n": 40,
+      "any_error": {
+        "count": 6,
+        "rate": 0.15,
+        "ci95": [
+          0.071,
+          0.291
+        ]
+      },
+      "decision_wrong": {
+        "count": 2,
+        "rate": 0.05,
+        "ci95": [
+          0.014,
+          0.165
+        ]
+      },
+      "mapping_wrong": {
+        "count": 2,
+        "rate": 0.05,
+        "ci95": [
+          0.014,
+          0.165
+        ]
+      },
+      "explanation_wrong": {
+        "count": 4,
+        "rate": 0.1,
+        "ci95": [
+          0.04,
+          0.231
+        ]
+      }
+    },
+    "ood_test": {
+      "n": 20,
+      "any_error": {
+        "count": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.161
+        ]
+      },
+      "decision_wrong": {
+        "count": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.161
+        ]
+      },
+      "mapping_wrong": {
+        "count": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.161
+        ]
+      },
+      "explanation_wrong": {
+        "count": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.161
+        ]
+      }
+    },
+    "evaluation": {
+      "n": 90,
+      "any_error": {
+        "count": 9,
+        "rate": 0.1,
+        "ci95": [
+          0.054,
+          0.179
+        ]
+      },
+      "decision_wrong": {
+        "count": 3,
+        "rate": 0.033,
+        "ci95": [
+          0.011,
+          0.093
+        ]
+      },
+      "mapping_wrong": {
+        "count": 3,
+        "rate": 0.033,
+        "ci95": [
+          0.011,
+          0.093
+        ]
+      },
+      "explanation_wrong": {
+        "count": 6,
+        "rate": 0.067,
+        "ci95": [
+          0.031,
+          0.138
+        ]
+      }
+    }
+  },
+  "manual": {
+    "all": {
+      "decision": {
+        "correct": 163,
+        "wrong": 6,
+        "unclear": 1
+      },
+      "claim_text": {
+        "ok": 168,
+        "unclear": 2
+      },
+      "mapping": {
+        "n/a": 60,
+        "partly": 43,
+        "ok": 63,
+        "wrong": 4
+      },
+      "explanation": {
+        "n/a": 27,
+        "ok": 134,
+        "off_claim": 8,
+        "wrong": 1
+      },
+      "leak": {
+        "none": 170
+      }
+    },
+    "train": {
+      "decision": {
+        "correct": 76,
+        "wrong": 3,
+        "unclear": 1
+      },
+      "claim_text": {
+        "ok": 79,
+        "unclear": 1
+      },
+      "mapping": {
+        "n/a": 20,
+        "partly": 32,
+        "ok": 27,
+        "wrong": 1
+      },
+      "explanation": {
+        "n/a": 9,
+        "ok": 68,
+        "off_claim": 3
+      },
+      "leak": {
+        "none": 80
+      }
+    },
+    "val": {
+      "decision": {
+        "correct": 29,
+        "wrong": 1
+      },
+      "claim_text": {
+        "ok": 29,
+        "unclear": 1
+      },
+      "mapping": {
+        "ok": 17,
+        "partly": 6,
+        "n/a": 6,
+        "wrong": 1
+      },
+      "explanation": {
+        "ok": 23,
+        "n/a": 5,
+        "off_claim": 2
+      },
+      "leak": {
+        "none": 30
+      }
+    },
+    "test": {
+      "decision": {
+        "correct": 38,
+        "wrong": 2
+      },
+      "claim_text": {
+        "ok": 40
+      },
+      "mapping": {
+        "n/a": 16,
+        "ok": 18,
+        "wrong": 2,
+        "partly": 4
+      },
+      "explanation": {
+        "n/a": 11,
+        "ok": 25,
+        "off_claim": 3,
+        "wrong": 1
+      },
+      "leak": {
+        "none": 40
+      }
+    },
+    "ood_test": {
+      "decision": {
+        "correct": 20
+      },
+      "claim_text": {
+        "ok": 20
+      },
+      "mapping": {
+        "n/a": 18,
+        "partly": 1,
+        "ok": 1
+      },
+      "explanation": {
+        "n/a": 2,
+        "ok": 18
+      },
+      "leak": {
+        "none": 20
+      }
+    }
+  },
+  "errors_in_current_build": {
+    "unchanged": 3,
+    "dropped": 11,
+    "target_changed": 1
+  },
+  "automatic": {
+    "train": {
+      "examples": 20939,
+      "limitation_not_in_claim": 0,
+      "parent_claim_missing": 61,
+      "mapped_passage_no_overlap": 0,
+      "explanation_missing": 30,
+      "examiner_text_missing": 30,
+      "provenance_incomplete": 0,
+      "conflicting_duplicate": 0
+    },
+    "val": {
+      "examples": 1597,
+      "limitation_not_in_claim": 0,
+      "parent_claim_missing": 0,
+      "mapped_passage_no_overlap": 0,
+      "explanation_missing": 0,
+      "examiner_text_missing": 0,
+      "provenance_incomplete": 0,
+      "conflicting_duplicate": 0
+    },
+    "test": {
+      "examples": 1627,
+      "limitation_not_in_claim": 0,
+      "parent_claim_missing": 0,
+      "mapped_passage_no_overlap": 0,
+      "explanation_missing": 0,
+      "examiner_text_missing": 0,
+      "provenance_incomplete": 0,
+      "conflicting_duplicate": 0
+    },
+    "ood_test": {
+      "examples": 1194,
+      "limitation_not_in_claim": 0,
+      "parent_claim_missing": 0,
+      "mapped_passage_no_overlap": 0,
+      "explanation_missing": 0,
+      "examiner_text_missing": 0,
+      "provenance_incomplete": 0,
+      "conflicting_duplicate": 0
+    }
+  },
+  "errors": [
+    {
+      "example_id": "GS3MOMWFPPOPPY5:21",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Explanation is about claims 1, 9, 14 and 22 ('Claim 1, lines 4-5 ... first race') and never names claim 21. It reaches claim 21 only through base claim 14.",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "HWKV4K3RPXXIFW4:8",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Most of the explanation concerns claims 23-24 ('computer readable medium'). Only the closing sentences on 'Claims 1-11 recite a microprocessor' apply to claim 8.",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "HQ57462SPXXIFW4:6",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Missing 102: 'Claims 1-10, 12-14, 16 and 17 (as best understood) are rejected under pre-AIA 35 U.S.C. 102(e) as being anticipated by Shaffer (US 7,578,117)'. Target has 112 only, so the 102 mapping is also absent.",
+      "split": "train",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HBP2G915PXXIFW4:25",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "The limitation maps to 0070, a generic passage on the CRM and middleware that says nothing about time stamps or the data field. The examiner's reasoning for it rests on 0059, 0087-0090, 0133-0134 and 0137-0138 (LocalID/ServerID).",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "H0CVX7R9PXXIFW4:18",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Only one clause, '(claims 5 and 18)', concerns this claim; the rest covers claims 6, 19, 8, 21, 22 and 23.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "H7N9MN0VPXXIFW4:6",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Only the opening on 'Claims 6 and 18' concerns this claim; most of the text reasons about claims 7, 19, 8, 16 and 17.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "GH4PDADUPPOPPY5:5",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Missing 102: 'Claims 1-12, 14, and 16-20 (as presently understood) are rejected under 35 U.S.C. 102(b)' over Creaghan covers claim 5; that reference has 0 passages (flag no_prior_art_text). Explanation discusses claims 1, 2, 2-4 and 7 and never names claim 5, which is reached only through parent claim 1.",
+      "split": "train",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HV850D45PXXIFW4:6",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Missing 103: 'Claims 6, 15, and 20 are rejected under pre-AIA 35 U.S.C. 103(a)' over Dombrowski and Mutabdzija; that sentence runs on into 'In reference to Claim 6', which may have affected extraction. Target keeps only 112, and the explanation covers only the 112 ground.",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HA46DUQYPXXIFW4:6",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "ok",
+      "explanation": "wrong",
+      "leak": "none",
+      "notes": "Spurious 102 from an examiner typo: 'Claim 1-5, 8-12 and 5-19' almost certainly means 15-19, since claim 6 is separately rejected under 103 over Salafia in view of Seymour. Explanation says Salafia 'does not expressly disclose features of these claims', contradicting the 102 ground.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HPBMTNXWPXXIFW4:12",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "partly",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "Statement is \"over Best and Suzuki in view [of] Naidenov\", but target lists only 20110009191; Best and Suzuki, cited by short name, were dropped. claim_mapping is also empty despite resolved pin 0033.",
+      "split": "train",
+      "now": "unchanged"
+    },
+    {
+      "example_id": "HPVADPS0PXXIFW4:16",
+      "decision": "wrong",
+      "claim_text": "ok",
+      "mapping": "n/a",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Missing 103: \"Claims 15-17 area rejected under pre-AIA 35 U.S.C. 103(a)\" covers 16; the typo \"area\" probably defeated parsing. Explanation cites only claims 1, 3, 4, 14 and never claim 16 or 15.",
+      "split": "test",
+      "now": "dropped"
+    },
+    {
+      "example_id": "GHDN0FV6PPOPPY5:10",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "The mapped passage 0023 concerns a servo-adjustment \"prescribed pattern\" and says nothing of hologram count, address or incident angle as management information. It matches the examiner's first pin only; [0141]-[0145] are not in the input and the resolved 0126 is about tilt.",
+      "split": "train",
+      "now": "target_changed"
+    },
+    {
+      "example_id": "H20FZ846PXXIFW4:14",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "ok",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Only the last sentence addresses claim 14. The rest is 112 reasoning on parent claim 1 plus an unrelated claim 8 antecedent-basis paragraph (\"the step of updating the graphical content\"), and claim 14 does not depend from claim 8.",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "I10NKOHLPXXIFW4:29",
+      "decision": "correct",
+      "claim_text": "unclear",
+      "mapping": "wrong",
+      "explanation": "off_claim",
+      "leak": "none",
+      "notes": "Examiner's group text for claims 26-29 recites \"at least about 20 mol %\" while claim 29 requires 80 mol %. Mapped 0074 says \"less than about 74 mol %\" neutralized, which contradicts the limitation even though it follows the examiner's pin.",
+      "split": "val",
+      "now": "dropped"
+    },
+    {
+      "example_id": "HMM2OV10PXXIFW4:8",
+      "decision": "correct",
+      "claim_text": "ok",
+      "mapping": "wrong",
+      "explanation": "ok",
+      "leak": "none",
+      "notes": "The copper in 0048 is the core of \"a copper-core solder ball\" (solder conductor 6), not the claimed metal films. The mapping follows the examiner's pin, but the passage does not disclose the limitation.",
+      "split": "test",
+      "now": "dropped"
+    }
+  ]
+}

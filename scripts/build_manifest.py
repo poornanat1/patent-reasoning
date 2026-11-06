@@ -77,6 +77,7 @@ def main() -> None:
         pairs[path.stem] = {"pairs": len(rows), "types": dict(Counter(r["type"] for r in rows))}
 
     audit = json.load(open(p["audit_summary"]))
+    audit_v2 = json.load(open(p["audit_v2_summary"]))
     manifest = {
         "dataset_version": p["version"],
         "schema_version": SCHEMA_VERSION,
@@ -92,6 +93,7 @@ def main() -> None:
         "preference_pairs": pairs,
         "audit": {k: audit[k] for k in ("sampled", "examples_with_an_error")}
         | {"manual": audit["manual"]["all"]},
+        "audit_v2": {k: audit_v2[k] for k in ("sampled", "examples_with_an_error", "error_rates")},
     }
     text = json.dumps(manifest, indent=1) + "\n"
     with start_run(cfg):
