@@ -98,6 +98,7 @@ def _input(record: dict, documents: dict[str, dict], passage_ids: list[str]) -> 
         )
     return ExampleInput(
         claim=ClaimText(number=record["claim_number"], text=record["claim_text"]),
+        limitations=record["limitations"],
         parent_claims=[
             ClaimText(number=n, text=t)
             for n, t in zip(record["parent_claims"], record["parent_claim_texts"], strict=True)

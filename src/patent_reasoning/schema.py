@@ -20,7 +20,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-SCHEMA_VERSION = "1.2"
+SCHEMA_VERSION = "1.3"
 
 Statute = Literal["101", "102", "103", "112"]
 PRIOR_ART_STATUTES = ("102", "103")
@@ -69,6 +69,11 @@ class PriorArtDocument(_Strict):
 
 class ExampleInput(_Strict):
     claim: ClaimText
+    limitations: list[str] = Field(
+        default_factory=list,
+        description="This claim's own limitations, split from its text and each verbatim in it. "
+        "A claim mapping has one entry per limitation, in this order.",
+    )
     parent_claims: list[ClaimText] = Field(
         default_factory=list,
         description="Claims this claim depends on, nearest first, so the full scope is visible.",
@@ -218,7 +223,7 @@ class Provenance(_Strict):
 
 
 class Example(_Strict):
-    schema_version: Literal["1.2"] = SCHEMA_VERSION
+    schema_version: Literal["1.3"] = SCHEMA_VERSION
     example_id: str = Field(description="'<office_action_id>:<claim number>'.")
     input: ExampleInput
     target: ModelOutput

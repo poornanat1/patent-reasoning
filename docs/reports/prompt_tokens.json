@@ -1,0 +1,98 @@
+{
+  "tokenizer": "mlx-community/Qwen3-8B-4bit",
+  "revision": "545dc4251c05440727734bcd94334791f6ab0192",
+  "splits": {
+    "train": {
+      "examples": 20939,
+      "prompt_tokens": {
+        "p50": 3235,
+        "p95": 3703,
+        "p99": 3971,
+        "max": 5221
+      },
+      "target_tokens": {
+        "p50": 238,
+        "p95": 614,
+        "p99": 741,
+        "max": 1105
+      },
+      "prompt_plus_target_tokens": {
+        "p50": 3497,
+        "p95": 4074,
+        "p99": 4361,
+        "max": 6086
+      },
+      "over_max_seq_len": 933,
+      "chars_per_prompt_token": 4.27
+    },
+    "val": {
+      "examples": 1597,
+      "prompt_tokens": {
+        "p50": 3243,
+        "p95": 3755,
+        "p99": 3989,
+        "max": 4510
+      },
+      "target_tokens": {
+        "p50": 227,
+        "p95": 580,
+        "p99": 706,
+        "max": 988
+      },
+      "prompt_plus_target_tokens": {
+        "p50": 3492,
+        "p95": 4051,
+        "p99": 4383,
+        "max": 4643
+      },
+      "over_max_seq_len": 65,
+      "chars_per_prompt_token": 4.28
+    },
+    "test": {
+      "examples": 1627,
+      "prompt_tokens": {
+        "p50": 3250,
+        "p95": 3705,
+        "p99": 3953,
+        "max": 4387
+      },
+      "target_tokens": {
+        "p50": 214,
+        "p95": 581,
+        "p99": 674,
+        "max": 916
+      },
+      "prompt_plus_target_tokens": {
+        "p50": 3488,
+        "p95": 4049,
+        "p99": 4382,
+        "max": 4950
+      },
+      "over_max_seq_len": 68,
+      "chars_per_prompt_token": 4.26
+    },
+    "ood_test": {
+      "examples": 1194,
+      "prompt_tokens": {
+        "p50": 3240,
+        "p95": 4241,
+        "p99": 7471,
+        "max": 18129
+      },
+      "target_tokens": {
+        "p50": 188,
+        "p95": 695,
+        "p99": 755,
+        "max": 917
+      },
+      "prompt_plus_target_tokens": {
+        "p50": 3467,
+        "p95": 4652,
+        "p99": 7547,
+        "max": 18154
+      },
+      "over_max_seq_len": 240,
+      "chars_per_prompt_token": 3.92
+    }
+  }
+}

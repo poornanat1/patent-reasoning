@@ -26,6 +26,12 @@ train = [
     "accelerate>=1.0",
     "bitsandbytes>=0.44; sys_platform == 'linux'",
 ]
+# Local inference on Apple silicon (MLX), with outputs constrained to the JSON schema.
+infer = [
+    "mlx-lm>=0.32; sys_platform == 'darwin'",
+    "outlines>=1.3",
+    "llguidance>=1.9",
+]
 # Prompt optimization (Phase 6). GEPA ships as dspy.GEPA.
 optim = ["dspy>=3.0"]
 eval = ["scikit-learn>=1.5"]

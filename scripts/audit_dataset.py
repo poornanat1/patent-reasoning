@@ -162,8 +162,9 @@ def summarize(p: dict) -> None:
         "examples_with_an_error": len(errors),
         "adjudicated": sum("adjudication" in v for v in verdicts),
         "manual_before_adjudication": tally(verdicts),
-        "error_rates": ({s: rates(vs) for s, vs in groups.items()}
-                        if p.get("sampling") == "random" else None),  # fmt: skip
+        "error_rates": (
+            {s: rates(vs) for s, vs in groups.items()} if p.get("sampling") == "random" else None
+        ),  # fmt: skip
         "manual": {"all": tally(adjudicated), **manual},
         "errors_in_current_build": dict(Counter(in_current_build(v["example_id"]) for v in errors)),
         "automatic": by_split,

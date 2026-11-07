@@ -16,7 +16,7 @@ uv run python scripts/export_schemas.py --check  # fail if stale (also covered b
 
 ## The three parts
 
-- **`input`** is everything the model sees: the claim, the claims it depends on (nearest first), and the cited prior art as passages. It never contains the office action, because the action states the outcome. Unknown fields are rejected, so nothing extra can slip in.
+- **`input`** is everything the model sees: the claim, its own limitations as split by the pipeline, the claims it depends on (nearest first), and the cited prior art as passages. It never contains the office action, because the action states the outcome. Unknown fields are rejected, so nothing extra can slip in.
 - **`target`** is a `ModelOutput`:
   - `grounds`: the rejection grounds, empty for no rejection
   - `claim_mapping`: this claim's limitations mapped to passages
@@ -30,7 +30,7 @@ uv run python scripts/export_schemas.py --check  # fail if stale (also covered b
 - **Ground references.** A 102 ground relies on exactly one reference, a 103 ground on one or more, and 101/112 on none.
 - **Evidence status** applies only when there is a 102/103 ground. Otherwise it is `not_applicable`.
 - **Passage IDs** are `<document_id>:<locator key>`, for example `20130173955:0131`. Every passage or document that a target cites must appear in the input.
-- **Claim mapping** covers only the claim's own limitations. A dependent claim's parent limitations are mapped in the parent's example. Limitations are quoted verbatim from the claim.
+- **Claim mapping** covers only the claim's own limitations. A dependent claim's parent limitations are mapped in the parent's example. Limitations are quoted verbatim from the claim, as listed in `input.limitations`. A model's mapping is either empty or one entry per listed limitation, in order; a training target may list only the limitations the examiner's cites reach (`mapping_partial`).
 - **No-rejection examples** come from the office action text. Claims are either "allowed" or "objected to as being dependent upon a rejected base claim, but would be allowable if rewritten…". They don't come from OARD's `objected` rows, which also include objections for informalities. The examiner judged these claims against the same cited art.
 - **Explanations for allowable claims.** When the action has a statement of reasons for allowable subject matter that names the claim, it is the explanation (`explanation_source: "reasons_for_allowance"`).
 - **Missing explanations.** When the examiner gives no reasons (common for allowable claims), `target.explanation` is `null`, `provenance.explanation_source` is `"none"`, and the example is flagged `no_reference_explanation`.

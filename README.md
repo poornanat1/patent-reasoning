@@ -62,6 +62,14 @@ uv run python scripts/audit_dataset.py summarize configs/dataset_audit_v2.yaml  
 uv run python scripts/build_manifest.py        # -> data/processed/manifest.json (dataset v1)
 ```
 
+Generation needs the `infer` extra (MLX, Apple silicon) and downloads Qwen3-8B (4.6 GB) on first use:
+
+```bash
+uv sync --extra infer
+uv run python scripts/measure_prompt_tokens.py # -> docs/reports/prompt_tokens.json
+uv run python scripts/generate.py configs/generation/base_zero_shot.yaml --split val  # resumable
+```
+
 Findings so far: [audit](docs/reports/oard_audit_findings.md), [feasibility](docs/reports/feasibility.md), [claim-level dataset and evidence](docs/reports/claim_level_dataset.md), [SFT corpus](docs/reports/sft_corpus.md), [splits and preference pairs](docs/reports/splits_and_preferences.md), [dataset v1 audit](docs/reports/dataset_v1.md).
 
 The sample takes whole applications, chosen by a salted SHA-256 of `app_id`. Rerunning it gives the same sample regardless of row order, and every office action, rejection and citation for a chosen application stays together. That keeps later family-level splits clean. Sample settings live in [configs/oard_sample.yaml](configs/oard_sample.yaml).

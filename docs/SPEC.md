@@ -11,6 +11,7 @@ The model plays the examiner. It sees one claim and the prior art the examiner h
 **Input**
 
 - The claim text, plus the text of any claims it depends on
+- The claim's own limitations, split from its text by the pipeline and each quoted verbatim. The claim mapping has one entry per limitation, so mappings can be scored limitation by limitation.
 - The cited prior-art documents, as passages under a fixed context budget that is the same for every experiment (see [Evidence](#evidence))
 
 The examiner's office action is **never** part of the input. It states the outcome ("Claims 1-5 are rejected under 35 U.S.C. 103"), so including it would leak the label.
@@ -156,7 +157,11 @@ All variants use the same evidence retrieval and context budget, so differences 
 
 Thinking mode stays off everywhere. Otherwise prompt-optimized variants could reason at length while fine-tuned ones don't, which would confound both accuracy and cost.
 
-The evidence budget is re-measured with the Qwen3 tokenizer; until then, tokens are estimated at 4 characters each.
+**Generation.** Every variant decodes greedily, so its outputs are deterministic. Decoding is constrained to a per-example JSON schema: fields in a fixed order (mapping, explanation, grounds, evidence status), and a mapping that is either empty or one entry per listed limitation. Document and passage IDs are not constrained, so citing something outside the input stays possible and is scored. Outputs that break a rule the schema can't express, such as a 102 ground with two references, count as invalid and are not repaired. Details: [base_model.md](reports/base_model.md).
+
+**Backend.** Local inference uses the MLX 4-bit build of Qwen3-8B (group size 64), pinned to its revision. That isn't NF4, so variants are only compared when they run on the same backend and quantization.
+
+**Token budget.** Measured with the Qwen3 tokenizer, the zero-shot prompt has a median of 3,240 tokens (about 4.3 characters per token, close to the original estimate of 4). Prompt plus target exceeds 4,096 tokens for 4.5% of train and 20% of OOD examples ([prompt_tokens.json](reports/prompt_tokens.json)). Inference has room, since Qwen3's context is 32k; how training handles the long examples is decided with the SFT config.
 
 ## Reproducibility
 

@@ -1,0 +1,21 @@
+# Experiment A: frozen base model, zero-shot. Greedy decoding constrained to the per-example
+# output schema, thinking off (see src/patent_reasoning/model/).
+name: base-zero-shot
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  model:
+    backend: mlx
+    # MLX 4-bit (group size 64) build of Qwen/Qwen3-8B, pinned to its revision.
+    id: mlx-community/Qwen3-8B-4bit
+    revision: 545dc4251c05440727734bcd94334791f6ab0192
+    max_new_tokens: 1024
+    constrained: true
+  prompt:
+    shots: 0
+  splits_dir: data/processed/splits
+  split: val
+  limit: null
+  out_dir: data/interim/generations/base_zero_shot

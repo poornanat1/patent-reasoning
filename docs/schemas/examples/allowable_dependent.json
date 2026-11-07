@@ -1,11 +1,19 @@
 {
-  "schema_version": "1.2",
+  "schema_version": "1.3",
   "example_id": "I1HUBKC5PXXIFW4:4",
   "input": {
     "claim": {
       "number": 4,
       "text": "4. The method according to claim 1 comprising: before a preplanned disconnection of said given enclosure: identifying a RAID GROUP having more than a predefined number of members stored in the given enclosure, wherein said predefined number corresponds to a number of said N parity members in said RAID groups; allocating an alternative RAID group for the identified RAID group; wherein said alternative RAID group does not have more than said predefined number of members in said given enclosure; copying data from said identified RAID group to said alternative RAID group; and disconnecting said given enclosure upon successful copying."
     },
+    "limitations": [
+      "before a preplanned disconnection of said given enclosure: identifying a RAID GROUP having more than a predefined number of members stored in the given enclosure",
+      "wherein said predefined number corresponds to a number of said N parity members in said RAID groups",
+      "allocating an alternative RAID group for the identified RAID group",
+      "wherein said alternative RAID group does not have more than said predefined number of members in said given enclosure",
+      "copying data from said identified RAID group to said alternative RAID group",
+      "disconnecting said given enclosure upon successful copying"
+    ],
     "parent_claims": [
       {
         "number": 1,
