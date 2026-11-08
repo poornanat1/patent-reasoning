@@ -68,6 +68,8 @@ Generation needs the `infer` extra (MLX, Apple silicon) and downloads Qwen3-8B (
 uv sync --extra infer
 uv run python scripts/measure_prompt_tokens.py # -> docs/reports/prompt_tokens.json
 uv run python scripts/generate.py configs/generation/base_zero_shot.yaml --split val  # resumable
+scripts/run_baselines.sh                      # zero-shot and few-shot on every evaluation split
+uv run python scripts/score.py configs/generation/base_zero_shot.yaml --split val  # -> <out_dir>/val.scores.json
 ```
 
 Findings so far: [audit](docs/reports/oard_audit_findings.md), [feasibility](docs/reports/feasibility.md), [claim-level dataset and evidence](docs/reports/claim_level_dataset.md), [SFT corpus](docs/reports/sft_corpus.md), [splits and preference pairs](docs/reports/splits_and_preferences.md), [dataset v1 audit](docs/reports/dataset_v1.md).

@@ -136,7 +136,9 @@ All variants use the same evidence retrieval and context budget, so differences 
 - **Citations:** precision (cited passages exist and support the limitation) and unsupported-assertion rate.
 - **Mapping:** limitation-level agreement with the examiner's pin cites, where available.
 - **Cost:** inference latency and total experiment cost (GPU hours, optimizer calls, tokens).
-- **Statistics:** bootstrap 95% confidence intervals and paired error comparisons.
+- **Statistics:** bootstrap 95% confidence intervals and paired error comparisons, resampling whole applications.
+
+Definitions, slices and the limits of each metric: [evaluation.md](reports/evaluation.md).
 
 ## Model and training defaults
 
