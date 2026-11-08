@@ -14,7 +14,7 @@ params:
     max_new_tokens: 1024
     constrained: true
   prompt:
-    shots: 0
+    shots: []
   splits_dir: data/processed/splits
   split: val
   limit: null

@@ -157,7 +157,7 @@ All variants use the same evidence retrieval and context budget, so differences 
 
 Thinking mode stays off everywhere. Otherwise prompt-optimized variants could reason at length while fine-tuned ones don't, which would confound both accuracy and cost.
 
-**Generation.** Every variant decodes greedily, so its outputs are deterministic. Decoding is constrained to a per-example JSON schema: fields in a fixed order (mapping, explanation, grounds, evidence status), and a mapping that is either empty or one entry per listed limitation. Document and passage IDs are not constrained, so citing something outside the input stays possible and is scored. Outputs that break a rule the schema can't express, such as a 102 ground with two references, count as invalid and are not repaired. Details: [base_model.md](reports/base_model.md).
+**Generation.** Every variant decodes greedily, so its outputs are deterministic. Decoding is constrained to a per-example JSON schema: fields in a fixed order (mapping, explanation, grounds, evidence status), and a mapping that is either empty or one entry per listed limitation. Document and passage IDs are not constrained, so citing something outside the input stays possible and is scored. Each statute's reference count is constrained too (one for 102, at least one for 103, none for 101 and 112). An output whose evidence status contradicts its grounds, the one rule the schema can't express, counts as invalid and is not repaired. Details: [base_model.md](reports/base_model.md).
 
 **Backend.** Local inference uses the MLX 4-bit build of Qwen3-8B (group size 64), pinned to its revision. That isn't NF4, so variants are only compared when they run on the same backend and quantization.
 

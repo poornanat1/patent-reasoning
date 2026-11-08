@@ -12,9 +12,9 @@ the input, in order, each quoting its limitation exactly. Without that, greedy d
 repeats limitations until it runs out of tokens. Document and passage IDs are not
 constrained, so citing something outside the input stays possible and measurable.
 
-Rules the schema can't express (a 102 ground has exactly one reference, the evidence status
-matches the decision) are checked by ``parse``: an output that breaks them is invalid, not
-repaired.
+Each statute's reference count is in the schema too: one for 102, at least one for 103,
+none for 101 and 112. The rule the schema can't express, that the evidence status matches
+the decision, is checked by ``parse``: an output that breaks it is invalid, not repaired.
 """
 
 from __future__ import annotations
@@ -56,9 +56,16 @@ def generation_schema(limitations: list[str]) -> dict:
 
     schema["properties"] = {k: props[k] for k in FIELD_ORDER}
     schema["required"] = list(FIELD_ORDER)
-    defs["Ground"]["properties"]["references"]["maxItems"] = MAX_REFERENCES
-    defs["Ground"]["required"] = ["statute", "references"]
-    for p in [*defs["Ground"]["properties"].values(), *schema["properties"].values()]:
+    del schema["$defs"]  # Ground and LimitationMapping are inlined above and below
+    refs = {"type": "array", "items": {"type": "string", "minLength": 1}}
+    counts = {"102": (1, 1), "103": (1, MAX_REFERENCES), "101": (0, 0), "112": (0, 0)}
+    props["grounds"]["items"] = {"anyOf": [
+        {"type": "object", "additionalProperties": False, "required": ["statute", "references"],
+         "properties": {"statute": {"const": statute},
+                        "references": refs | {"minItems": lo, "maxItems": hi}}}
+        for statute, (lo, hi) in counts.items()
+    ]}  # fmt: skip
+    for p in schema["properties"].values():
         p.pop("default", None)
     for entry in entries:
         for p in entry["properties"].values():

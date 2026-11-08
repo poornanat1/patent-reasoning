@@ -7,7 +7,7 @@
 - **Model:** Qwen3-8B, thinking off, as the MLX 4-bit build (`mlx-community/Qwen3-8B-4bit`, revision `545dc42`, 4.6 GB). It runs locally on an M5 Pro with 24 GB of unified memory.
 - **Deterministic:** greedy decoding gave byte-identical outputs on a second run for all 10 smoke-test examples.
 - **Always well-formed:** constrained decoding gave 10 of 10 valid outputs, with no truncation.
-- **Speed:** about 12 seconds per example for a 3,200-token prompt. One pass over validation (1,597 examples) takes about 5 hours; over all three evaluation sets (4,418), about 15.
+- **Speed:** about 5 seconds per example on mains power, for zero-shot or few-shot. One pass over all three evaluation sets (4,418 examples) takes about 6 hours. On battery in Low Power Mode it is several times slower.
 
 Code: `src/patent_reasoning/model/` (prompt, output schema, generator), `scripts/generate.py`, `scripts/measure_prompt_tokens.py`. Config: [configs/generation/base_zero_shot.yaml](../../configs/generation/base_zero_shot.yaml).
 
@@ -26,12 +26,13 @@ The model cites passages by those IDs, so every citation can be checked against 
 **Constrained decoding.** Each example gets its own JSON schema, compiled by llguidance through outlines in under a second:
 - every field is required, and the explanation is a string
 - the mapping is either empty, or exactly one entry per listed limitation, in order, each quoting its limitation
+- each ground has the right number of references for its statute: one for 102, at least one for 103, none for 101 and 112
 - lists and strings are capped, so a run can't loop until the token limit
 - the JSON is compact, the same as `serialize`
 
 Document and passage IDs aren't constrained. Citing something outside the input stays possible, so the faithfulness evaluator can measure it.
 
-**Parsing.** Some rules can't be expressed in the schema: a 102 ground needs exactly one reference, and the evidence status must match the decision. An output that breaks one of them is recorded as invalid with the reason. It isn't repaired or retried.
+**Parsing.** One rule can't be expressed in the schema: the evidence status must match the decision (`not_applicable` exactly when there is no 102/103 ground). An output that breaks it is recorded as invalid with the reason. It isn't repaired or retried.
 
 ## What the smoke test showed
 
@@ -42,6 +43,31 @@ Three problems came up in the first runs, and the design above is the result:
 - **Grammar compile time.** The default outlines backend took 2 minutes to compile the schema. llguidance takes under a second and gave identical outputs.
 
 The 10 examples aren't a measurement of accuracy. For what it's worth, the zero-shot model got 4 of 10 decisions right and leaned toward 103.
+
+## Baselines
+
+The two frozen-model variants share everything except the demonstrations:
+
+| | Zero-shot (A) | Few-shot (B) |
+| --- | --- | --- |
+| Config | [base_zero_shot.yaml](../../configs/generation/base_zero_shot.yaml) | [base_few_shot.yaml](../../configs/generation/base_few_shot.yaml) |
+| Before each example | the system message | the system message and 5 demonstrations |
+| Shared prefix (cached) | 549 tokens | 6,414 tokens |
+| Seconds per example, median of 20 | 5.6 | 4.3 |
+| Valid outputs, of 20 | 19 | 19 |
+
+**Demonstrations.** One per decision class, all from train, so no evaluation example can be one:
+- 102: GU8VZQF9:10, where one limitation is disclosed by Mitchell [0042]
+- 103: HV6MQ40W:6, where the primary reference lacks a feature and Shin [0056] supplies it
+- 112: GLP467AE:15, where two terms lack antecedent basis
+- 101: G291HJC2:7, a process not tied to a machine or transformation
+- no rejection: I4A5Z69Q:2, where the reasons for allowance name the limitation
+
+Each was read in full. Each was chosen because its target is fully grounded, it is short, and its explanation is the examiner's reasoning about that claim itself. No train example with no rejection has both an explanation and a full mapping; the one chosen maps its single limitation as not disclosed, which the examiner's reasons state.
+
+**Prefix cache.** The system message and demonstrations are the same for every example, so their KV cache is computed once (`MLXGenerator.set_prefix`). Each generation processes only the example's own message, then the cache is trimmed back. On zero-shot, cached outputs are byte-identical to uncached ones. With the cache, few-shot costs no more than zero-shot, despite prompts of about 9,000 tokens.
+
+The two invalid outputs both have an evidence status that contradicts their grounds. Scoring reads the decision from the grounds and reports validity separately.
 
 ## Tokens
 

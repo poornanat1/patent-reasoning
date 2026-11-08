@@ -1,8 +1,10 @@
 """Generate model outputs for one split under one prompting variant.
 
 Writes one JSON line per example (raw text, parse error if any, token counts, latency,
-finish reason) to the config's ``out`` path. A rerun skips examples already written, so a
-stopped run resumes. Scoring is separate (scripts/score.py).
+finish reason) to ``<out_dir>/<split>.jsonl``. Few-shot demonstrations (``prompt.shots``)
+are train example IDs, so no evaluation example can be one. The system message and the
+demonstrations are cached once and shared by every example. A rerun skips examples already
+written, so a stopped run resumes. Scoring is separate (scripts/score.py).
 
 Usage: uv run --extra infer python scripts/generate.py configs/generation/<variant>.yaml
            [--split val] [--limit N]
@@ -19,9 +21,20 @@ import mlflow
 from patent_reasoning.config import load_config
 from patent_reasoning.model.generate import MLXGenerator
 from patent_reasoning.model.output import parse
-from patent_reasoning.model.prompt import SYSTEM, messages
+from patent_reasoning.model.prompt import SYSTEM, messages, prefix
 from patent_reasoning.schema import Example
 from patent_reasoning.tracking import start_run
+
+
+def load_shots(splits_dir: str, ids: list[str]) -> list[tuple]:
+    by_id = {}
+    for line in open(Path(splits_dir) / "train.jsonl"):
+        e = Example.model_validate_json(line)
+        if e.example_id in ids:
+            by_id[e.example_id] = e
+    missing = set(ids) - set(by_id)
+    assert not missing, f"shots not in train: {sorted(missing)}"
+    return [(by_id[i].input, by_id[i].target) for i in ids]
 
 
 def main() -> None:
@@ -44,17 +57,20 @@ def main() -> None:
     todo = [e for e in examples if e.example_id not in done]
     print(f"{split}: {len(examples)} examples, {len(done)} already generated")
 
+    shots = load_shots(p["splits_dir"], p["prompt"]["shots"])
     m = p["model"]
     start = time.perf_counter()
     generator = MLXGenerator(m["id"], m["revision"], m["max_new_tokens"],
                              constrained=m["constrained"])  # fmt: skip
+    prefix_tokens = generator.set_prefix(prefix(shots=shots))
     with start_run(cfg, run_name=f"{cfg.name}-{split}"), open(out, "a") as f:
         # The config's split and limit are logged as params; these are what this run used.
         mlflow.set_tags({"run_split": split, "run_limit": str(limit)})
-        mlflow.log_metric("load_seconds", round(time.perf_counter() - start, 1))
+        mlflow.log_metrics({"load_seconds": round(time.perf_counter() - start, 1),
+                            "prefix_tokens": prefix_tokens})  # fmt: skip
         mlflow.log_text(SYSTEM, "system_prompt.txt")
         for i, e in enumerate(todo, 1):
-            g = generator.generate(messages(e.input), e.input.limitations)
+            g = generator.generate(messages(e.input, shots=shots), e.input.limitations)
             row = {"example_id": e.example_id, "text": g.text, "error": parse(g.text).error,
                    "prompt_tokens": g.prompt_tokens, "completion_tokens": g.completion_tokens,
                    "seconds": round(g.seconds, 2), "finish_reason": g.finish_reason}  # fmt: skip

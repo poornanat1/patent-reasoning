@@ -33,6 +33,14 @@ def test_schema_requires_every_field_in_order():
     assert schema["properties"]["explanation"]["type"] == "string"
 
 
+def test_schema_fixes_each_statutes_reference_count():
+    grounds = generation_schema(["a sensor"])["properties"]["grounds"]["items"]["anyOf"]
+    counts = {g["properties"]["statute"]["const"]: (g["properties"]["references"]["minItems"],
+              g["properties"]["references"]["maxItems"]) for g in grounds}  # fmt: skip
+    assert counts["102"] == (1, 1) and counts["103"][0] == 1
+    assert counts["101"] == counts["112"] == (0, 0)
+
+
 def test_parse_reports_json_and_schema_errors_without_repairing():
     assert parse('{"claim_mapping": [').error.startswith("json")
     two_refs = {"claim_mapping": [], "explanation": "x", "evidence_status": "supported",

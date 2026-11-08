@@ -66,15 +66,21 @@ def render_input(inp: ExampleInput) -> str:
     return "\n".join(lines)
 
 
+def prefix(
+    system: str = SYSTEM, shots: list[tuple[ExampleInput, ModelOutput]] = ()
+) -> list[dict[str, str]]:
+    """The messages every example shares: the system message, then any demonstrations."""
+    out = [{"role": "system", "content": system}]
+    for shot_input, shot_output in shots:
+        out.append({"role": "user", "content": render_input(shot_input)})
+        out.append({"role": "assistant", "content": serialize(shot_output)})
+    return out
+
+
 def messages(
     inp: ExampleInput,
     system: str = SYSTEM,
     shots: list[tuple[ExampleInput, ModelOutput]] = (),
 ) -> list[dict[str, str]]:
     """Chat messages for one example, with optional demonstrations before it."""
-    out = [{"role": "system", "content": system}]
-    for shot_input, shot_output in shots:
-        out.append({"role": "user", "content": render_input(shot_input)})
-        out.append({"role": "assistant", "content": serialize(shot_output)})
-    out.append({"role": "user", "content": render_input(inp)})
-    return out
+    return [*prefix(system, shots), {"role": "user", "content": render_input(inp)}]
