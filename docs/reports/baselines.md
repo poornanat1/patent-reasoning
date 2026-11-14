@@ -7,36 +7,45 @@
 | Zero-shot | `configs/generation/base_zero_shot.yaml` | System prompt and the example |
 | Few-shot | `configs/generation/base_few_shot.yaml` | Plus five demonstrations from train: one each for 102, 103, 112, 101 and no rejection |
 
-**Status.** Validation is done for both, and test is done for zero-shot. Few-shot test and the OOD runs for both are still generating; their rows below will be filled in when they finish.
-
 ## Scores
 
-| | Zero-shot val | Zero-shot test | Few-shot val |
-| --- | --- | --- | --- |
-| Examples | 1,597 | 1,627 | 1,597 |
-| Macro-F1 (95% interval) | 0.215 (0.190–0.240) | 0.239 (0.216–0.262) | 0.237 (0.205–0.267) |
-| Exact match | 0.287 | 0.371 | 0.199 |
-| False-rejection rate | 0.536 | 0.523 | 0.285 |
-| False-allowance rate | 0.270 | 0.236 | 0.624 |
-| Valid outputs | 99.2% | 99.3% | 89.0% |
-| Citation existence | 0.982 | 0.984 | 1.000 |
-| Citation precision | 0.914 | 0.903 | 0.962 |
-| Art rejections citing nothing | 0.132 | 0.145 | 0.978 |
-| Examiner pin recall | 0.322 | 0.362 | 0.009 |
-| Seconds per example | 8.7 | 10.1 | 8.4 |
-| Prompt tokens | 4.98M | 5.18M | 14.35M |
+| | Zero-shot val | Few-shot val | Zero-shot test | Few-shot test | Zero-shot OOD | Few-shot OOD |
+| --- | --- | --- | --- | --- | --- | --- |
+| Examples | 1,597 | 1,597 | 1,627 | 1,627 | 1,194 | 1,194 |
+| Macro-F1 | 0.215 | 0.237 | 0.239 | 0.221 | 0.156 | 0.156 |
+| 95% interval | 0.190–0.240 | 0.205–0.267 | 0.216–0.262 | 0.196–0.246 | 0.130–0.181 | 0.130–0.181 |
+| Exact match | 0.287 | 0.199 | 0.371 | 0.271 | 0.149 | 0.137 |
+| False-rejection rate | 0.536 | 0.285 | 0.523 | 0.293 | 0.608 | 0.358 |
+| False-allowance rate | 0.270 | 0.624 | 0.236 | 0.623 | 0.498 | 0.628 |
+| Valid outputs | 99.2% | 89.0% | 99.3% | 90.7% | 97.6% | 93.2% |
+| Citation existence | 0.982 | 1.000 | 0.984 | 1.000 | 0.949 | 0.951 |
+| Citation precision | 0.914 | 0.962 | 0.903 | 0.952 | 0.846 | 0.927 |
+| Art rejections citing nothing | 0.132 | 0.978 | 0.145 | 0.962 | 0.182 | 0.949 |
+| Examiner pin recall | 0.322 | 0.009 | 0.362 | 0.016 | 0.358 | 0.016 |
+| Seconds per example | 8.7 | 8.4 | 10.1 | 6.9 | 6.3 | 5.1 |
+| Prompt tokens | 4.98M | 14.35M | 5.18M | 14.72M | 3.48M | 10.48M |
 
-**Few-shot against zero-shot (validation, paired bootstrap):** macro-F1 +0.022, 95% interval −0.015 to +0.057, few-shot ahead in 89% of resamples. The difference isn't significant.
+**Few-shot against zero-shot (paired bootstrap of macro-F1):**
+
+| Split | Difference | 95% interval | Few-shot ahead in |
+| --- | --- | --- | --- |
+| Validation | +0.022 | −0.015 to +0.057 | 89% of resamples |
+| Test | −0.018 | −0.047 to +0.014 | 11% |
+| OOD | +0.001 | −0.027 to +0.028 | 51% |
+
+No difference is significant. The two baselines score about the same; they fail in different ways.
 
 **Per-class F1:**
 
-| Class | Gold (val) | Zero-shot val | Zero-shot test | Few-shot val |
-| --- | --- | --- | --- | --- |
-| No rejection | 362 | 0.389 | 0.480 | 0.372 |
-| 102 | 564 | 0.191 | 0.168 | 0.106 |
-| 103 | 476 | 0.432 | 0.504 | 0.339 |
-| 112 | 309 | 0.049 | 0.025 | 0.167 |
-| 101 | 118 | 0.016 | 0.019 | 0.203 |
+| Class | Gold (test) | Zero-shot test | Few-shot test | Gold (OOD) | Zero-shot OOD | Few-shot OOD |
+| --- | --- | --- | --- | --- | --- | --- |
+| No rejection | 518 | 0.480 | 0.465 | 232 | 0.218 | 0.303 |
+| 102 | 401 | 0.168 | 0.123 | 126 | 0.205 | 0.096 |
+| 103 | 549 | 0.504 | 0.320 | 218 | 0.341 | 0.188 |
+| 112 | 213 | 0.025 | 0.078 | 690 | 0.014 | 0.162 |
+| 101 | 95 | 0.019 | 0.120 | 18 | 0.000 | 0.034 |
+
+Validation per-class scores follow the same pattern as test and are in the score files.
 
 Seconds per example are wall-clock on an M5 Pro and include stretches on battery, so they overstate the cost of a run on mains power.
 
@@ -47,6 +56,12 @@ Seconds per example are wall-clock on an M5 Pro and include stretches on battery
 **Few-shot stops citing.** The demonstrations moved the model towards "no rejection" (1,030 predictions against 362 gold) and raised the 112 and 101 scores, but every one of its 1,030 allowances, and 535 of its 547 prior-art rejections, comes with an empty claim mapping. The model asserts a limitation isn't disclosed without looking for a passage. All 175 invalid outputs are prior-art rejections whose evidence status isn't allowed for one.
 
 The likely cause is the demonstration set: three of the five (112, 101, no rejection) show an empty mapping or a "not applicable" status, and the model copies that shape even when it rejects on prior art. This is inferred from the counts, not tested. The demonstrations were left unchanged for the test and OOD runs, so few-shot is reported as a weak baseline rather than tuned on validation.
+
+## Out of distribution
+
+The OOD set (technology centers 1600 and 1700, biotechnology and chemistry) is harder for both baselines: macro-F1 falls from about 0.23 on test to 0.156, and the intervals don't overlap. The main reason is the label mix. 112 is the most common ground in OOD, on 690 of 1,194 claims (58%), against 13% in test. Both baselines are weakest on exactly that class (F1 0.014 and 0.162). Biotechnology (1600) is the hardest center, at 0.080 for zero-shot and 0.110 for few-shot; chemistry (1700) is 0.184 and 0.169.
+
+Citation behaviour holds up: zero-shot's citation existence falls only from 0.98 to 0.95, and its pin recall is unchanged at 0.36. What drops is the decision, not the ability to find passages.
 
 ## Failure review
 
