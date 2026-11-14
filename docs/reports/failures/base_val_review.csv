@@ -1,0 +1,51 @@
+variant,example_id,category,note
+base_zero_shot,FTNIJDS5PPOPPY5:12,missed_112_101,112 statement concerns claim 6; possible label error
+base_zero_shot,HFO257YKPXXIFW4:4,rejected_allowable,rejects under 103 while explaining two limitations are not disclosed
+base_zero_shot,GQFBCRO8PPOPPY5:11,missed_112_101,misses 101 (computer-readable medium) and 112; picks 103 instead of 102
+base_zero_shot,H3LRUGUAPXXIFW4:15,missed_112_101,"""rejected as dependent upon a rejected base claim""; possible label error (an objection)"
+base_zero_shot,FYNJH8PQPPOPPY5:13,rejected_allowable,103 with status unsupported; explanation says nothing is disclosed
+base_zero_shot,HA9MZTQXPXXIFW4:10,statute_102_103,finds the examiner's 102 disclosure; calls it 103 only
+base_zero_shot,HBGH6KJFPXXIFW4:14,missed_112_101,"112 inherited from claim 6, not visible in the claim"
+base_zero_shot,HFCU2PC9PXXIFW4:8,missed_112_101,misses 112 on a relative term in claim 1; 103 correct
+base_zero_shot,HQJQUHAQPXXIFW4:20,statute_102_103,cites the passage the examiner relied on; 103 instead of 102
+base_zero_shot,HHT42IZIPXXIFW4:8,statute_102_103,single reference disclosure; 103 instead of 102
+base_zero_shot,HSN7VVMAPXXIFW4:9,rejected_allowable,no reasons for allowance recorded; cannot judge the citation
+base_zero_shot,H6FEQ7LKPXXIFW4:7,statute_102_103,cites the examiner's paragraph [0029]; 103 instead of 102
+base_zero_shot,GU8EPDT2PPOPPY5:15,statute_102_103,cites the examiner's paragraph [0055]; 103 instead of 102
+base_zero_shot,HWJBKZTMPXXIFW4:1,statute_102_103,103 instead of 102
+base_zero_shot,I2VVYJ52PXXIFW4:16,missed_112_101,112 antecedent basis in claim 1; 102 called 103
+base_zero_shot,HE9YGB3SPXXIFW4:7,statute_102_103,combination rejection called 102
+base_zero_shot,GQFBCRO8PPOPPY5:4,missed_112_101,misses 101 and 112; 103 called 102
+base_zero_shot,I10NKOHLPXXIFW4:13,missed_art,"examiner text says 20 mol%, claim says 80 mol%; model may be right; possible label error"
+base_zero_shot,HF429AFKPXXIFW4:13,statute_102_103,103 instead of 102
+base_zero_shot,HTIO6LKUPXXIFW4:24,missed_112_101,101 and 112 inherited from claim 16
+base_zero_shot,GJBNTP8MPPOPPY5:9,rejected_allowable,no reasons for allowance recorded
+base_zero_shot,HTPXA2UOPXXIFW4:4,statute_102_103,103 called 102
+base_zero_shot,GQ3X0M3UPPOPPY5:18,missed_art,"103 rests on official notice, which is not in the input"
+base_zero_shot,H3LPWT0NPXXIFW4:5,missed_112_101,112 inherited from claim 1; misses the 102 passage
+base_zero_shot,I06OISJ3PXXIFW4:10,missed_112_101,"112 on ""hats"" in the parent; invents a 103 with status unsupported"
+base_zero_shot,GUR9MPQRPXXIFW4:5,statute_102_103,103 instead of 102
+base_zero_shot,G9O7WUVJPPOPPY5:5,missed_112_101,112 first paragraph inherited from claim 2
+base_zero_shot,HJ7AZ3WGPXXIFW4:14,rejected_allowable,no reasons for allowance recorded
+base_zero_shot,I06OISJ3PXXIFW4:15,missed_112_101,gets 112 but adds a 103 with status unsupported
+base_zero_shot,GTG55S3FPPOPPY5:17,missed_112_101,112 inherited; 103 limitation absent from the references (examiner adds a teaching)
+base_zero_shot,HOHD0R7QPXXIFW4:15,statute_102_103,103 called 102
+base_zero_shot,HCDKLUYLPXXIFW4:13,statute_102_103,"103 instead of 102; ""trenches"" read as ""dimples"""
+base_zero_shot,GZZLL6BCPXXIFW4:15,rejected_allowable,reasons for allowance name a parent limitation the model ignores
+base_zero_shot,I0JNFF7SPXXIFW4:11,missed_112_101,112(b) blanket rejection of claims 1-12
+base_zero_shot,HF2N1QJSPXXIFW4:5,statute_102_103,103 instead of 102
+base_zero_shot,GEQ2SFIAPPOPPY5:15,statute_102_103,cites the examiner's paragraph [0012]; 103 instead of 102
+base_zero_shot,HEBAILS7PXXIFW4:11,reasoning_error,treats 0.5 ohm-cm as below 10 mohm-cm (a units error); 103 called 102
+base_zero_shot,H8LIKJ4FPXXIFW4:77,missed_112_101,"misses 101 ""signal per se"""
+base_zero_shot,HE9YGB3SPXXIFW4:15,statute_102_103,103 instead of 102
+base_zero_shot,I06YD3OSPXXIFW4:3,missed_art,says not disclosed; the examiner relied on paragraph [0043]
+base_few_shot,GQFBCRO8PPOPPY5:21,lazy_allowance,"no_rejection with empty mapping; misses 101, 102 and 112"
+base_few_shot,GQFBCRO8PPOPPY5:4,lazy_allowance,"no_rejection with empty mapping; misses 101, 103 and 112"
+base_few_shot,GPVCT6L0PPOPPY5:21,lazy_allowance,no_rejection with empty mapping; examiner relied on paragraph 49
+base_few_shot,HEFUFD65PXXIFW4:4,lazy_allowance,no_rejection with empty mapping
+base_few_shot,GYN0X8TFPXXIFW4:9,lazy_allowance,no_rejection with empty mapping; 112 first paragraph
+base_few_shot,HPBO1MSMPXXIFW4:5,lazy_allowance,no_rejection with empty mapping; examiner relied on paragraph 0310
+base_few_shot,HGZ0JWM0PXXIFW4:2,lazy_allowance,no_rejection with empty mapping
+base_few_shot,HBNM26XBPXXIFW4:1,lazy_allowance,no_rejection with empty mapping
+base_few_shot,H6FEQ7LKPXXIFW4:14,missed_112_101,"101 correct, invents 112, drops 102"
+base_few_shot,HD35LDWXPXXIFW4:18,lazy_allowance,no_rejection with empty mapping
