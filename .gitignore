@@ -17,6 +17,7 @@ checkpoints/
 
 # MLflow
 mlflow.db
+mlflow_pod.db
 mlruns/
 mlartifacts/
 
