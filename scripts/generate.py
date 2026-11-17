@@ -65,11 +65,12 @@ def main() -> None:
     m = p["model"]
     start = time.perf_counter()
     if m.get("backend", "mlx") == "vllm":
-        generator = VLLMGenerator(m["id"], m["revision"], m["max_new_tokens"],
-                                  constrained=m["constrained"],
-                                  quantization=m.get("quantization"),
-                                  max_model_len=m.get("max_model_len", 16384),
-                                  adapter=m.get("adapter"), seed=cfg.seed)  # fmt: skip
+        generator = VLLMGenerator(
+            m["id"], m["revision"], m["max_new_tokens"], constrained=m["constrained"],
+            quantization=m.get("quantization"), max_model_len=m.get("max_model_len", 16384),
+            adapter=m.get("adapter"), seed=cfg.seed,
+            gpu_memory_utilization=m.get("gpu_memory_utilization", 0.9),
+        )  # fmt: skip
         prefix_tokens = len(generator.prompt_tokens(prefix(shots=shots)))
         batch_size = m.get("batch_size", 256)
     else:
