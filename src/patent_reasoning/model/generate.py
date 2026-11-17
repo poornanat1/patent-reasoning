@@ -10,8 +10,18 @@ prefix. ``set_prefix`` computes its KV cache once; each generation then processe
 example's own message, and the cache is trimmed back to the prefix afterwards. The chat
 template is applied with thinking off, for every variant (docs/SPEC.md).
 
-The MLX backend runs on Apple silicon. A CUDA backend (vLLM or transformers, both
-supported by outlines) can implement the same ``generate`` for the training machine.
+Two backends:
+
+- ``MLXGenerator`` runs on Apple silicon, one example at a time.
+- ``VLLMGenerator`` runs on CUDA with vLLM, a batch at a time, with the weights in bf16 and
+  optionally a LoRA adapter on top. QLoRA trains adapters against the 4-bit NF4 base, but
+  every variant is evaluated on the bf16 weights, so all of them are compared on the same
+  footing (vLLM no longer loads bitsandbytes NF4). The shared prefix is cached by vLLM's
+  prefix caching, and the grammar is the same per-example schema, compiled by llguidance.
+  Batched greedy decoding on a GPU isn't bit-for-bit reproducible across batch
+  compositions; reruns can differ in rare near-ties.
+
+Scores are only compared between variants generated on the same backend.
 """
 
 from __future__ import annotations
@@ -111,3 +121,70 @@ class MLXGenerator:
         if self._prefix and not cached:
             raise ValueError("prompt doesn't start with the cached prefix")
         return Generation(text, len(tokens), n, time.perf_counter() - start, finish)
+
+
+class VLLMGenerator:
+    def __init__(self, model: str, revision: str | None, max_new_tokens: int,
+                 constrained: bool = True, quantization: str | None = None,
+                 max_model_len: int = 16384, adapter: str | None = None, max_lora_rank: int = 16,
+                 seed: int = 0, gpu_memory_utilization: float = 0.9):  # fmt: skip
+        from transformers import AutoTokenizer
+        from vllm import LLM
+
+        self.tokenizer = AutoTokenizer.from_pretrained(model, revision=revision)
+        self.max_new_tokens = max_new_tokens
+        self.max_model_len = max_model_len
+        self.constrained = constrained
+        self.llm = LLM(model=model, revision=revision, quantization=quantization, seed=seed,
+                       max_model_len=max_model_len, enable_prefix_caching=True,
+                       enable_lora=adapter is not None, max_lora_rank=max_lora_rank,
+                       gpu_memory_utilization=gpu_memory_utilization,
+                       structured_outputs_config={"backend": "guidance",
+                                                  "disable_any_whitespace": True})  # fmt: skip
+        self.lora = None
+        if adapter is not None:
+            from vllm.lora.request import LoRARequest
+
+            self.lora = LoRARequest("adapter", 1, adapter)
+
+    def prompt_tokens(self, messages: list[dict[str, str]]) -> list[int]:
+        text = self.tokenizer.apply_chat_template(
+            messages, add_generation_prompt=True, enable_thinking=False, tokenize=False
+        )
+        return self.tokenizer.encode(text, add_special_tokens=False)
+
+    def _params(self, limitations: list[str]):
+        from vllm import SamplingParams
+        from vllm.sampling_params import StructuredOutputsParams
+
+        structured = None
+        if self.constrained:
+            # Compact JSON, the same as ``serialize`` and the MLX backend.
+            schema = generation_schema(limitations)
+            schema["x-guidance"] = {"whitespace_flexible": False, "item_separator": ",",
+                                    "key_separator": ":"}  # fmt: skip
+            structured = StructuredOutputsParams(json=schema, disable_any_whitespace=True)
+        return SamplingParams(temperature=0.0, max_tokens=self.max_new_tokens,
+                              structured_outputs=structured)  # fmt: skip
+
+    def generate_batch(
+        self, batch: list[tuple[list[dict[str, str]], list[str]]]
+    ) -> list[Generation]:
+        """Generate for several examples at once: (messages, limitations) for each. Seconds
+        are the batch's wall time divided evenly."""
+        prompts = [{"prompt_token_ids": self.prompt_tokens(m)} for m, _ in batch]
+        limit = self.max_model_len - self.max_new_tokens
+        too_long = [p for p in prompts if len(p["prompt_token_ids"]) > limit]
+        if too_long:
+            raise ValueError(f"{len(too_long)} prompts exceed max_model_len")
+        start = time.perf_counter()
+        outputs = self.llm.generate(prompts, [self._params(lims) for _, lims in batch],
+                                    lora_request=self.lora, use_tqdm=False)  # fmt: skip
+        each = (time.perf_counter() - start) / len(batch)
+        result = []
+        for p, o in zip(prompts, outputs, strict=True):
+            c = o.outputs[0]
+            finish = "length" if c.finish_reason == "length" else "stop"
+            result.append(Generation(c.text, len(p["prompt_token_ids"]), len(c.token_ids),
+                                     each, finish))  # fmt: skip
+        return result

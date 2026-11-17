@@ -159,11 +159,18 @@ Definitions, slices and the limits of each metric: [evaluation.md](reports/evalu
 
 Thinking mode stays off everywhere. Otherwise prompt-optimized variants could reason at length while fine-tuned ones don't, which would confound both accuracy and cost.
 
-**Generation.** Every variant decodes greedily, so its outputs are deterministic. Decoding is constrained to a per-example JSON schema: fields in a fixed order (mapping, explanation, grounds, evidence status), and a mapping that is either empty or one entry per listed limitation. Document and passage IDs are not constrained, so citing something outside the input stays possible and is scored. Each statute's reference count is constrained too (one for 102, at least one for 103, none for 101 and 112). An output whose evidence status contradicts its grounds, the one rule the schema can't express, counts as invalid and is not repaired. Details: [base_model.md](reports/base_model.md).
+**Generation.** Every variant decodes greedily. Decoding is constrained to a per-example JSON schema:
+- fields in a fixed order (mapping, explanation, grounds, evidence status)
+- a mapping that is either empty or one entry per listed limitation
+- each statute's reference count (one for 102, at least one for 103, none for 101 and 112)
+- an evidence status that matches the grounds: a support level when there is a 102/103 ground, which is listed first, and "not_applicable" otherwise
+- an explanation that may be empty only when the claim isn't rejected
 
-**Backend.** Local inference uses the MLX 4-bit build of Qwen3-8B (group size 64), pinned to its revision. That isn't NF4, so variants are only compared when they run on the same backend and quantization.
+Document and passage IDs are not constrained, so citing something outside the input stays possible and is scored. Details: [base_model.md](reports/base_model.md).
 
-**Token budget.** Measured with the Qwen3 tokenizer, the zero-shot prompt has a median of 3,240 tokens (about 4.3 characters per token, close to the original estimate of 4). Prompt plus target exceeds 4,096 tokens for 4.5% of train and 20% of OOD examples ([prompt_tokens.json](reports/prompt_tokens.json)). Inference has room, since Qwen3's context is 32k; how training handles the long examples is decided with the SFT config.
+**Backend.** Every reported comparison runs on one setup: a CUDA machine (one A100 80 GB), vLLM, and Qwen3-8B in bf16 at revision `b968826`, with LoRA adapters applied on top of the bf16 weights. QLoRA trains against the 4-bit NF4 base to save memory; evaluating on bf16 keeps every variant on the same weights, and vLLM no longer loads bitsandbytes NF4. Packages are pinned in [requirements/gpu.txt](../requirements/gpu.txt). The earlier MLX 4-bit runs on a laptop ([baselines.md](reports/baselines.md)) are a development record, not part of the comparison.
+
+**Token budget.** Measured with the Qwen3 tokenizer, the zero-shot prompt has a median of 3,240 tokens (about 4.3 characters per token, close to the original estimate of 4). Prompt plus target exceeds 4,096 tokens for 4.5% of train and 20% of OOD examples ([prompt_tokens.json](reports/prompt_tokens.json)). Inference has room, since Qwen3's context is 32k. Training excludes the examples that don't fit rather than truncating them ([sft.yaml](../configs/training/sft.yaml)).
 
 ## Reproducibility
 

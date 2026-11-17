@@ -1,0 +1,38 @@
+# Experiment C: QLoRA SFT. Qwen3-8B quantized to 4-bit NF4 (bitsandbytes), a rank-16 LoRA
+# adapter on every linear projection, trained on the prompt/target records of
+# patent_reasoning.train.sft_records with the loss on the target only. Evaluated with the
+# adapter on the bf16 weights (configs/generation/gpu_sft.yaml), like every variant.
+name: sft
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  model:
+    id: Qwen/Qwen3-8B
+    revision: b968826d9c46dd6066d109eabc6255188de91218
+    quant_type: nf4
+    double_quant: true
+    compute_dtype: bfloat16
+  lora:
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+  data:
+    splits_dir: data/processed/splits
+    max_tokens: 4096  # prompt + target; longer examples are excluded, not truncated
+    eval_examples: 300  # validation records for the eval loss, after the same filters
+  train:
+    epochs: 2
+    learning_rate: 2.0e-4
+    lr_scheduler: cosine
+    warmup_ratio: 0.03
+    per_device_batch_size: 4
+    gradient_accumulation_steps: 4  # effective batch 16
+    gradient_checkpointing: true
+    logging_steps: 10
+    eval_steps: 100
+    save_steps: 100
+    save_total_limit: 4
+  out_dir: checkpoints/sft

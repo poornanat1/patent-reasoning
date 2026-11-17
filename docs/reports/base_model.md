@@ -32,7 +32,7 @@ The model cites passages by those IDs, so every citation can be checked against 
 
 Document and passage IDs aren't constrained. Citing something outside the input stays possible, so the faithfulness evaluator can measure it.
 
-**Parsing.** One rule can't be expressed in the schema: the evidence status must match the decision (`not_applicable` exactly when there is no 102/103 ground). An output that breaks it is recorded as invalid with the reason. It isn't repaired or retried.
+**Parsing.** The evidence status must match the decision (`not_applicable` exactly when there is no 102/103 ground). The MLX runs below checked this after generation and recorded breaches as invalid, without repair. The schema now enforces it (see the update at the end), and `parse` still checks every rule.
 
 ## What the smoke test showed
 
@@ -85,5 +85,17 @@ Measured with the Qwen3 tokenizer ([prompt_tokens.json](prompt_tokens.json)):
 
 ## Open points
 
-- **Backend and quantization for the comparison.** MLX 4-bit (affine, group size 64) isn't the NF4 that QLoRA trains on. Every variant must be evaluated on the same backend and quantization, and that's decided before the SFT phase. Either train LoRA adapters with MLX on this 4-bit model, or evaluate everything on a CUDA machine with NF4. The generator interface is backend-neutral, and outlines supports vLLM and transformers, so a CUDA backend is a small addition.
-- **Train targets with partial mappings.** Generation allows only an empty or full mapping, but 31% of train's 102/103 targets have no mapping and others are partial. They'll be handled with the SFT config.
+- **Backend and quantization for the comparison.** Resolved: every variant is evaluated on a CUDA machine with vLLM and bf16 weights. See the update below.
+- **Train targets with partial mappings.** Resolved: art rejections without a full mapping are excluded from SFT (`patent_reasoning.train.sft_records`).
+
+## Update: the CUDA backend
+
+The comparison runs on a rented A100 80 GB with vLLM (`VLLMGenerator`), Qwen3-8B in bf16 at revision `b968826`. vLLM 0.34 no longer loads bitsandbytes NF4, so adapters trained against the NF4 base are applied to the bf16 weights for evaluation, for every variant alike.
+
+Three changes came with the move:
+
+- **The evidence-status rule is in the schema.** On the first GPU check, 42% of outputs were invalid: in bf16 the model often marks an allowance "unsupported", where the 4-bit model wrote "not_applicable". The schema is now one of three shapes that differ after the explanation: no grounds and "not_applicable"; only 112/101 grounds and "not_applicable"; or a 102/103 ground first and a support level. The cost is one convention, that a prior-art ground is listed first, and `serialize` writes targets and demonstrations that way. After the change, 200 of 200 outputs were valid.
+- **An allowance may have an empty explanation.** Examiners rarely give reasons for an allowable claim, so most such SFT targets have none. They keep an empty explanation rather than an invented one, and only the no-rejection shape allows it.
+- **`serialize` is compact.** It had written JSON with spaces after separators, while constrained generation writes none, so few-shot demonstrations didn't match the model's own output format. Targets and demonstrations are now compact too.
+
+Compact output is set both in the engine (`disable_any_whitespace`) and in the schema (`x-guidance`); the per-request setting alone was ignored and produced pretty-printed JSON. Throughput is about 0.35 seconds per example in batches of 256, against 5–10 seconds on the laptop.

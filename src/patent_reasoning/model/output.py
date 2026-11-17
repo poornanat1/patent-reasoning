@@ -13,8 +13,14 @@ repeats limitations until it runs out of tokens. Document and passage IDs are no
 constrained, so citing something outside the input stays possible and measurable.
 
 Each statute's reference count is in the schema too: one for 102, at least one for 103,
-none for 101 and 112. The rule the schema can't express, that the evidence status matches
-the decision, is checked by ``parse``: an output that breaks it is invalid, not repaired.
+none for 101 and 112. So is the rule that the evidence status matches the decision. The
+schema is one of three shapes, which differ only after the explanation: no grounds and
+status "not_applicable"; only 112/101 grounds and "not_applicable"; or a 102/103 ground
+first, then any others, and a support level. Listing a prior-art ground first is the one
+convention this imposes, and ``serialize`` writes targets and demonstrations the same way.
+Only the no-rejection shape allows an empty explanation: examiners rarely give reasons for
+an allowable claim, and SFT targets for those claims have none rather than invented ones.
+``parse`` still checks every ``ModelOutput`` rule, for outputs generated without the schema.
 """
 
 from __future__ import annotations
@@ -25,7 +31,7 @@ from dataclasses import dataclass
 
 from pydantic import ValidationError
 
-from patent_reasoning.schema import ModelOutput
+from patent_reasoning.schema import PRIOR_ART_STATUTES, ModelOutput
 
 FIELD_ORDER = ("claim_mapping", "explanation", "grounds", "evidence_status")
 MAX_PASSAGES_PER_LIMITATION = 16  # the whole evidence budget
@@ -54,30 +60,48 @@ def generation_schema(limitations: list[str]) -> dict:
             "minItems": len(entries), "maxItems": len(entries)}  # fmt: skip
     props["claim_mapping"] = {"anyOf": [empty, full]} if limitations else empty
 
-    schema["properties"] = {k: props[k] for k in FIELD_ORDER}
-    schema["required"] = list(FIELD_ORDER)
     del schema["$defs"]  # Ground and LimitationMapping are inlined above and below
     refs = {"type": "array", "items": {"type": "string", "minLength": 1}}
     counts = {"102": (1, 1), "103": (1, MAX_REFERENCES), "101": (0, 0), "112": (0, 0)}
-    props["grounds"]["items"] = {"anyOf": [
-        {"type": "object", "additionalProperties": False, "required": ["statute", "references"],
-         "properties": {"statute": {"const": statute},
-                        "references": refs | {"minItems": lo, "maxItems": hi}}}
-        for statute, (lo, hi) in counts.items()
-    ]}  # fmt: skip
-    for p in schema["properties"].values():
+    ground = {statute: {"type": "object", "additionalProperties": False,
+                        "required": ["statute", "references"],
+                        "properties": {"statute": {"const": statute},
+                                       "references": refs | {"minItems": lo, "maxItems": hi}}}
+              for statute, (lo, hi) in counts.items()}  # fmt: skip
+    art = {"anyOf": [ground[s] for s in ("102", "103")]}
+    other = {"anyOf": [ground[s] for s in ("112", "101")]}
+    any_ground = {"anyOf": list(ground.values())}
+    not_applicable = {"const": "not_applicable"}
+    support = {"enum": ["supported", "partially_supported", "unsupported"]}
+    shapes = [
+        ({"type": "array", "maxItems": 0}, not_applicable),
+        ({"type": "array", "items": other, "minItems": 1, "maxItems": MAX_GROUNDS}, not_applicable),
+        ({"type": "array", "prefixItems": [art], "items": any_ground, "minItems": 1,
+          "maxItems": MAX_GROUNDS}, support),
+    ]  # fmt: skip
+    for p in props.values():
         p.pop("default", None)
     for entry in entries:
         for p in entry["properties"].values():
             p.pop("default", None)
-    return schema
+    variants = []
+    for i, (grounds, status) in enumerate(shapes):
+        explanation = props["explanation"] | ({"minLength": 0} if i == 0 else {})
+        fields = {"claim_mapping": props["claim_mapping"], "explanation": explanation,
+                  "grounds": grounds, "evidence_status": status}  # fmt: skip
+        variants.append({"type": "object", "additionalProperties": False,
+                         "properties": {k: fields[k] for k in FIELD_ORDER},
+                         "required": list(FIELD_ORDER)})  # fmt: skip
+    return {"title": schema.get("title", "ModelOutput"), "anyOf": variants}
 
 
 def serialize(output: ModelOutput) -> str:
-    """``output`` as the model should write it: compact, fields in ``FIELD_ORDER``."""
+    """``output`` as the model should write it: compact, fields in ``FIELD_ORDER``, and
+    prior-art grounds before the others (otherwise in their original order)."""
     data = output.model_dump(mode="json")
+    data["grounds"].sort(key=lambda g: g["statute"] not in PRIOR_ART_STATUTES)
     data = {k: data[k] for k in FIELD_ORDER}
-    return json.dumps(data, ensure_ascii=False)
+    return json.dumps(data, ensure_ascii=False, separators=(",", ":"))
 
 
 @dataclass

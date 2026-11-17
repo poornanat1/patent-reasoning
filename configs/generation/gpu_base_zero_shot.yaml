@@ -1,0 +1,26 @@
+# The same variant on the training machine: CUDA, vLLM, Qwen3-8B in bf16. Every trained
+# variant is evaluated the same way (adapters on the bf16 weights) and compared against these
+# scores, not the MLX ones.
+# Experiment A: frozen base model, zero-shot. Greedy decoding constrained to the per-example
+# output schema, thinking off (see src/patent_reasoning/model/).
+name: gpu-base-zero-shot
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  model:
+    backend: vllm
+    id: Qwen/Qwen3-8B
+    revision: b968826d9c46dd6066d109eabc6255188de91218
+    quantization: null  # bf16; vLLM no longer loads bitsandbytes NF4
+    max_model_len: 32768  # Qwen3-8B native context; some OOD prompts exceed 16k
+    batch_size: 256
+    max_new_tokens: 1024
+    constrained: true
+  prompt:
+    shots: []
+  splits_dir: data/processed/splits
+  split: val
+  limit: null
+  out_dir: data/interim/generations/gpu_base_zero_shot

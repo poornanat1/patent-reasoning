@@ -1,0 +1,24 @@
+# Experiment C evaluated: the SFT adapter (configs/training/sft.yaml) on the bf16 weights,
+# zero-shot prompt, same backend and grammar as the GPU baselines.
+name: gpu-sft
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  model:
+    backend: vllm
+    id: Qwen/Qwen3-8B
+    revision: b968826d9c46dd6066d109eabc6255188de91218
+    quantization: null  # bf16; vLLM no longer loads bitsandbytes NF4
+    max_model_len: 32768  # Qwen3-8B native context; some OOD prompts exceed 16k
+    batch_size: 256
+    adapter: checkpoints/sft/final
+    max_new_tokens: 1024
+    constrained: true
+  prompt:
+    shots: []
+  splits_dir: data/processed/splits
+  split: val
+  limit: null
+  out_dir: data/interim/generations/gpu_sft

@@ -72,6 +72,16 @@ scripts/run_baselines.sh                      # zero-shot and few-shot on every 
 uv run python scripts/score.py configs/generation/base_zero_shot.yaml --split val  # -> <out_dir>/val.scores.json
 ```
 
+The comparison itself runs on a CUDA machine (one A100 80 GB). Install the pinned packages there, then generate with vLLM and train with QLoRA:
+
+```bash
+uv venv -p 3.12 venv && . venv/bin/activate && uv pip install -r requirements/gpu.txt -e .
+python scripts/generate.py configs/generation/gpu_base_zero_shot.yaml --split val   # batched, bf16
+python scripts/train_sft.py configs/training/sft.yaml --max-steps 20 --out-dir checkpoints/sft-smoke
+python scripts/train_sft.py configs/training/sft.yaml                               # -> checkpoints/sft/final
+python scripts/generate.py configs/generation/gpu_sft.yaml --split val               # the adapter on bf16
+```
+
 Findings so far: [audit](docs/reports/oard_audit_findings.md), [feasibility](docs/reports/feasibility.md), [claim-level dataset and evidence](docs/reports/claim_level_dataset.md), [SFT corpus](docs/reports/sft_corpus.md), [splits and preference pairs](docs/reports/splits_and_preferences.md), [dataset v1 audit](docs/reports/dataset_v1.md).
 
 The sample takes whole applications, chosen by a salted SHA-256 of `app_id`. Rerunning it gives the same sample regardless of row order, and every office action, rejection and citation for a chosen application stays together. That keeps later family-level splits clean. Sample settings live in [configs/oard_sample.yaml](configs/oard_sample.yaml).

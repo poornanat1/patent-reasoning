@@ -1,0 +1,33 @@
+# The same variant on the training machine: CUDA, vLLM, Qwen3-8B in bf16. Every trained
+# variant is evaluated the same way (adapters on the bf16 weights) and compared against these
+# scores, not the MLX ones.
+# Experiment B: frozen base model, handcrafted few-shot. Same generation as zero-shot, with
+# five demonstrations from train before each example, one per decision class. Each was read
+# in full and chosen because its target is fully grounded, short, and has the examiner's
+# reasoning about that claim itself.
+name: gpu-base-few-shot
+seed: 42
+tracking:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: patent-reasoning
+params:
+  model:
+    backend: vllm
+    id: Qwen/Qwen3-8B
+    revision: b968826d9c46dd6066d109eabc6255188de91218
+    quantization: null  # bf16; vLLM no longer loads bitsandbytes NF4
+    max_model_len: 32768  # Qwen3-8B native context; some OOD prompts exceed 16k
+    batch_size: 256
+    max_new_tokens: 1024
+    constrained: true
+  prompt:
+    shots:
+      - GU8VZQF9PPOPPY5:10  # 102: one limitation, disclosed by Mitchell [0042]
+      - HV6MQ40WPXXIFW4:6   # 103: the primary reference lacks it; Shin [0056] supplies it
+      - GLP467AEPPOPPY5:15  # 112: two terms without antecedent basis
+      - G291HJC2PPOPPY5:7   # 101: a process not tied to a machine or transformation
+      - I4A5Z69QPXXIFW4:2   # no rejection: the reasons for allowance name the limitation
+  splits_dir: data/processed/splits
+  split: val
+  limit: null
+  out_dir: data/interim/generations/gpu_base_few_shot

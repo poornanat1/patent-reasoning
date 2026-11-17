@@ -6,8 +6,12 @@ are train example IDs, so no evaluation example can be one. The system message a
 demonstrations are cached once and shared by every example. A rerun skips examples already
 written, so a stopped run resumes. Scoring is separate (scripts/score.py).
 
+The model backend is ``model.backend``: ``mlx`` (Apple silicon, one example at a time) or
+``vllm`` (CUDA, in batches of ``model.batch_size``).
+
 Usage: uv run --extra infer python scripts/generate.py configs/generation/<variant>.yaml
            [--split val] [--limit N]
+       (on CUDA: uv run --extra gpu ...)
 """
 
 import argparse
@@ -19,7 +23,7 @@ from pathlib import Path
 import mlflow
 
 from patent_reasoning.config import load_config
-from patent_reasoning.model.generate import MLXGenerator
+from patent_reasoning.model.generate import MLXGenerator, VLLMGenerator
 from patent_reasoning.model.output import parse
 from patent_reasoning.model.prompt import SYSTEM, messages, prefix
 from patent_reasoning.schema import Example
@@ -60,24 +64,47 @@ def main() -> None:
     shots = load_shots(p["splits_dir"], p["prompt"]["shots"])
     m = p["model"]
     start = time.perf_counter()
-    generator = MLXGenerator(m["id"], m["revision"], m["max_new_tokens"],
-                             constrained=m["constrained"])  # fmt: skip
-    prefix_tokens = generator.set_prefix(prefix(shots=shots))
+    if m.get("backend", "mlx") == "vllm":
+        generator = VLLMGenerator(m["id"], m["revision"], m["max_new_tokens"],
+                                  constrained=m["constrained"],
+                                  quantization=m.get("quantization"),
+                                  max_model_len=m.get("max_model_len", 16384),
+                                  adapter=m.get("adapter"), seed=cfg.seed)  # fmt: skip
+        prefix_tokens = len(generator.prompt_tokens(prefix(shots=shots)))
+        batch_size = m.get("batch_size", 256)
+    else:
+        generator = MLXGenerator(m["id"], m["revision"], m["max_new_tokens"],
+                                 constrained=m["constrained"])  # fmt: skip
+        prefix_tokens = generator.set_prefix(prefix(shots=shots))
+        batch_size = 1
+
+    def run(batch: list[Example]) -> list:
+        if isinstance(generator, VLLMGenerator):
+            return generator.generate_batch(
+                [(messages(e.input, shots=shots), e.input.limitations) for e in batch]
+            )
+        e = batch[0]
+        return [generator.generate(messages(e.input, shots=shots), e.input.limitations)]
+
     with start_run(cfg, run_name=f"{cfg.name}-{split}"), open(out, "a") as f:
         # The config's split and limit are logged as params; these are what this run used.
         mlflow.set_tags({"run_split": split, "run_limit": str(limit)})
         mlflow.log_metrics({"load_seconds": round(time.perf_counter() - start, 1),
                             "prefix_tokens": prefix_tokens})  # fmt: skip
         mlflow.log_text(SYSTEM, "system_prompt.txt")
-        for i, e in enumerate(todo, 1):
-            g = generator.generate(messages(e.input, shots=shots), e.input.limitations)
-            row = {"example_id": e.example_id, "text": g.text, "error": parse(g.text).error,
-                   "prompt_tokens": g.prompt_tokens, "completion_tokens": g.completion_tokens,
-                   "seconds": round(g.seconds, 2), "finish_reason": g.finish_reason}  # fmt: skip
-            f.write(json.dumps(row) + "\n")
+        written = 0
+        for b in range(0, len(todo), batch_size):
+            batch = todo[b : b + batch_size]
+            for e, g in zip(batch, run(batch), strict=True):
+                row = {"example_id": e.example_id, "text": g.text,
+                       "error": parse(g.text).error, "prompt_tokens": g.prompt_tokens,
+                       "completion_tokens": g.completion_tokens, "seconds": round(g.seconds, 2),
+                       "finish_reason": g.finish_reason}  # fmt: skip
+                f.write(json.dumps(row) + "\n")
             f.flush()
-            if i % 25 == 0 or i == len(todo):
-                print(f"{i}/{len(todo)} generated")
+            written += len(batch)
+            if written % 25 < len(batch) or written == len(todo):
+                print(f"{written}/{len(todo)} generated", flush=True)
 
         rows = [json.loads(line) for line in open(out)]
         rows = [r for r in rows if r["example_id"] in {e.example_id for e in examples}]

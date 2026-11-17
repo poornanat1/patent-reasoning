@@ -7,7 +7,50 @@
 | Zero-shot | `configs/generation/base_zero_shot.yaml` | System prompt and the example |
 | Few-shot | `configs/generation/base_few_shot.yaml` | Plus five demonstrations from train: one each for 102, 103, 112, 101 and no rejection |
 
-## Scores
+## Reference scores: GPU baselines
+
+These are the scores every trained variant is compared against. They come from the setup the comparison uses: one A100 80 GB, vLLM, Qwen3-8B in bf16 at revision `b968826`, and the final grammar ([base_model.md](base_model.md#update-the-cuda-backend)). Configs: `configs/generation/gpu_base_zero_shot.yaml` and `gpu_base_few_shot.yaml`.
+
+| | Zero-shot val | Zero-shot test | Zero-shot OOD | Few-shot val | Few-shot test | Few-shot OOD |
+| --- | --- | --- | --- | --- | --- | --- |
+| Macro-F1 | 0.241 | 0.276 | 0.162 | 0.248 | 0.258 | 0.147 |
+| 95% interval | 0.216–0.263 | 0.253–0.298 | 0.133–0.186 | 0.222–0.271 | 0.233–0.281 | 0.120–0.171 |
+| Exact match | 0.320 | 0.403 | 0.163 | 0.354 | 0.384 | 0.172 |
+| False-rejection rate | 0.503 | 0.438 | 0.526 | 0.373 | 0.376 | 0.435 |
+| False-allowance rate | 0.265 | 0.221 | 0.489 | 0.317 | 0.293 | 0.531 |
+| Valid outputs | 100.0% | 99.9% | 99.4% | 99.8% | 99.9% | 99.4% |
+| Citation precision | 0.910 | 0.893 | 0.855 | 0.914 | 0.906 | 0.893 |
+| Art rejections citing nothing | 0.008 | 0.018 | 0.067 | 0.007 | 0.009 | 0.029 |
+| Examiner pin recall | 0.373 | 0.402 | 0.385 | 0.321 | 0.344 | 0.345 |
+| Seconds per example | 0.35 | 0.35 | 0.34 | 0.50 | 0.50 | 0.47 |
+
+**Per-class F1** (predictions in brackets):
+
+| Class | Zero-shot val | Zero-shot test | Zero-shot OOD | Few-shot val | Few-shot test | Few-shot OOD |
+| --- | --- | --- | --- | --- | --- | --- |
+| No rejection | 0.414 (507) | 0.551 (535) | 0.262 (576) | 0.458 (616) | 0.553 (647) | 0.294 (639) |
+| 102 | 0.384 (384) | 0.385 (400) | 0.293 (297) | 0.520 (721) | 0.436 (690) | 0.319 (419) |
+| 103 | 0.406 (706) | 0.445 (688) | 0.256 (313) | 0.244 (253) | 0.268 (286) | 0.080 (106) |
+| 112 | 0.000 (1) | 0.000 (2) | 0.000 (1) | 0.000 (0) | 0.009 (1) | 0.040 (16) |
+| 101 | 0.000 (1) | 0.000 (2) | 0.000 (1) | 0.017 (3) | 0.021 (2) | 0.000 (7) |
+
+**Few-shot against zero-shot (paired bootstrap of macro-F1):**
+
+| Split | Difference | 95% interval | Few-shot ahead in |
+| --- | --- | --- | --- |
+| val | +0.007 | -0.015 to +0.028 | 73% |
+| test | -0.018 | -0.040 to +0.006 | 6% |
+| OOD | -0.016 | -0.037 to +0.010 | 11% |
+
+**What changed from the laptop runs below:**
+
+- **Few-shot cites again.** On the laptop, few-shot left 98% of its prior-art rejections citing nothing. On the GPU it's under 3% on every split. The laptop demonstrations were serialized with spaces the model never writes under the grammar, and that mismatch is now fixed, so the earlier failure was most likely a format artifact rather than a property of few-shot prompting.
+- **112 and 101 almost vanish.** In bf16 the model predicts 112 or 101 at most 16 times on any split, against 213–690 gold 112 claims, so both classes score near zero. Macro-F1 averages over all five classes, which holds the baselines to 0.24–0.28 on validation and test even though the best of the other three classes reaches 0.41–0.55.
+- **The two baselines are still a tie.** No paired difference is significant.
+
+The rest of this report covers the laptop (MLX 4-bit) runs and the failure review. Those numbers are a development record, kept because the failure categories still apply.
+
+## Laptop scores (MLX 4-bit)
 
 | | Zero-shot val | Few-shot val | Zero-shot test | Few-shot test | Zero-shot OOD | Few-shot OOD |
 | --- | --- | --- | --- | --- | --- | --- |
