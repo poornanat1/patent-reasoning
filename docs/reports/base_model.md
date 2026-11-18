@@ -71,7 +71,7 @@ The two invalid outputs both have an evidence status that contradicts their grou
 
 ## Tokens
 
-Measured with the Qwen3 tokenizer ([prompt_tokens.json](prompt_tokens.json)):
+Measured with the Qwen3 tokenizer ([prompt_tokens.json](../results/prompt_tokens.json)):
 
 | | Train | Validation | Test | OOD |
 | --- | --- | --- | --- | --- |

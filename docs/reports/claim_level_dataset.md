@@ -1,6 +1,6 @@
 # Claim-level records and evidence
 
-> **Superseded numbers.** Parser fixes from the dataset audit and the full 1% sample build changed these counts; the current ones are in [claim_records_summary.json](claim_records_summary.json) and [dataset_v1.md](dataset_v1.md).
+> **Superseded numbers.** Parser fixes from the dataset audit and the full 1% sample build changed these counts; the current ones are in [claim_records_summary.json](../results/claim_records_summary.json) and [dataset_v1.md](dataset_v1.md).
 
 **What this covers.** Each claim in an application's first non-final office action becomes one record. The record holds the examiner's decision on that claim, its text and parent claims, its limitations, and the examiner's reasoning and pin cites for it. Each record is then paired with the cited prior art as passages, chosen under the fixed budget that every experiment uses.
 
@@ -10,7 +10,7 @@
 - **Grounded records:** 1,561 (22%). These have a trustworthy label and claim text, cited art with full text, and for 102/103 rejections at least one examiner pin cite resolved to a paragraph.
 - **Evidence coverage:** the primary evidence setting puts at least one of the examiner's own cited passages in front of the model for 91% of claims that have resolved pin cites.
 
-Raw numbers: [claim_records_summary.json](claim_records_summary.json) and [evidence_summary.json](evidence_summary.json). Pipelines:
+Raw numbers: [claim_records_summary.json](../results/claim_records_summary.json) and [evidence_summary.json](../results/evidence_summary.json). Pipelines:
 
 - `scripts/build_claim_records.py` ([configs/claim_records.yaml](../../configs/claim_records.yaml))
 - `scripts/build_evidence.py` ([configs/evidence.yaml](../../configs/evidence.yaml))

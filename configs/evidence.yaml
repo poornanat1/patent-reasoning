@@ -10,7 +10,7 @@ params:
   claim_funnel: data/interim/claim_records/funnel.jsonl
   cache_dir: data/raw/odp
   out_dir: data/interim/evidence
-  report: docs/reports/evidence_summary.json
+  report: docs/results/evidence_summary.json
   # action_cited (examiner-cited passages of the whole action, then BM25) or retrieved
   condition: action_cited
   # 4096 max sequence - ~550 tokens of claim + parents (p95) - 1000 reserve leaves ~2550.

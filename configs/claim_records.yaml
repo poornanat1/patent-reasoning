@@ -9,7 +9,7 @@ params:
   sample_dir: data/interim/oard_sample
   cache_dir: data/raw/odp
   out_dir: data/interim/claim_records
-  report: docs/reports/claim_records_summary.json
+  report: docs/results/claim_records_summary.json
   # null = every eligible first action in the sample (10,588); actions are taken in salted
   # hash order, so a smaller n is always a prefix of a larger one.
   n_office_actions: null

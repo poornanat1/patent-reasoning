@@ -19,7 +19,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("config", nargs="?", default="configs/oard_sample.yaml")
     parser.add_argument("--sample", action="store_true", help="audit the sample, not full data")
-    parser.add_argument("--out", default="docs/reports")
+    parser.add_argument("--out", default="docs/results")
     args = parser.parse_args()
 
     p = load_config(args.config).params

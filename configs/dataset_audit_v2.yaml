@@ -9,11 +9,11 @@ params:
   splits_dir: data/processed/splits
   cache_dir: data/raw/odp
   sheet_dir: data/interim/audit_v2
-  sample: docs/reports/dataset_audit_v2_sample.json
-  verdicts: docs/reports/dataset_audit_v2_verdicts.jsonl
-  report: docs/reports/dataset_audit_v2_summary.json
+  sample: docs/audits/dataset_audit_v2_sample.json
+  verdicts: docs/audits/dataset_audit_v2_verdicts.jsonl
+  report: docs/audits/dataset_audit_v2_summary.json
   salt: audit-v2
   sampling: random
-  exclude_samples: [docs/reports/dataset_audit_sample.json]
+  exclude_samples: [docs/audits/dataset_audit_sample.json]
   quotas: {train: 80, val: 30, test: 40, ood_test: 20}
   batches: 4

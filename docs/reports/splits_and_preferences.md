@@ -11,7 +11,7 @@
 
 The evaluation sets are far below the spec's targets (1,000 validation, 1,000 test, 500–1,000 OOD). They grow with the corpus.
 
-Raw numbers: [splits_summary.json](splits_summary.json), [preferences_summary.json](preferences_summary.json). Pipelines:
+Raw numbers: [splits_summary.json](../results/splits_summary.json), [preferences_summary.json](../results/preferences_summary.json). Pipelines:
 
 - `scripts/build_splits.py` ([configs/splits.yaml](../../configs/splits.yaml))
 - `scripts/build_preferences.py` ([configs/preferences.yaml](../../configs/preferences.yaml))

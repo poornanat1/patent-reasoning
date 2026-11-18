@@ -1,6 +1,6 @@
 # Office Action Research Dataset: audit findings
 
-This audits the USPTO Office Action Research Dataset, 2017 release (ODP product `PTOFFACT`). The generated reports are [oard_audit.md](oard_audit.md) (full data) and [oard_audit_sample.md](oard_audit_sample.md) (sample). Both can be regenerated with `scripts/audit_oard.py`.
+This audits the USPTO Office Action Research Dataset, 2017 release (ODP product `PTOFFACT`). The generated reports are [oard_audit.md](../results/oard_audit.md) (full data) and [oard_audit_sample.md](../results/oard_audit_sample.md) (sample). Both can be regenerated with `scripts/audit_oard.py`.
 
 ## Data obtained
 

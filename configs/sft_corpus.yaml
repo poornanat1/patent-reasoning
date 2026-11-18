@@ -9,6 +9,6 @@ params:
   documents: data/interim/evidence/documents.jsonl
   retrieval: data/interim/evidence/retrieval.jsonl
   out_dir: data/interim/sft_corpus
-  report: docs/reports/sft_corpus_summary.json
+  report: docs/results/sft_corpus_summary.json
   # Targets above this are excluded: the 1,000-token reserve also holds the instructions.
   max_target_tokens: 700

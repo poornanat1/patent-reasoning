@@ -1,7 +1,7 @@
 {
  "dataset_version": "v1",
  "schema_version": "1.3",
- "git_commit": "fc233b3ba90f5545b867ca60ef65d71938fcc74f",
+ "git_commit": "f35e39fcf23922591cbf6e2ba4148ec31634e81d",
  "stages": {
   "oard_sample": {
    "config": {
@@ -19,7 +19,7 @@
   "claim_records": {
    "config": {
     "path": "configs/claim_records.yaml",
-    "sha256": "bbaaab4ad27d2059d886d5140cc2c90a2834325ca8befb847c1cb2ef730b3810"
+    "sha256": "0caee25d70016f817ccc90e8d18593a14d1069952b7b13bf49ac32baef8525d4"
    },
    "outputs": [
     {
@@ -39,7 +39,7 @@
   "evidence": {
    "config": {
     "path": "configs/evidence.yaml",
-    "sha256": "cdf2c4b79d8b9a014834efa878ad2199be69c0b0a5109e894c7fb53d5f09c520"
+    "sha256": "9f85ac9ae27e5e0477b1a5e9dddde007de44d579af7deb65ac2ce660dca1fb3c"
    },
    "outputs": [
     {
@@ -59,7 +59,7 @@
   "sft_corpus": {
    "config": {
     "path": "configs/sft_corpus.yaml",
-    "sha256": "41b8b6a75b4c4891de162eea0b81467c54b3e2ce37258fc5e5de53e69a4f4538"
+    "sha256": "679dc5a5af47eb18b342288d58ea7ceb3fd6f60b9dc813dda3fc16d277a3b417"
    },
    "outputs": [
     {
@@ -79,7 +79,7 @@
   "splits": {
    "config": {
     "path": "configs/splits.yaml",
-    "sha256": "4d0e178923a808c8e1565e4d63c042afff56495ef8f7151a503160199f013047"
+    "sha256": "137789657f4fc7342233e27618eae8f919138c62fc82ea5afb9e522d13641a54"
    },
    "outputs": [
     {
@@ -116,7 +116,7 @@
   "preferences": {
    "config": {
     "path": "configs/preferences.yaml",
-    "sha256": "1cd7501ae5bf920ab974357286faed9c2a800d0b04855271d1b5769f6feb115e"
+    "sha256": "80b52e0379c1fe1739c319c3d5f7294036643480917c2618dbc2aabeebe7765a"
    },
    "outputs": [
     {
@@ -136,22 +136,22 @@
   "audit": {
    "config": {
     "path": "configs/dataset_audit.yaml",
-    "sha256": "06a3c9d15718e36c47b4c2422a90e0d6830505c5afef3412232284a6b62c66d3"
+    "sha256": "0b076374e2e17543f5e3a122d3406d02ef83a25d0ea2355b0d3608c00b9d7eab"
    },
    "outputs": [
     {
-     "path": "docs/reports/dataset_audit_sample.json",
+     "path": "docs/audits/dataset_audit_sample.json",
      "sha256": "4402281679ac3184156d980de5c9b4346899a7d96837d82367125b655d3624ec",
      "bytes": 27420
     },
     {
-     "path": "docs/reports/dataset_audit_verdicts.jsonl",
+     "path": "docs/audits/dataset_audit_verdicts.jsonl",
      "sha256": "04fa998281d8c384d75380d6e07966c03f61572bc7ca5dd570dd687db0660c5e",
      "bytes": 40445,
      "lines": 170
     },
     {
-     "path": "docs/reports/dataset_audit_summary.json",
+     "path": "docs/audits/dataset_audit_summary.json",
      "sha256": "4887bee6444116e31f3e8a38818c1d92e739d136c462c8d63bc6fb6cc718c034",
      "bytes": 23782
     }
@@ -160,22 +160,22 @@
   "audit_v2": {
    "config": {
     "path": "configs/dataset_audit_v2.yaml",
-    "sha256": "f0627bc9ce9a5af2812986205f5b3961a3506ab570b851c0cfb944331c622a58"
+    "sha256": "b452101c673de12dcbcf91c85c088e48ba07a5468fb72a54853a64dfdbe95630"
    },
    "outputs": [
     {
-     "path": "docs/reports/dataset_audit_v2_sample.json",
+     "path": "docs/audits/dataset_audit_v2_sample.json",
      "sha256": "a97aca31fee476d90096c14971dc5d0c4dba30e03c9bbe83e678c27c9359bc6f",
      "bytes": 26781
     },
     {
-     "path": "docs/reports/dataset_audit_v2_verdicts.jsonl",
+     "path": "docs/audits/dataset_audit_v2_verdicts.jsonl",
      "sha256": "f6a949284132064da980e20baef0b508d877c83aae7edb0d6f9bf409089fbfbf",
      "bytes": 41205,
      "lines": 170
     },
     {
-     "path": "docs/reports/dataset_audit_v2_summary.json",
+     "path": "docs/audits/dataset_audit_v2_summary.json",
      "sha256": "17eae11d125080349ca90dad8543e3ffcf9e6f2a697f8ff2082ec0f014a64677",
      "bytes": 13968
     }

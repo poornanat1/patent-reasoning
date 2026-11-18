@@ -11,9 +11,9 @@
 
 Raw files:
 
-- First audit: [verdicts](dataset_audit_verdicts.jsonl), [sample](dataset_audit_sample.json) with each target's hash, [summary](dataset_audit_summary.json) with where each error went in v1
-- Second audit: [verdicts](dataset_audit_v2_verdicts.jsonl), [sample](dataset_audit_v2_sample.json), [summary](dataset_audit_v2_summary.json) with error rates
-- [dataset_v1_manifest.json](dataset_v1_manifest.json): the manifest
+- First audit: [verdicts](../audits/dataset_audit_verdicts.jsonl), [sample](../audits/dataset_audit_sample.json) with each target's hash, [summary](../audits/dataset_audit_summary.json) with where each error went in v1
+- Second audit: [verdicts](../audits/dataset_audit_v2_verdicts.jsonl), [sample](../audits/dataset_audit_v2_sample.json), [summary](../audits/dataset_audit_v2_summary.json) with error rates
+- [dataset_v1_manifest.json](../results/dataset_v1_manifest.json): the manifest
 
 Pipelines:
 
@@ -169,7 +169,7 @@ What to keep in mind when using these numbers:
 - **Prior art overlap is measured, not removed.** 53 validation and 69 test applications share a cited document with train; OOD shares none.
 - **Preference pairs far exceed the spec's 3,000.** The DPO phase should subsample them, with the mix decided then. The pairs are still template corruptions. Harder negatives need the fine-tuned model.
 
-**Manifest** ([dataset_v1_manifest.json](dataset_v1_manifest.json), with a copy at `data/processed/manifest.json`). It records:
+**Manifest** ([dataset_v1_manifest.json](../results/dataset_v1_manifest.json), with a copy at `data/processed/manifest.json`). It records:
 - the git commit and schema version
 - every stage's config, and every output file with its SHA-256, size and line count, from the OARD sample through the audit
 - every example ID per split, with its application and family

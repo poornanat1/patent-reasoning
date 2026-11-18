@@ -70,7 +70,7 @@ Passages are chosen under a fixed budget of 2,500 tokens and 16 passages, with e
 - **`action_cited` (primary).** First come the passages the examiner pin-cited anywhere in the action, taking up to 70% of the budget. Then BM25 fills the rest, with the best two passages per limitation first, then the best for the claim as a whole. The cited pool is identical for every claim in the action, so it reveals what the examiner looked at, not what the examiner decided about this claim.
 - **`retrieved`.** BM25 only. This is the realistic setting with no examiner involvement, kept as an ablation.
 
-Ranking only ever uses the claim text, never the office action or the label. The examiner's own pin cites for a claim are used only to measure recall, and recall for both conditions is in [evidence_summary.json](reports/evidence_summary.json).
+Ranking only ever uses the claim text, never the office action or the label. The examiner's own pin cites for a claim are used only to measure recall, and recall for both conditions is in [evidence_summary.json](results/evidence_summary.json).
 
 ## Data sources
 
@@ -170,7 +170,7 @@ Document and passage IDs are not constrained, so citing something outside the in
 
 **Backend.** Every reported comparison runs on one setup: a CUDA machine (one A100 80 GB), vLLM, and Qwen3-8B in bf16 at revision `b968826`, with LoRA adapters applied on top of the bf16 weights. QLoRA trains against the 4-bit NF4 base to save memory; evaluating on bf16 keeps every variant on the same weights, and vLLM no longer loads bitsandbytes NF4. Packages are pinned in [requirements/gpu.txt](../requirements/gpu.txt). The earlier MLX 4-bit runs on a laptop ([baselines.md](reports/baselines.md)) are a development record, not part of the comparison.
 
-**Token budget.** Measured with the Qwen3 tokenizer, the zero-shot prompt has a median of 3,240 tokens (about 4.3 characters per token, close to the original estimate of 4). Prompt plus target exceeds 4,096 tokens for 4.5% of train and 20% of OOD examples ([prompt_tokens.json](reports/prompt_tokens.json)). Inference has room, since Qwen3's context is 32k. Training excludes the examples that don't fit rather than truncating them ([sft.yaml](../configs/training/sft.yaml)).
+**Token budget.** Measured with the Qwen3 tokenizer, the zero-shot prompt has a median of 3,240 tokens (about 4.3 characters per token, close to the original estimate of 4). Prompt plus target exceeds 4,096 tokens for 4.5% of train and 20% of OOD examples ([prompt_tokens.json](results/prompt_tokens.json)). Inference has room, since Qwen3's context is 32k. Training excludes the examples that don't fit rather than truncating them ([sft.yaml](../configs/training/sft.yaml)).
 
 ## Reproducibility
 

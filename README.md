@@ -1,108 +1,27 @@
 # Patent Legal Reasoning
 
-Patent Legal Reasoning compares two ways of improving an open 7B–8B model at legal reasoning over USPTO patent examination records:
+Can an open 8B model learn to reason like a patent examiner? And is it better to teach it by fine-tuning or by optimizing its prompt?
 
-- **Fine-tuning:** QLoRA SFT, then DPO
-- **Prompt optimization:** DSPy + GEPA
+This project builds a benchmark from real USPTO examination records and uses it to compare two ways of improving Qwen3-8B: fine-tuning (QLoRA SFT, then DPO) and prompt optimization (DSPy + GEPA).
 
-The full design is in [docs/SPEC.md](docs/SPEC.md).
+## The task
 
-> Status: early setup. Data pipeline in progress.
+The model is given one patent claim and the prior art the examiner cited. It decides whether the claim is rejected, and on which ground: 102 (anticipated), 103 (obvious), 112 (indefinite) or 101 (ineligible). It then maps each limitation of the claim to the passage of prior art that discloses it, and explains its decision. The examiner's office action is never part of the input.
 
-## Setup
+## Dataset
 
-Requires [uv](https://docs.astral.sh/uv/).
+The dataset has about 25,000 claims from real office actions, split by patent family into train, validation, test and an out-of-distribution test set (biotech and chemistry). Two manual audits checked the labels.
 
-```bash
-uv sync                      # core data + tracking deps
-uv sync --extra train        # GPU training stack (Linux + CUDA)
-uv sync --all-extras         # everything
-```
+## Results so far
 
-Verify the environment by running the smoke test and the test suite:
+| Frozen Qwen3-8B | Macro-F1 (test) | Macro-F1 (OOD) |
+| --- | --- | --- |
+| Zero-shot | 0.276 | 0.162 |
+| Few-shot | 0.258 | 0.147 |
 
-```bash
-uv run python scripts/smoke_test.py
-uv run pytest
-```
+The base model usually finds the passage the examiner relied on, but it often confuses 102 with 103, and it almost never predicts 112 or 101. Fine-tuning is next.
 
-## Data
+## More
 
-The pipeline starts from the [USPTO Office Action Research Dataset](https://www.uspto.gov/ip-policy/economic-research/research-datasets/office-action-research-dataset-patents) (2017 release): about 4.4M office actions from 2008 to mid-2017, with rejection and citation tables. The USPTO Open Data Portal serves the files. Downloading them needs a free API key from [data.uspto.gov](https://data.uspto.gov).
-
-```bash
-export USPTO_API_KEY=...
-uv run python scripts/download_oard.py      # ~800 MB of zips into data/raw/oard
-uv run python scripts/sample_oard.py        # extract + 1% application sample -> data/interim
-uv run python scripts/audit_oard.py         # schema/quality report -> docs/reports
-uv run python scripts/audit_oard.py --sample
-```
-
-Without a key, download `office_actions.csv.zip`, `rejections.csv.zip` and `citations.csv.zip` from the [PTOFFACT dataset page](https://data.uspto.gov/bulkdata/datasets/ptoffact) in a browser, put them in `data/raw/oard/`, and start from the sample step.
-
-Then join each sampled office action with its text, claims and cited prior art from the Open Data Portal file wrapper. The same API key is used (from the environment or `.env`). Responses are cached under `data/raw/odp/`.
-
-```bash
-uv run python scripts/build_joined_sample.py   # -> data/interim/joined_sample/records.jsonl
-uv run python scripts/inspection_sheet.py      # Markdown sheet for manual review
-```
-
-Next, build one record per claim from each application's first non-final action, and the evidence each claim's input will show:
-
-```bash
-scripts/build_dataset.sh                      # every step below through the manifest; resumes from the ODP cache
-uv run python scripts/build_claim_records.py   # -> data/interim/claim_records/claims.jsonl
-uv run python scripts/build_evidence.py        # -> data/interim/evidence/{documents,retrieval}.jsonl
-uv run python scripts/build_sft_corpus.py      # -> data/interim/sft_corpus/{examples,excluded}.jsonl
-uv run python scripts/build_splits.py          # -> data/processed/splits/{train,val,test,ood_test}.jsonl
-uv run python scripts/build_preferences.py     # -> data/processed/preferences/{train,val}.jsonl
-uv run python scripts/audit_dataset.py sheet   # -> data/interim/audit/batch-*.md (manual review sheets)
-uv run python scripts/audit_dataset.py summarize  # -> docs/reports/dataset_audit_summary.json
-uv run python scripts/audit_dataset.py summarize configs/dataset_audit_v2.yaml  # second audit, with error rates
-uv run python scripts/build_manifest.py        # -> data/processed/manifest.json (dataset v1)
-```
-
-Generation needs the `infer` extra (MLX, Apple silicon) and downloads Qwen3-8B (4.6 GB) on first use:
-
-```bash
-uv sync --extra infer
-uv run python scripts/measure_prompt_tokens.py # -> docs/reports/prompt_tokens.json
-uv run python scripts/generate.py configs/generation/base_zero_shot.yaml --split val  # resumable
-scripts/run_baselines.sh                      # zero-shot and few-shot on every evaluation split
-uv run python scripts/score.py configs/generation/base_zero_shot.yaml --split val  # -> <out_dir>/val.scores.json
-```
-
-The comparison itself runs on a CUDA machine (one A100 80 GB). Install the pinned packages there, then generate with vLLM and train with QLoRA:
-
-```bash
-uv venv -p 3.12 venv && . venv/bin/activate && uv pip install -r requirements/gpu.txt -e .
-python scripts/generate.py configs/generation/gpu_base_zero_shot.yaml --split val   # batched, bf16
-python scripts/train_sft.py configs/training/sft.yaml --max-steps 20 --out-dir checkpoints/sft-smoke
-python scripts/train_sft.py configs/training/sft.yaml                               # -> checkpoints/sft/final
-python scripts/generate.py configs/generation/gpu_sft.yaml --split val               # the adapter on bf16
-```
-
-Findings so far: [audit](docs/reports/oard_audit_findings.md), [feasibility](docs/reports/feasibility.md), [claim-level dataset and evidence](docs/reports/claim_level_dataset.md), [SFT corpus](docs/reports/sft_corpus.md), [splits and preference pairs](docs/reports/splits_and_preferences.md), [dataset v1 audit](docs/reports/dataset_v1.md).
-
-The sample takes whole applications, chosen by a salted SHA-256 of `app_id`. Rerunning it gives the same sample regardless of row order, and every office action, rejection and citation for a chosen application stays together. That keeps later family-level splits clean. Sample settings live in [configs/oard_sample.yaml](configs/oard_sample.yaml).
-
-## Experiment tracking
-
-Runs are logged to MLflow, stored in a local SQLite database (`mlflow.db`). To browse them:
-
-```bash
-uv run mlflow ui --backend-store-uri sqlite:///mlflow.db
-```
-
-Every run records its config, seed and git commit.
-
-## Layout
-
-```
-configs/   YAML experiment configs
-data/      raw / interim / processed data (not committed)
-docs/      specification and reports
-scripts/   entry points
-src/       patent_reasoning package
-tests/     unit tests
-```
+- [Design](docs/SPEC.md)
+- [Reports](docs/README.md)

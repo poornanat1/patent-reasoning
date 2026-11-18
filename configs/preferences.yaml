@@ -10,6 +10,6 @@ params:
   claim_records: data/interim/claim_records/claims.jsonl
   splits: [train, val]
   out_dir: data/processed/preferences
-  report: docs/reports/preferences_summary.json
+  report: docs/results/preferences_summary.json
   # Cap false-allowance pairs at the number of false-rejection pairs per split.
   balance_decision_pairs: true

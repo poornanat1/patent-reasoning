@@ -10,9 +10,9 @@ params:
   cache_dir: data/raw/odp
   sheet_dir: data/interim/audit
   # The drawn sample (with each target's hash) and the manual verdicts, both committed.
-  sample: docs/reports/dataset_audit_sample.json
-  verdicts: docs/reports/dataset_audit_verdicts.jsonl
-  report: docs/reports/dataset_audit_summary.json
+  sample: docs/audits/dataset_audit_sample.json
+  verdicts: docs/audits/dataset_audit_verdicts.jsonl
+  report: docs/audits/dataset_audit_summary.json
   salt: audit-v1
   quotas: {train: 80, val: 30, test: 40, ood_test: 20}
   batches: 4

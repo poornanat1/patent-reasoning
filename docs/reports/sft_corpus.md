@@ -6,7 +6,7 @@
 
 **Result.** 1,144 examples from 206 applications, out of 7,005 claim records (16%). None failed schema validation.
 
-Raw numbers: [sft_corpus_summary.json](sft_corpus_summary.json). Pipeline: `scripts/build_sft_corpus.py` ([configs/sft_corpus.yaml](../../configs/sft_corpus.yaml)), with rules in `src/patent_reasoning/data/sft.py`. Output goes to `data/interim/sft_corpus/examples.jsonl` and `excluded.jsonl`.
+Raw numbers: [sft_corpus_summary.json](../results/sft_corpus_summary.json). Pipeline: `scripts/build_sft_corpus.py` ([configs/sft_corpus.yaml](../../configs/sft_corpus.yaml)), with rules in `src/patent_reasoning/data/sft.py`. Output goes to `data/interim/sft_corpus/examples.jsonl` and `excluded.jsonl`.
 
 ## What qualifies
 

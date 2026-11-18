@@ -9,7 +9,7 @@ params:
   version: v1
   out: data/processed/manifest.json
   # Committed copy, so a checkout records exactly which examples v1 contains.
-  report: docs/reports/dataset_v1_manifest.json
+  report: docs/results/dataset_v1_manifest.json
   stages:
     oard_sample:
       config: configs/oard_sample.yaml
@@ -37,16 +37,16 @@ params:
     audit:
       config: configs/dataset_audit.yaml
       outputs:
-        - docs/reports/dataset_audit_sample.json
-        - docs/reports/dataset_audit_verdicts.jsonl
-        - docs/reports/dataset_audit_summary.json
+        - docs/audits/dataset_audit_sample.json
+        - docs/audits/dataset_audit_verdicts.jsonl
+        - docs/audits/dataset_audit_summary.json
     audit_v2:
       config: configs/dataset_audit_v2.yaml
       outputs:
-        - docs/reports/dataset_audit_v2_sample.json
-        - docs/reports/dataset_audit_v2_verdicts.jsonl
-        - docs/reports/dataset_audit_v2_summary.json
+        - docs/audits/dataset_audit_v2_sample.json
+        - docs/audits/dataset_audit_v2_verdicts.jsonl
+        - docs/audits/dataset_audit_v2_summary.json
   splits_dir: data/processed/splits
   preferences_dir: data/processed/preferences
-  audit_summary: docs/reports/dataset_audit_summary.json
-  audit_v2_summary: docs/reports/dataset_audit_v2_summary.json
+  audit_summary: docs/audits/dataset_audit_summary.json
+  audit_v2_summary: docs/audits/dataset_audit_v2_summary.json

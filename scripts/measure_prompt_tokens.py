@@ -20,7 +20,7 @@ from patent_reasoning.model.output import serialize
 from patent_reasoning.model.prompt import messages
 from patent_reasoning.schema import Example
 
-REPORT = Path("docs/reports/prompt_tokens.json")
+REPORT = Path("docs/results/prompt_tokens.json")
 MAX_SEQ_LEN = 4096
 
 

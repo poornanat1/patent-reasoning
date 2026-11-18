@@ -108,7 +108,7 @@ Citation behaviour holds up: zero-shot's citation existence falls only from 0.98
 
 ## Failure review
 
-50 validation failures, drawn with `scripts/sample_failures.py` (salt `failures-v1`, sampled within each gold class in proportion to its share of failures): 40 from zero-shot and 10 from few-shot. A failure is an example whose predicted set of statutes differs from the gold set. Each was read against the claim, its parents, the examiner's text and the model's output. The labels are in [failures/base_val_review.csv](failures/base_val_review.csv) and the sampled records in `failures/`.
+50 validation failures, drawn with `scripts/sample_failures.py` (salt `failures-v1`, sampled within each gold class in proportion to its share of failures): 40 from zero-shot and 10 from few-shot. A failure is an example whose predicted set of statutes differs from the gold set. Each was read against the claim, its parents, the examiner's text and the model's output. The labels are in [failures/base_val_review.csv](../audits/failures/base_val_review.csv) and the sampled records next to it.
 
 **Zero-shot (40):**
 

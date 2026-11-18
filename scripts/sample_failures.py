@@ -7,7 +7,7 @@ record is written with what a reviewer needs: the claim, the gold grounds and ex
 reasoning, and the model's grounds, explanation and citations.
 
 Usage: uv run python scripts/sample_failures.py configs/generation/<variant>.yaml
-           --split val --n 40 --out docs/reports/failures/<variant>_val.jsonl
+           --split val --n 40 --out docs/audits/failures/<variant>_val.jsonl
 """
 
 import argparse

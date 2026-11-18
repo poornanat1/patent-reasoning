@@ -8,7 +8,7 @@
 - **Strict evidence-grounded records:** 48 (target: 50+). These also have as-filed claims and at least one examiner pin cite resolved to the cited publication's paragraph text.
 - **Decision: go.** Keep full reasoning generation. Build evidence-grounded targets from rejections that cite US publications from 2005 onward. Treat older patents as document-level evidence.
 
-Raw numbers: [joined_sample_summary.json](joined_sample_summary.json). Pipeline: `scripts/build_joined_sample.py` (config [configs/joined_sample.yaml](../../configs/joined_sample.yaml)).
+Raw numbers: [joined_sample_summary.json](../results/joined_sample_summary.json). Pipeline: `scripts/build_joined_sample.py` (config [configs/joined_sample.yaml](../../configs/joined_sample.yaml)).
 
 ## Sources actually used
 
