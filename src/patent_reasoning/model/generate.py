@@ -153,7 +153,9 @@ class VLLMGenerator:
         )
         return self.tokenizer.encode(text, add_special_tokens=False)
 
-    def _params(self, limitations: list[str]):
+    def _params(self, limitations: list[str], n: int = 1, temperature: float = 0.0,
+                seed: int | None = None):  # fmt: skip
+        """Greedy by default; with ``temperature`` > 0, ``n`` samples from a fixed ``seed``."""
         from vllm import SamplingParams
         from vllm.sampling_params import StructuredOutputsParams
 
@@ -164,8 +166,23 @@ class VLLMGenerator:
             schema["x-guidance"] = {"whitespace_flexible": False, "item_separator": ",",
                                     "key_separator": ":"}  # fmt: skip
             structured = StructuredOutputsParams(json=schema, disable_any_whitespace=True)
-        return SamplingParams(temperature=0.0, max_tokens=self.max_new_tokens,
+        return SamplingParams(n=n, temperature=temperature, seed=seed,
+                              max_tokens=self.max_new_tokens,
                               structured_outputs=structured)  # fmt: skip
+
+    def sample_batch(
+        self, batch: list[tuple[list[dict[str, str]], list[str], int]], n: int,
+        temperature: float,
+    ) -> list[list[tuple[str, str]]]:  # fmt: skip
+        """``n`` samples for each (messages, limitations, seed): (text, finish reason) each."""
+        prompts = [{"prompt_token_ids": self.prompt_tokens(m)} for m, _, _ in batch]
+        limit = self.max_model_len - self.max_new_tokens
+        if any(len(p["prompt_token_ids"]) > limit for p in prompts):
+            raise ValueError("prompts exceed max_model_len")
+        params = [self._params(lims, n, temperature, seed) for _, lims, seed in batch]
+        outputs = self.llm.generate(prompts, params, lora_request=self.lora, use_tqdm=False)
+        return [[(c.text, "length" if c.finish_reason == "length" else "stop")
+                 for c in o.outputs] for o in outputs]  # fmt: skip
 
     def generate_batch(
         self, batch: list[tuple[list[dict[str, str]], list[str]]]
