@@ -1,4 +1,4 @@
-# Experiment C: QLoRA SFT. Qwen3-8B quantized to 4-bit NF4 (bitsandbytes), a rank-16 LoRA
+# Experiment D: QLoRA SFT. Qwen3-8B quantized to 4-bit NF4 (bitsandbytes), a rank-16 LoRA
 # adapter on every linear projection, trained on the prompt/target records of
 # patent_reasoning.train.sft_records with the loss on the target only. Evaluated with the
 # adapter on the bf16 weights (configs/generation/gpu_sft.yaml), like every variant.

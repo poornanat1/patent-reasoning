@@ -1,4 +1,4 @@
-# Experiment C evaluated: the SFT adapter (configs/training/sft.yaml) on the bf16 weights,
+# Experiment D evaluated: the SFT adapter (configs/training/sft.yaml) on the bf16 weights,
 # zero-shot prompt, same backend and grammar as the GPU baselines.
 name: gpu-sft
 seed: 42

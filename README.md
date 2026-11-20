@@ -14,12 +14,15 @@ The dataset has about 25,000 claims from real office actions, split by patent fa
 
 ## Results so far
 
-| Frozen Qwen3-8B | Macro-F1 (test) | Macro-F1 (OOD) |
-| --- | --- | --- |
-| Zero-shot | 0.276 | 0.162 |
-| Few-shot | 0.258 | 0.147 |
+Validation macro-F1 over the five decision classes:
 
-The base model usually finds the passage the examiner relied on, but it often confuses 102 with 103, and it almost never predicts 112 or 101. Fine-tuning is next.
+| Qwen3-8B | Macro-F1 (val) |
+| --- | --- |
+| Zero-shot | 0.241 |
+| Few-shot | 0.248 |
+| QLoRA SFT | 0.455 |
+
+Fine-tuning nearly doubles the score of the frozen model. It cuts false allowances from 27% to 10%, and it learns to predict 112. Its main remaining errors are calling a 102 a 103 and missing 101. DPO is next.
 
 ## More
 

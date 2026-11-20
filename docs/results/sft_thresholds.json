@@ -1,0 +1,10 @@
+{
+  "config": "configs/generation/gpu_sft.yaml",
+  "fitted_on": "val",
+  "thresholds": {
+    "102": 0.25,
+    "103": 0.4375,
+    "112": 0.4375,
+    "101": 0.125
+  }
+}

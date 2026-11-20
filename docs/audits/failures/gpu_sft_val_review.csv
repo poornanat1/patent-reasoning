@@ -1,0 +1,51 @@
+variant,example_id,category,note
+gpu_sft,H8LIKJ4FPXXIFW4:77,missed_112_101,signal per se (101); visible in the parent claim
+gpu_sft,HFY3YMAYPXXIFW4:11,102_103_confused,right passage area; second 103 reference never cited; invents reference names
+gpu_sft,H77HZSDCPXXIFW4:17,missed_112_101,computer readable medium (101); visible in the claim
+gpu_sft,HJSHXW9LPXXIFW4:12,missed_112_101,"gets 112, misses program per se (101); visible in the claim chain"
+gpu_sft,HV9IMYMOPXXIFW4:5,missed_112_101,"112 antecedent basis: ""device"" vs ""clamp"" in claim 1; visible with the parent"
+gpu_sft,H0XWAUX3PXXIFW4:18,102_103_confused,adds an unmapped second reference
+gpu_sft,GX0GAYW8PXXIFW4:6,102_103_confused,103 called 102; maps the primary reference only
+gpu_sft,HSX7PM5DPXXIFW4:56,truncated,explanation loops on a citation list
+gpu_sft,HXES3JS1PXXIFW4:1,rejected_claim_allowed,writes reasons for allowance while marking a limitation disclosed
+gpu_sft,HYK1NCT7PXXIFW4:9,missed_112_101,"gets 103, misses 112 and 102; the 112 turns on parent claim 8"
+gpu_sft,HYVOP6PYPXXIFW4:23,102_103_confused,adds an unmapped second reference
+gpu_sft,H6QNNSNQPXXIFW4:6,missed_112_101,112 on a limitation in the claim itself
+gpu_sft,HYFUNMWTPXXIFW4:9,102_103_confused,103 called 102
+gpu_sft,GWP8ZKLMPXXIFW4:3,102_103_confused,adds an unmapped second reference
+gpu_sft,H3LPWT0NPXXIFW4:13,statute_and_112_101,blanket 112 on claims 1-24 (inherited) and 102 called 103
+gpu_sft,HZB7Y5MHPXXIFW4:2,allowable_claim_rejected,102 over a passage that plausibly discloses the limitation; examiner gave no reasons
+gpu_sft,GWGBQWHAPXXIFW4:3,102_103_confused,adds an unmapped second reference
+gpu_sft,HNLTNZR7PXXIFW4:8,102_103_confused,adds an unmapped second reference
+gpu_sft,I1L4XK1GPXXIFW4:13,rejected_claim_allowed,empty output; no mapping attempted
+gpu_sft,I2VVYJ52PXXIFW4:11,missed_112_101,112 antecedent basis in the claim itself
+gpu_sft,I0FNWWY1PXXIFW4:23,statute_and_112_101,112 from claim 21 (inherited) and 102 called 103
+gpu_sft,HL6PA75UPXXIFW4:14,102_103_confused,103 listing the same reference twice
+gpu_sft,HD35LDWXPXXIFW4:9,102_103_confused,adds an unmapped second reference
+gpu_sft,HVF6FKF9PXXIFW4:5,statute_and_112_101,112 from claim 3 (inherited) and 103 called 102
+gpu_sft,HD35LDWXPXXIFW4:6,statute_and_112_101,"112 antecedent basis in the claim itself, and 102 called 103"
+gpu_sft,HVXPZLRCPXXIFW4:4,missed_112_101,101 inherited from claim 1 (method not tied to a machine)
+gpu_sft,HATQ8NM7PXXIFW4:29,allowable_claim_rejected,102 on a Markush list of metals; examiner gave no reasons
+gpu_sft,HVTKOFCCPXXIFW4:2,missed_112_101,112 antecedent basis in the claim itself
+gpu_sft,GW6QW9ZSPXXIFW4:18,rejected_claim_allowed,misses 101 (inherited) and two 102 grounds; empty output
+gpu_sft,I24PQ9MVPXXIFW4:8,112_rejected_on_art,"examiner 112 wording (""information on a location"") differs from the claim text; possible label error"
+gpu_sft,H6QNNSNQPXXIFW4:7,missed_112_101,112 antecedent basis in the claim itself
+gpu_sft,GQFBCRO8PPOPPY5:4,missed_112_101,112 and 101 inherited from claim 1
+gpu_sft,HZB7Y5MHPXXIFW4:11,allowable_claim_rejected,102 over the same reference as its sibling claim; examiner gave no reasons
+gpu_sft,H8NHE6ESPXXIFW4:36,statute_and_112_101,"101 inherited from claim 26, and 103 called 102"
+gpu_sft,HNN8DFNLPXXIFW4:9,allowable_claim_rejected,102 over a passage that may disclose the limitation; examiner gave no reasons
+gpu_sft,GQJIXR4SPPOPPY5:8,allowable_claim_rejected,102 with two passages mapped; examiner gave no reasons
+gpu_sft,H739ROYUPXXIFW4:9,112_rejected_on_art,blanket 112 on claims 1-21; predicts 103
+gpu_sft,GWGBQWHAPXXIFW4:26,102_103_confused,adds an unmapped second reference (same application as 17)
+gpu_sft,HDRCDHYTPXXIFW4:2,102_103_confused,"adds a second reference; maps it, not the examiner's"
+gpu_sft,GQ0TNWAJPPOPPY5:5,allowable_claim_rejected,103 with one reference mapped; examiner gave no reasons
+gpu_sft,H2HOE10GPXXIFW4:9,102_103_confused,103 called 102
+gpu_sft,GU1FMU5UPPOPPY5:5,rejected_claim_allowed,empty output; 103 combination missed
+gpu_sft,H8CZO8G6PXXIFW4:2,missed_112_101,112 from claim 1 (inherited)
+gpu_sft,I2XFRWB2PXXIFW4:4,statute_and_112_101,"101 abstract idea (inherited from claim 1), and 103 called 102"
+gpu_sft,I41LK67DPXXIFW4:10,rejected_claim_allowed,empty output; 102 missed
+gpu_sft,GQFBCRO8PPOPPY5:11,missed_112_101,"gets 101 and 102, misses inherited 112"
+gpu_sft,GVXTJLZBPXXIFW4:4,102_103_confused,103 called 102
+gpu_sft,I09PJBCVPXXIFW4:2,missed_112_101,101 inherited from claim 1 (software server)
+gpu_sft,I05CR877PXXIFW4:19,102_103_confused,103 called 102
+gpu_sft,HQI2V5AMPXXIFW4:4,allowable_claim_rejected,103 over a passage that may disclose the limitation; examiner gave no reasons

@@ -22,10 +22,11 @@ Each report opens with what it covers and its result. They are listed in the ord
 7. [base_model.md](reports/base_model.md): the base model, the prompt, and constrained generation
 8. [evaluation.md](reports/evaluation.md): the scoring rubric, fixed before any training
 9. [baselines.md](reports/baselines.md): zero-shot and few-shot Qwen3-8B, with a review of 50 failures
+10. [sft.md](reports/sft.md): the QLoRA SFT adapter on validation, decision thresholds, and a review of 50 failures
 
 The first three reports were written on early samples. The banners at the top of each one point to the current numbers.
 
 ## Raw outputs
 
 - [results/](results/): machine-written summaries the pipeline regenerates, including the dataset v1 manifest
-- [audits/](audits/): the hand-labeled audit samples and verdicts, and the baseline failure review. The split builder reads the verdicts to drop audited errors from evaluation, so treat them as inputs, not just records.
+- [audits/](audits/): the hand-labeled audit samples and verdicts, and the failure reviews of each variant. The split builder reads the verdicts to drop audited errors from evaluation, so treat them as inputs, not just records.
